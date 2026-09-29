@@ -3,6 +3,7 @@ import type { AppEnv } from "../env";
 import type { AccountUser } from "../types";
 import { toAccountUser } from "../types";
 import { repos } from "../db";
+import type { SessionRef } from "../db/sessions";
 import { readSessionToken } from "../auth/cookies";
 import { ApiError } from "./errors";
 
@@ -20,11 +21,16 @@ export function readBearerToken(c: Context<AppEnv>): string | undefined {
 export const loadUser: MiddlewareHandler<AppEnv> = async (c, next) => {
   const token = readSessionToken(c) ?? readBearerToken(c);
   let user: AccountUser | null = null;
+  let session: SessionRef | null = null;
   if (token) {
-    const row = await repos(c.env).sessions.resolve(token);
-    if (row) user = toAccountUser(row);
+    const resolved = await repos(c.env).sessions.resolveSession(token);
+    if (resolved) {
+      user = toAccountUser(resolved.user);
+      session = resolved.session;
+    }
   }
   c.set("user", user);
+  c.set("session", session);
   await next();
 };
 

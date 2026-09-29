@@ -21,8 +21,9 @@ import {
   REMOTE_ATTACHMENT_MAX_BYTES,
   REMOTE_ATTACHMENT_TTL_MS,
   REMOTE_GRANT_TTL_MS,
+  REMOTE_REAUTH_MS,
 } from "../config";
-import { remoteDevicePresence } from "../remoteGateway";
+import { disconnectRemote, remoteDevicePresence } from "../remoteGateway";
 import backups from "./backups";
 import { ConfigBackupRepo } from "../db/configBackups";
 
@@ -63,14 +64,27 @@ me.patch("/devices/:deviceId", async (c) => {
 
 me.delete("/devices/:deviceId", async (c) => {
   const user = currentUser(c);
-  const revoked = await repos(c.env).remoteDevices.revoke(user.id, c.req.param("deviceId"));
+  const deviceId = c.req.param("deviceId");
+  const revoked = await repos(c.env).remoteDevices.revoke(user.id, deviceId);
   if (!revoked) throw new ApiError(404, "device_not_found", "That device is unavailable.");
-  return c.json({ ok: true });
+  const disconnected = await disconnectRemote(c.env, [deviceId]);
+  return c.json({ ok: true, disconnected });
 });
 
 me.post("/remote-grants", async (c) => {
   const user = currentUser(c);
+  const session = c.get("session");
   const { targetDeviceId, scopes } = await parseBody(c, RemoteGrantIssueSchema);
+  if (!session) throw new ApiError(401, "unauthorized", "Sign in to continue.");
+  // A device-flow session is minted by approving from another session, so its
+  // age says nothing about when a password was last entered.
+  if (session.kind !== "web") {
+    throw new ApiError(403, "remote_reauth_required", "Sign in on this browser to control a computer remotely.");
+  }
+  const reauthAt = Date.parse(session.createdAt) + REMOTE_REAUTH_MS;
+  if (!(reauthAt > Date.now())) {
+    throw new ApiError(403, "remote_reauth_required", "Sign in again to control this computer remotely.");
+  }
   const remoteDevices = repos(c.env).remoteDevices;
   const device = await remoteDevices.activeForUser(user.id, targetDeviceId);
   if (!device) throw new ApiError(404, "device_not_found", "That device is unavailable.");
@@ -82,8 +96,12 @@ me.post("/remote-grants", async (c) => {
     targetDeviceId,
     scopes,
     ttlMs: REMOTE_GRANT_TTL_MS,
+    session,
   });
-  return c.json({ grant: { ...grant, targetDeviceId, scopes }, device }, 201);
+  return c.json({
+    grant: { ...grant, targetDeviceId, scopes, reauthAt: new Date(reauthAt).toISOString() },
+    device,
+  }, 201);
 });
 
 me.post("/remote-attachments", async (c) => {
@@ -138,7 +156,7 @@ me.post("/password", async (c) => {
 
   // Drop every session, then mint a fresh one so this device stays signed in.
   await sessions.deleteAllForUser(user.id);
-  await remoteDevices.revokeAllForUser(user.id);
+  await disconnectRemote(c.env, await remoteDevices.revokeAllForUser(user.id));
   setSessionCookie(c, await sessions.create(user.id, { userAgent: c.req.header("user-agent") ?? "" }));
   return c.json({ ok: true });
 });
@@ -148,7 +166,7 @@ me.delete("/", async (c) => {
   const { users, sessions, remoteDevices } = repos(c.env);
   await users.softDelete(user.id);
   await sessions.deleteAllForUser(user.id);
-  await remoteDevices.revokeAllForUser(user.id);
+  await disconnectRemote(c.env, await remoteDevices.revokeAllForUser(user.id));
   if (c.env.BACKUPS) await new ConfigBackupRepo(c.env.DB, c.env.BACKUPS).removeAllForUser(user.id);
   clearSessionCookie(c);
   return c.json({ ok: true });

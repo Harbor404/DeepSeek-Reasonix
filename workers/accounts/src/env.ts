@@ -1,4 +1,5 @@
 import type { AccountUser } from "./types";
+import type { SessionRef } from "./db/sessions";
 
 // Cloudflare's native rate-limit binding (configured under [[unsafe.bindings]]).
 export interface RateLimiter {
@@ -32,6 +33,7 @@ export interface Bindings {
 // resolved; requireAuth guarantees it is non-null for protected routes.
 export interface Variables {
   user: AccountUser | null;
+  session: SessionRef | null;
 }
 
 export type AppEnv = { Bindings: Bindings; Variables: Variables };

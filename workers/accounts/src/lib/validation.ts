@@ -83,6 +83,14 @@ export const RemoteGrantConsumeSchema = z.object({
   ticket: z.string().regex(/^[0-9a-f]{64}$/),
 }).strict();
 
+export const RemoteLeaseCheckSchema = z.object({
+  leases: z.array(z.object({
+    userId: z.number().int().positive(),
+    deviceId: remoteDeviceId,
+    sessionId: z.string().regex(/^[0-9a-f]{64}$/).optional(),
+  }).strict()).min(1).max(16),
+}).strict();
+
 export const RemoteAttachmentUploadSchema = z.object({
   objectId: z.string().regex(/^[0-9a-f]{64}$/),
   ticket: z.string().regex(/^[0-9a-f]{64}$/),

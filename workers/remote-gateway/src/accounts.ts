@@ -1,4 +1,5 @@
 import type { AuthenticatedDevice, AuthorizedAttachment, ConsumedGrant, Env } from "./env";
+import type { LeaseVerdict } from "./lease";
 
 const TOKEN_PATTERN = /^[0-9a-f]{64}$/;
 
@@ -47,4 +48,15 @@ export function authorizeAttachmentDownload(
   ticket: string,
 ): Promise<AuthorizedAttachment | null> {
   return accountRequest(env, "/remote/attachments/download", { objectId, ticket });
+}
+
+export async function checkLeases(
+  env: Env,
+  leases: Array<{ userId: number; deviceId: string; sessionId?: string }>,
+): Promise<LeaseVerdict[] | null> {
+  const answer = await accountRequest<{ verdicts?: unknown }>(env, "/remote/leases/check", { leases });
+  if (!answer || !Array.isArray(answer.verdicts)) return null;
+  const verdicts = answer.verdicts.filter((value): value is LeaseVerdict =>
+    value === "active" || value === "revoked" || value === "reauth_required");
+  return verdicts.length === answer.verdicts.length ? verdicts : null;
 }

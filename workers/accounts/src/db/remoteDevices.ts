@@ -32,7 +32,17 @@ export interface ConsumedRemoteGrant {
   userId: number;
   targetDeviceId: string;
   scopes: RemoteCapability[];
+  sessionId: string | null;
+  authenticatedAt: string | null;
 }
+
+export interface RemoteLease {
+  userId: number;
+  deviceId: string;
+  sessionId?: string;
+}
+
+export type RemoteLeaseVerdict = "active" | "revoked" | "reauth_required";
 
 function parseCapabilities(value: string): RemoteCapability[] {
   let parsed: unknown;
@@ -129,6 +139,13 @@ export class RemoteDeviceRepo {
     return row ? toDevice(row) : null;
   }
 
+  async activeIdsForUser(userId: number): Promise<string[]> {
+    const result = await this.db.prepare(
+      "SELECT id FROM remote_devices WHERE user_id = ?1 AND revoked_at IS NULL",
+    ).bind(userId).all<{ id: string }>();
+    return result.results.map((row) => row.id);
+  }
+
   async revoke(userId: number, deviceId: string): Promise<boolean> {
     const now = new Date().toISOString();
     const result = await this.db.prepare(
@@ -138,13 +155,15 @@ export class RemoteDeviceRepo {
     return (result.meta.changes ?? 0) > 0;
   }
 
-  async revokeAllForUser(userId: number): Promise<void> {
+  async revokeAllForUser(userId: number): Promise<string[]> {
     const now = new Date().toISOString();
-    await this.db.prepare(
+    const revoked = await this.db.prepare(
       `UPDATE remote_devices SET revoked_at = ?1, updated_at = ?1
-       WHERE user_id = ?2 AND revoked_at IS NULL`,
-    ).bind(now, userId).run();
+       WHERE user_id = ?2 AND revoked_at IS NULL
+       RETURNING id`,
+    ).bind(now, userId).all<{ id: string }>();
     await this.db.prepare("DELETE FROM remote_connection_grants WHERE user_id = ?1").bind(userId).run();
+    return revoked.results.map((row) => row.id);
   }
 
   async authenticate(deviceId: string, credential: string): Promise<{ userId: number; device: RemoteDevice } | null> {
@@ -164,6 +183,7 @@ export class RemoteDeviceRepo {
     targetDeviceId: string;
     scopes: RemoteCapability[];
     ttlMs: number;
+    session: { id: string; createdAt: string };
   }): Promise<{ ticket: string; expiresAt: string }> {
     const ticket = generateToken();
     const ticketHash = await hashToken(this.pepper, ticket);
@@ -171,11 +191,12 @@ export class RemoteDeviceRepo {
     const expiresAt = new Date(now.getTime() + input.ttlMs).toISOString();
     await this.db.prepare(
       `INSERT INTO remote_connection_grants (
-         ticket_hash, user_id, target_device_id, scopes, created_at, expires_at
-       ) VALUES (?1, ?2, ?3, ?4, ?5, ?6)`,
+         ticket_hash, user_id, target_device_id, scopes, created_at, expires_at,
+         session_hash, authenticated_at
+       ) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8)`,
     ).bind(
       ticketHash, input.userId, input.targetDeviceId, JSON.stringify(input.scopes),
-      now.toISOString(), expiresAt,
+      now.toISOString(), expiresAt, input.session.id, input.session.createdAt,
     ).run();
     return { ticket, expiresAt };
   }
@@ -192,9 +213,55 @@ export class RemoteDeviceRepo {
              AND d.user_id = remote_connection_grants.user_id
              AND d.revoked_at IS NULL
          )
-       RETURNING user_id, target_device_id, scopes`,
-    ).bind(ticketHash, now).first<{ user_id: number; target_device_id: string; scopes: string }>();
+         AND (session_hash IS NULL OR EXISTS (
+           SELECT 1 FROM sessions s
+           WHERE s.token_hash = remote_connection_grants.session_hash
+             AND s.user_id = remote_connection_grants.user_id
+             AND s.expires_at > ?2
+         ))
+       RETURNING user_id, target_device_id, scopes, session_hash, authenticated_at`,
+    ).bind(ticketHash, now).first<{
+      user_id: number;
+      target_device_id: string;
+      scopes: string;
+      session_hash: string | null;
+      authenticated_at: string | null;
+    }>();
     if (!row) return null;
-    return { userId: row.user_id, targetDeviceId: row.target_device_id, scopes: parseCapabilities(row.scopes) };
+    return {
+      userId: row.user_id,
+      targetDeviceId: row.target_device_id,
+      scopes: parseCapabilities(row.scopes),
+      sessionId: row.session_hash ?? null,
+      authenticatedAt: row.authenticated_at ?? null,
+    };
+  }
+
+  // Answers whether each live relay connection may continue. A connection that
+  // names a session also needs that session to exist and to have signed in
+  // after `signedInAfter`; one that names none is held only to its device.
+  async checkLeases(leases: RemoteLease[], signedInAfter: string): Promise<RemoteLeaseVerdict[]> {
+    const now = new Date().toISOString();
+    const verdicts: RemoteLeaseVerdict[] = [];
+    for (const lease of leases) {
+      const device = await this.db.prepare(
+        "SELECT 1 AS ok FROM remote_devices WHERE id = ?1 AND user_id = ?2 AND revoked_at IS NULL",
+      ).bind(lease.deviceId, lease.userId).first<{ ok: number }>();
+      if (!device) {
+        verdicts.push("revoked");
+        continue;
+      }
+      if (!lease.sessionId) {
+        verdicts.push("active");
+        continue;
+      }
+      const session = await this.db.prepare(
+        `SELECT s.created_at FROM sessions s JOIN users u ON u.id = s.user_id
+         WHERE s.token_hash = ?1 AND s.user_id = ?2 AND s.expires_at > ?3
+           AND s.kind = 'web' AND u.status = 'active'`,
+      ).bind(lease.sessionId, lease.userId, now).first<{ created_at: string }>();
+      verdicts.push(session && session.created_at > signedInAfter ? "active" : "reauth_required");
+    }
+    return verdicts;
   }
 }

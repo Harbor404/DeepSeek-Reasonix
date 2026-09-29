@@ -64,14 +64,15 @@ Design notes:
 | GET    | `/me/devices`              | ✓    | registered remote devices with live `online` state |
 | POST   | `/me/devices`              | ✓    | register/rotate a device credential     |
 | PATCH  | `/me/devices/:id`          | ✓    | rename an active device                 |
-| DELETE | `/me/devices/:id`          | ✓    | revoke a device                         |
-| POST   | `/me/remote-grants`        | ✓    | issue a 60-second, scoped connection ticket |
+| DELETE | `/me/devices/:id`          | ✓    | revoke a device and close its live relay connections |
+| POST   | `/me/remote-grants`        | ✓    | issue a 60-second, scoped connection ticket; `403 remote_reauth_required` once the session is 24 h old or is a device-flow session |
 | GET    | `/me/backups`              | ✓    | list encrypted config backups + `limits` |
 | POST   | `/me/backups`              | ✓    | `{ label, format, appVersion, platform, categories, envelope(base64) }`; ≤ 4 MiB, ≤ 10 per account |
 | GET    | `/me/backups/:id`          | ✓    | `{ backup, envelope }`                  |
 | DELETE | `/me/backups/:id`          | ✓    | delete one backup                       |
 | POST   | `/remote/devices/authenticate` | gateway | validate a device credential        |
 | POST   | `/remote/grants/consume`   | gateway | consume a connection ticket once     |
+| POST   | `/remote/leases/check`     | gateway | `{ leases }` → `active` \| `revoked` \| `reauth_required` per live connection |
 | DELETE | `/me`                      | ✓    | soft-delete the account                 |
 | GET    | `/u/:handle`               | —    | public profile                          |
 | GET    | `/health`                  | —    | liveness                                |

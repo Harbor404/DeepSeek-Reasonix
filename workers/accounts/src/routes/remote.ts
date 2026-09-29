@@ -8,7 +8,9 @@ import {
   RemoteAttachmentUploadSchema,
   RemoteDeviceAuthenticateSchema,
   RemoteGrantConsumeSchema,
+  RemoteLeaseCheckSchema,
 } from "../lib/validation";
+import { REMOTE_REAUTH_MS } from "../config";
 
 const remote = new Hono<AppEnv>();
 
@@ -42,7 +44,22 @@ remote.post("/grants/consume", async (c) => {
   const { ticket } = await parseBody(c, RemoteGrantConsumeSchema);
   const grant = await repos(c.env).remoteDevices.consumeGrant(ticket);
   if (!grant) throw new ApiError(401, "invalid_grant", "The connection grant is invalid, expired, or already used.");
-  return c.json({ grant });
+  const { sessionId, authenticatedAt, ...admitted } = grant;
+  const signedIn = authenticatedAt ? Date.parse(authenticatedAt) : Number.NaN;
+  return c.json({
+    grant: {
+      ...admitted,
+      ...(sessionId ? { sessionId } : {}),
+      ...(Number.isFinite(signedIn) ? { reauthAt: new Date(signedIn + REMOTE_REAUTH_MS).toISOString() } : {}),
+    },
+  });
+});
+
+remote.post("/leases/check", async (c) => {
+  const { leases } = await parseBody(c, RemoteLeaseCheckSchema);
+  const signedInAfter = new Date(Date.now() - REMOTE_REAUTH_MS).toISOString();
+  const verdicts = await repos(c.env).remoteDevices.checkLeases(leases, signedInAfter);
+  return c.json({ verdicts });
 });
 
 remote.post("/attachments/upload", async (c) => {

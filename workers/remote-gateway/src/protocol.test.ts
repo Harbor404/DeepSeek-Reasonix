@@ -21,6 +21,10 @@ describe("remote message routing envelope", () => {
     expect(parseDeviceMessage("not-json")).toBeNull();
   });
 
+  it("accepts a device heartbeat", () => {
+    expect(parseDeviceMessage(JSON.stringify({ type: "heartbeat" }))).toEqual({ type: "heartbeat" });
+  });
+
   it("accepts a device-owned controller disconnect", () => {
     expect(parseDeviceMessage(JSON.stringify({
       type: "disconnect_controller",

@@ -27,6 +27,8 @@ export interface ConsumedGrant {
     userId: number;
     targetDeviceId: string;
     scopes: RemoteCapability[];
+    sessionId?: string;
+    reauthAt?: string;
   };
 }
 

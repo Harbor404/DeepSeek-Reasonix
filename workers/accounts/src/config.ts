@@ -10,6 +10,9 @@ export const RESET_TTL_MS = 60 * 60 * 1000; // 1 hour
 export const DEVICE_CODE_TTL_MS = 10 * 60 * 1000; // 10 minutes to approve
 export const DEVICE_POLL_INTERVAL_S = 5; // client poll cadence; faster polls get slow_down
 export const REMOTE_GRANT_TTL_MS = 60 * 1000; // one-time gateway admission window
+// Remote control needs a sign-in no older than this; a live connection ends when
+// its signing-in session reaches the same age.
+export const REMOTE_REAUTH_MS = 24 * 60 * 60 * 1000;
 export const REMOTE_ATTACHMENT_TTL_MS = 15 * 60 * 1000;
 export const REMOTE_ATTACHMENT_MAX_BYTES = 20 * 1024 * 1024;
 

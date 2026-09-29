@@ -12,7 +12,8 @@ export function offeredProtocols(request: Request): string[] {
 
 export type DeviceMessage =
   | { type: "reply"; to: string; payload: string }
-  | { type: "disconnect_controller"; connectionId: string };
+  | { type: "disconnect_controller"; connectionId: string }
+  | { type: "heartbeat" };
 
 export function controllerMessage(
   connectionId: string,
@@ -30,6 +31,13 @@ export function controllerPresence(
   return JSON.stringify({ type, connectionId, scopes });
 }
 
+// Sent to a device as it connects: the controllers still attached, so it can
+// keep their encrypted sessions and drop the rest, and the heartbeat the relay
+// answers without waking. A device that ignores it keeps working unchanged.
+export function relayHello(controllers: string[], heartbeat: string, heartbeatMs: number): string {
+  return JSON.stringify({ type: "relay_hello", controllers, heartbeat, heartbeatMs });
+}
+
 export function parseDeviceMessage(message: string): DeviceMessage | null {
   let parsed: unknown;
   try {
@@ -39,6 +47,7 @@ export function parseDeviceMessage(message: string): DeviceMessage | null {
   }
   if (!parsed || typeof parsed !== "object") return null;
   const candidate = parsed as Record<string, unknown>;
+  if (candidate.type === "heartbeat") return { type: "heartbeat" };
   if (candidate.type === "disconnect_controller") {
     if (!/^[0-9a-f]{32}$/.test(String(candidate.connectionId ?? ""))) return null;
     return { type: "disconnect_controller", connectionId: String(candidate.connectionId) };

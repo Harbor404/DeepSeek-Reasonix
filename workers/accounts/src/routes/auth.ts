@@ -9,6 +9,7 @@ import { setSessionCookie, clearSessionCookie, readSessionToken } from "../auth/
 import { authRateLimit } from "../http/ratelimit";
 import { readBearerToken } from "../http/auth";
 import { ApiError } from "../http/errors";
+import { disconnectRemote } from "../remoteGateway";
 import { deriveHandleBase, isValidHandle } from "../lib/handle";
 import { parseBody, RegisterSchema, LoginSchema, ForgotSchema, ResetSchema, ResendSchema } from "../lib/validation";
 import { VERIFY_TTL_MS, RESET_TTL_MS } from "../config";
@@ -102,7 +103,13 @@ auth.post("/login", async (c) => {
 
 auth.post("/logout", async (c) => {
   const token = readSessionToken(c) ?? readBearerToken(c);
-  if (token) await repos(c.env).sessions.deleteByToken(token);
+  const { sessions, remoteDevices } = repos(c.env);
+  if (token) await sessions.deleteByToken(token);
+  const user = c.get("user");
+  const session = c.get("session");
+  if (user && session) {
+    await disconnectRemote(c.env, await remoteDevices.activeIdsForUser(user.id), session.id);
+  }
   clearSessionCookie(c);
   return c.json({ ok: true });
 });
@@ -126,7 +133,7 @@ auth.post("/reset", async (c) => {
   if (userId === null) throw new ApiError(400, "invalid_token", "This reset link is invalid or has expired.");
   await users.updatePassword(userId, await hashPassword(password));
   await sessions.deleteAllForUser(userId); // force a fresh sign-in everywhere
-  await remoteDevices.revokeAllForUser(userId);
+  await disconnectRemote(c.env, await remoteDevices.revokeAllForUser(userId));
   return c.json({ ok: true, message: "Password updated. You can now sign in." });
 });
 
