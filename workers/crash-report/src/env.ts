@@ -20,6 +20,14 @@ export interface Env {
   TELEMETRY_RAW?: R2Bucket;
   TELEMETRY_QUEUE_ENABLED?: string;
   WRITE_LIMITER?: RateLimiter;
+  // In-app feedback loop. Endpoints answer feedback.disabled unless both secrets
+  // are set and FEEDBACK_ENABLED is not "false". Screenshots live in TELEMETRY_RAW
+  // under the feedback/ prefix.
+  FEEDBACK_LIMITER?: RateLimiter;
+  FEEDBACK_BUDGET_LIMITER?: RateLimiter;
+  FEEDBACK_ENABLED?: string;
+  FEEDBACK_TOKEN_SECRET?: string;
+  FEEDBACK_ADMIN_TOKEN?: string;
   ADMIN_EMAILS?: string;
   // Shared identity service (id.reasonix.io) and the site that hosts its login
   // page (reasonix.io). Overridable for local dev.

@@ -31,6 +31,13 @@ ID_ORIGIN = "https://id.reasonix.io"
 APP_ORIGIN = "https://reasonix.io"
 # Browsers allowed to call the folded registry API with credentials.
 ALLOWED_ORIGINS = "https://reasonix.io,https://www.reasonix.io"
+# Kill switch for in-app feedback: "false" answers feedback.disabled. The feature
+# is also off while either worker secret is unset. Secrets (never in this file):
+#   FEEDBACK_TOKEN_SECRET  keys install hashes and read tokens; rotating it
+#                          invalidates every token AND changes every install
+#                          hash, so users lose their /mine history
+#   FEEDBACK_ADMIN_TOKEN   bearer for the converter's /v1/admin/feedback endpoints
+FEEDBACK_ENABLED = "true"
 TELEMETRY_QUEUE_ENABLED = "true"
 # CLI/Studio reads and writes use the isolated telemetry database. `dual` and
 # `legacy` remain available as rollback modes; the verified legacy copy is kept
@@ -111,3 +118,17 @@ name = "WRITE_LIMITER"
 type = "ratelimit"
 namespace_id = "3001"
 simple = { limit = 30, period = 60 }
+
+# Per-IP throttle for feedback submissions; hourly and daily caps live in D1.
+[[unsafe.bindings]]
+name = "FEEDBACK_LIMITER"
+type = "ratelimit"
+namespace_id = "5001"
+simple = { limit = 6, period = 60 }
+
+# Global admission ceiling for feedback, independent of IP.
+[[unsafe.bindings]]
+name = "FEEDBACK_BUDGET_LIMITER"
+type = "ratelimit"
+namespace_id = "5002"
+simple = { limit = 60, period = 60 }
