@@ -1,0 +1,19 @@
+import type { Env } from "./env";
+import { handleAdmin } from "./feedback_admin";
+import { ATTACHMENT_ROUTE, serveAttachment } from "./feedback_attachments";
+import { refuse } from "./feedback_http";
+import { handleMine } from "./feedback_read";
+import { handleSubmit } from "./feedback_submit";
+
+// Returns null when the path is not a feedback route so the caller keeps routing.
+export async function handleFeedbackRoute(request: Request, env: Env): Promise<Response | null> {
+  const url = new URL(request.url);
+  const path = url.pathname;
+  const method = request.method;
+  if (path === "/v1/feedback") return method === "POST" ? handleSubmit(request, env) : refuse("feedback.method_not_allowed", "method not allowed");
+  if (path === "/v1/feedback/mine") return method === "GET" ? handleMine(request, env) : refuse("feedback.method_not_allowed", "method not allowed");
+  if (path.startsWith(ATTACHMENT_ROUTE)) {
+    return method === "GET" ? serveAttachment(env.TELEMETRY_RAW, path.slice(ATTACHMENT_ROUTE.length)) : refuse("feedback.method_not_allowed", "method not allowed");
+  }
+  return handleAdmin(request, env, url);
+}

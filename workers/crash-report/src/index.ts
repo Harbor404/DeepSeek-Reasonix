@@ -25,6 +25,10 @@ import { PackageRepo } from "./registry/db/packages";
 import { EventRepo, pinSummary } from "./registry/db/events";
 import { repinReviewedDigest } from "./registry/pin";
 import { renderCommunity } from "./community";
+import { scrubSensitiveText } from "./scrub";
+import { sendAlert } from "./alert";
+import { handleFeedbackRoute } from "./feedback_routes";
+import { purgeStaleFeedback } from "./feedback_retention";
 import { CONTENT_DIGEST } from "./registry/lib/validation";
 import { maintainRegistry } from "./registry/maintenance";
 import {
@@ -439,23 +443,6 @@ type FingerprintInput = {
   topFrame?: string;
   fingerprintHint?: string;
 };
-
-export function scrubSensitiveText(input: string): string {
-  return input
-    .replace(/([A-Z]:\\Users\\)[^/\\:\s"']+/gi, "$1_")
-    .replace(/(\/(?:home|Users)\/)[^/\\:\s"']+/g, "$1_")
-    .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g, "[redacted-email]")
-    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]{16,}/gi, "Bearer [redacted]")
-    .replace(
-      /\b(api[_-]?key|access[_-]?token|refresh[_-]?token|id[_-]?token|authorization|secret|password|passwd|pwd|token)\b\s*[:=]\s*(?:Bearer\s+)?['"]?[^'"\s,;]+['"]?/gi,
-      "$1=[redacted]",
-    )
-    .replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g, "[redacted-jwt]")
-    .replace(/\b(?:sk|rk)-(?:proj-)?[A-Za-z0-9_-]{16,}\b/g, "[redacted-key]")
-    .replace(/\b[0-9a-fA-F]{32,}\b/g, "[redacted-hex]")
-    .replace(/[A-Za-z0-9+/]{40,}={0,2}/g, "[redacted-token]")
-    .replace(/\b[A-Za-z0-9_-]{48,}\b/g, "[redacted-token]");
-}
 
 function normalizeStackFrame(frame: string): string {
   return frame
@@ -1757,23 +1744,6 @@ function errText(err: unknown): string {
   return err instanceof Error ? err.message : String(err);
 }
 
-async function sendAlert(env: Env, text: string): Promise<void> {
-  if (!env.ALERT_WEBHOOK) return;
-  try {
-    const webhook = new URL(env.ALERT_WEBHOOK);
-    const feishu = webhook.hostname === "open.feishu.cn" || webhook.hostname === "open.larksuite.com";
-    const body = feishu ? { msg_type: "text", content: { text } } : { text };
-    const res = await fetch(webhook.toString(), {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(body),
-    });
-    if (!res.ok) console.error(`alert webhook responded ${res.status}`);
-  } catch (err) {
-    console.error("alert webhook unreachable", err);
-  }
-}
-
 async function runIngestSentinel(env: Env): Promise<void> {
   const problems: string[] = [];
   const desktopDB = telemetryDatabase(env, "desktop");
@@ -1880,6 +1850,7 @@ async function purgeExpiredStatsRows(env: Env): Promise<void> {
     console.error("retention: telemetry schema unavailable", err);
   }
   await purgeExpiredRows(env.DB, CRASH_RETENTION);
+  await purgeStaleFeedback(env);
   for (const db of desktopDatabases) await purgeExpiredRows(db, DESKTOP_TELEMETRY_RETENTION);
   for (const db of productDatabases) await purgeExpiredRows(db, PRODUCT_TELEMETRY_RETENTION);
 }
@@ -1911,6 +1882,8 @@ async function purgeExpiredRows(db: D1Database, retention: readonly RetentionRul
   }
 }
 
+export { scrubSensitiveText };
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -1926,6 +1899,9 @@ export default {
     if (cliRelease) {
       return handleReleaseGatewayRequest(method, () => handleCLIRelease(cliRelease));
     }
+
+    const feedback = await handleFeedbackRoute(request, env);
+    if (feedback) return feedback;
 
     if (path === "/v1/report" && method === "POST") return handleReport(request, env);
     if (path === "/v1/ping" && method === "POST") return handlePing(request, env);
