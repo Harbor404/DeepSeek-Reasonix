@@ -24,6 +24,8 @@ import type { Bindings as RegistryBindings } from "./registry/env";
 import { PackageRepo } from "./registry/db/packages";
 import { EventRepo } from "./registry/db/events";
 import { renderCommunity } from "./community";
+import { scrubSensitiveText } from "./scrub";
+import { handleFeedbackRoute } from "./feedback_routes";
 import {
   cliReleaseChannel,
   desktopReleaseChannel,
@@ -279,23 +281,6 @@ type FingerprintInput = {
   topFrame?: string;
   fingerprintHint?: string;
 };
-
-export function scrubSensitiveText(input: string): string {
-  return input
-    .replace(/([A-Z]:\\Users\\)[^/\\:\s"']+/gi, "$1_")
-    .replace(/(\/(?:home|Users)\/)[^/\\:\s"']+/g, "$1_")
-    .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b/g, "[redacted-email]")
-    .replace(/\bBearer\s+[A-Za-z0-9._~+/=-]{16,}/gi, "Bearer [redacted]")
-    .replace(
-      /\b(api[_-]?key|access[_-]?token|refresh[_-]?token|id[_-]?token|authorization|secret|password|passwd|pwd|token)\b\s*[:=]\s*(?:Bearer\s+)?['"]?[^'"\s,;]+['"]?/gi,
-      "$1=[redacted]",
-    )
-    .replace(/\beyJ[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\.[A-Za-z0-9_-]+\b/g, "[redacted-jwt]")
-    .replace(/\b(?:sk|rk)-(?:proj-)?[A-Za-z0-9_-]{16,}\b/g, "[redacted-key]")
-    .replace(/\b[0-9a-fA-F]{32,}\b/g, "[redacted-hex]")
-    .replace(/[A-Za-z0-9+/]{40,}={0,2}/g, "[redacted-token]")
-    .replace(/\b[A-Za-z0-9_-]{48,}\b/g, "[redacted-token]");
-}
 
 function normalizeStackFrame(frame: string): string {
   return frame
@@ -1388,6 +1373,8 @@ async function purgeExpiredStatsRows(env: Env): Promise<void> {
   }
 }
 
+export { scrubSensitiveText };
+
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
     const url = new URL(request.url);
@@ -1402,6 +1389,9 @@ export default {
     if (cliRelease) {
       return handleReleaseGatewayRequest(method, () => handleCLIRelease(cliRelease));
     }
+
+    const feedback = await handleFeedbackRoute(request, env);
+    if (feedback) return feedback;
 
     if (path === "/v1/report" && method === "POST") return handleReport(request, env);
     if (path === "/v1/ping" && method === "POST") return handlePing(request, env);

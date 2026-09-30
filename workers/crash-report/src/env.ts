@@ -11,6 +11,15 @@ export interface Env {
   PING_LIMITER: RateLimiter;
   METRICS_LIMITER: RateLimiter;
   WRITE_LIMITER?: RateLimiter;
+  // In-app feedback loop. FEEDBACK_ENABLED="false" is the kill switch for
+  // submissions. FEEDBACK_TOKEN_SECRET signs install tokens and
+  // FEEDBACK_ADMIN_TOKEN gates the converter endpoints; both are worker secrets.
+  FEEDBACK_LIMITER?: RateLimiter;
+  FEEDBACK_BUDGET_LIMITER?: RateLimiter;
+  FEEDBACK_R2?: R2Bucket;
+  FEEDBACK_ENABLED?: string;
+  FEEDBACK_TOKEN_SECRET?: string;
+  FEEDBACK_ADMIN_TOKEN?: string;
   ADMIN_EMAILS?: string;
   // Shared identity service (id.reasonix.io) and the site that hosts its login
   // page (reasonix.io). Overridable for local dev.
