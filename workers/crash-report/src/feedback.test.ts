@@ -2,34 +2,13 @@
 import { DatabaseSync } from "node:sqlite";
 import { beforeEach, describe, expect, it } from "vitest";
 import type { Env } from "./env";
+import { d1, fakeR2 } from "./feedback_testkit";
 import { purgeStaleFeedback } from "./feedback_retention";
 import { handleFeedbackRoute } from "./feedback_routes";
 import feedbackMigrationSQL from "../migrate-feedback.sql?raw";
+import triageMigrationSQL from "../migrate-feedback-triage.sql?raw";
 
 const ADMIN = "admin-secret";
-
-function d1(db: DatabaseSync): D1Database {
-  const stmt = (sql: string, args: unknown[] = []) => ({
-    bind: (...a: unknown[]) => stmt(sql, a),
-    first: async () => db.prepare(sql).get(...args) ?? null,
-    all: async () => ({ results: db.prepare(sql).all(...args) }),
-    run: async () => ({ meta: { changes: Number(db.prepare(sql).run(...args).changes) } }),
-  });
-  return { prepare: (sql: string) => stmt(sql) } as unknown as D1Database;
-}
-
-function fakeR2() {
-  const objects = new Map<string, { body: Uint8Array; contentType: string }>();
-  const bucket = {
-    put: async (k: string, body: Uint8Array, o: { httpMetadata: { contentType: string } }) => void objects.set(k, { body, contentType: o.httpMetadata.contentType }),
-    delete: async (ks: string | string[]) => void [ks].flat().forEach((k) => objects.delete(k)),
-    get: async (k: string) => {
-      const o = objects.get(k);
-      return o ? { body: o.body, httpMetadata: { contentType: o.contentType } } : null;
-    },
-  };
-  return { bucket: bucket as unknown as R2Bucket, objects };
-}
 
 let env: Env;
 let objects: Map<string, unknown>;
@@ -39,6 +18,7 @@ let ipCalls = 0;
 beforeEach(() => {
   const db = new DatabaseSync(":memory:");
   db.exec(feedbackMigrationSQL);
+  db.exec(triageMigrationSQL);
   const r2 = fakeR2();
   objects = r2.objects;
   ipAllowed = true;
@@ -138,6 +118,7 @@ describe("POST /v1/feedback", () => {
     expect(res.status).toBe(201);
     const [key] = [...objects.keys()];
     expect(key.startsWith("feedback/")).toBe(true);
+    await post(`/v1/admin/feedback/${((await res.json()) as { receipt: string }).receipt}/release`, { publishImages: true }, admin);
     const served = await call(`/v1/feedback/attachments/${key.slice("feedback/".length)}`);
     expect(served.status).toBe(200);
     expect(served.headers.get("content-type")).toBe("image/png");
@@ -147,7 +128,8 @@ describe("POST /v1/feedback", () => {
   });
 
   it("scrubs secrets from the body server-side", async () => {
-    await submit(submission({ body: "my key is sk-abcdefghijklmnopqrstuvwx ok" }));
+    const r = ((await (await submit(submission({ body: "my key is sk-abcdefghijklmnopqrstuvwx ok" }))).json()) as { receipt: string }).receipt;
+    await post(`/v1/admin/feedback/${r}/release`, {}, admin);
     const list = (await (await call("/v1/admin/feedback/pending", { headers: admin })).json()) as { items: { body: string }[] };
     expect(list.items[0].body).not.toContain("sk-abcdefgh");
   });
@@ -332,7 +314,8 @@ describe("attachment hygiene", () => {
   });
 
   it("serves a locked-down response", async () => {
-    await send(pngBytes());
+    const r = ((await (await send(pngBytes())).json()) as { receipt: string }).receipt;
+    await post(`/v1/admin/feedback/${r}/release`, { publishImages: true }, admin);
     const key = [...objects.keys()][0].slice("feedback/".length);
     const res = await call(`/v1/feedback/attachments/${key}`);
     expect(res.headers.get("content-security-policy")).toBe("default-src 'none'; sandbox");
@@ -343,7 +326,7 @@ describe("retention", () => {
   it("drops stale unconverted feedback with its images and keeps recorded rows", async () => {
     await submit(submission({ attachments: [{ name: "a.png", contentType: "image/png", dataBase64: PNG_B64 }] }));
     const old = new Date(Date.now() - 40 * 86_400_000).toISOString();
-    await env.DB.prepare("UPDATE feedback SET created_at = ?").bind(old).run();
+    await env.DB.prepare("UPDATE feedback SET created_at = ?, updated_at = ?").bind(old, old).run();
     await env.DB.prepare("INSERT INTO feedback (receipt, install_hash, idempotency_key, category, body, display_name, status, created_at, updated_at) VALUES ('FB-KEEP-KEEP','h','k','bug','b','n','recorded',?,?)").bind(old, old).run();
     await purgeStaleFeedback(env);
     const left = await env.DB.prepare("SELECT receipt FROM feedback").all<{ receipt: string }>();
@@ -380,6 +363,7 @@ describe("admin flow", () => {
 
   it("walks received -> recorded -> in_progress -> fixed and never contacts leak", async () => {
     const r = await receiptOf(submission({ contact: "me@example.test" }));
+    await post(`/v1/admin/feedback/${r}/release`, {}, admin);
     const pend = await call("/v1/admin/feedback/pending?limit=5", { headers: admin });
     const text = await pend.text();
     expect(text).toContain(r);
@@ -398,6 +382,7 @@ describe("admin flow", () => {
 
   it("upgrades fixed(next) to a concrete version once and lists it while awaiting a tag", async () => {
     const r = await receiptOf();
+    await post(`/v1/admin/feedback/${r}/release`, {}, admin);
     await post(`/v1/admin/feedback/${r}/recorded`, { issueNumber: 3, issueUrl: "https://github.com/o/r/issues/3" }, admin);
     await status(r, { status: "fixed", resolvedVersion: "next" });
     const open = async () => ((await (await call("/v1/admin/feedback/open", { headers: admin })).json()) as { items: { receipt: string }[] }).items;
@@ -413,6 +398,7 @@ describe("admin flow", () => {
   it("refuses backward and terminal-to-terminal transitions", async () => {
     const r = await receiptOf();
     expect(await errCode(await status(r, { status: "in_progress" }))).toBe("feedback.bad_transition");
+    await post(`/v1/admin/feedback/${r}/release`, {}, admin);
     await post(`/v1/admin/feedback/${r}/recorded`, { issueNumber: 1, issueUrl: "https://github.com/o/r/issues/1" }, admin);
     await status(r, { status: "wontfix" });
     expect(await errCode(await status(r, { status: "in_progress" }))).toBe("feedback.bad_transition");

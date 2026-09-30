@@ -37,6 +37,8 @@ ALLOWED_ORIGINS = "https://reasonix.io,https://www.reasonix.io"
 #                          invalidates every token AND changes every install
 #                          hash, so users lose their /mine history
 #   FEEDBACK_ADMIN_TOKEN   bearer for the converter's /v1/admin/feedback endpoints
+#   FEEDBACK_TURNSTILE_SECRET  optional; when set, submissions need a Turnstile token
+#                          with action "feedback" (hostname list: FEEDBACK_TURNSTILE_HOSTNAMES)
 FEEDBACK_ENABLED = "true"
 TELEMETRY_QUEUE_ENABLED = "true"
 # CLI/Studio reads and writes use the isolated telemetry database. `dual` and

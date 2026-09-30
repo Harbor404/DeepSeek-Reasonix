@@ -10,7 +10,10 @@ export type FeedbackCode =
   | "feedback.bad_transition"
   | "feedback.method_not_allowed"
   | "feedback.busy"
-  | "feedback.image_metadata";
+  | "feedback.image_metadata"
+  | "feedback.reply_limit"
+  | "feedback.not_replyable"
+  | "feedback.challenge_required";
 
 const STATUS: Record<FeedbackCode, number> = {
   "feedback.too_large": 413,
@@ -25,6 +28,9 @@ const STATUS: Record<FeedbackCode, number> = {
   "feedback.method_not_allowed": 405,
   "feedback.busy": 503,
   "feedback.image_metadata": 400,
+  "feedback.reply_limit": 429,
+  "feedback.not_replyable": 409,
+  "feedback.challenge_required": 403,
 };
 
 export function jsonResponse(body: unknown, status = 200, headers: Record<string, string> = {}): Response {

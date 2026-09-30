@@ -28,6 +28,10 @@ export interface Env {
   FEEDBACK_ENABLED?: string;
   FEEDBACK_TOKEN_SECRET?: string;
   FEEDBACK_ADMIN_TOKEN?: string;
+  // When set, submissions must carry a valid Turnstile token (feedback.challenge_required).
+  FEEDBACK_TURNSTILE_SECRET?: string;
+  // Comma-separated hostnames a Turnstile token may come from; unset skips the hostname check.
+  FEEDBACK_TURNSTILE_HOSTNAMES?: string;
   ADMIN_EMAILS?: string;
   // Shared identity service (id.reasonix.io) and the site that hosts its login
   // page (reasonix.io). Overridable for local dev.
