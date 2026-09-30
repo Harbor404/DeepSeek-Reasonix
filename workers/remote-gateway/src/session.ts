@@ -29,6 +29,7 @@ import {
   relayHello,
   REMOTE_WEBSOCKET_PROTOCOL,
 } from "./protocol";
+import { coarseHash, trace } from "./trace";
 
 const MAX_MESSAGE_BYTES = 64 * 1024;
 const MAX_CONTROLLERS = 4;
@@ -48,6 +49,13 @@ function connectionId(): string {
   const bytes = crypto.getRandomValues(new Uint8Array(16));
   return Array.from(bytes, (byte) => byte.toString(16).padStart(2, "0")).join("");
 }
+
+function refuse(status: number, code: string, message: string, deviceId: string, role: string | null): Response {
+  trace("handshake_rejected", { code, status, path: "room", role, device: coarseHash(deviceId) });
+  return new Response(message, { status });
+}
+
+const leaseEnded = new WeakSet<WebSocket>();
 
 function leaseOf(socket: WebSocket): SocketLease | null {
   return readLease(socket.deserializeAttachment());
@@ -89,22 +97,22 @@ export class RemoteSession {
     const admittedAt = Number(request.headers.get("x-reasonix-admitted-at"));
     if ((role !== "device" && role !== "controller") || !Number.isSafeInteger(userId) || userId < 1 ||
         !DEVICE_ID.test(deviceId) || !Number.isSafeInteger(admittedAt) || Math.abs(now - admittedAt) > ADMISSION_SKEW_MS) {
-      return new Response("Invalid admission", { status: 401 });
+      return refuse(401, "invalid_admission", "Invalid admission", deviceId, role);
     }
     const sessionHeader = request.headers.get("x-reasonix-session");
     const sessionId = sessionHeader && SESSION_ID.test(sessionHeader) ? sessionHeader : null;
     const reauthHeader = request.headers.get("x-reasonix-reauth-at");
     const reauthAt = role === "controller" ? Number(reauthHeader) : null;
     if (reauthAt !== null && (!Number.isSafeInteger(reauthAt) || reauthAt <= now)) {
-      return new Response("Sign-in required", { status: 401 });
+      return refuse(401, "reauth_required", "Sign-in required", deviceId, role);
     }
     const revokedAt = await this.state.storage.get<number>(REVOKED_AT_KEY);
     if (revokedAt !== undefined && admittedAt <= revokedAt) {
-      return new Response("Device revoked", { status: 403 });
+      return refuse(403, "device_revoked", "Device revoked", deviceId, role);
     }
     const sessionRevokedAt = sessionId ? (await this.revokedSessions(now))[sessionId] : undefined;
     if (sessionRevokedAt !== undefined && admittedAt <= sessionRevokedAt) {
-      return new Response("Signed out", { status: 401 });
+      return refuse(401, "signed_out", "Signed out", deviceId, role);
     }
     const scopes = (request.headers.get("x-reasonix-scopes") ?? "")
       .split(",")
@@ -113,13 +121,13 @@ export class RemoteSession {
     const devices = this.live("device");
     const controllers = this.live("controller");
     const ownerMismatch = [...devices, ...controllers].some(([, lease]) => lease.userId !== userId);
-    if (ownerMismatch) return new Response("Session owner mismatch", { status: 403 });
+    if (ownerMismatch) return refuse(403, "owner_mismatch", "Session owner mismatch", deviceId, role);
     if (role === "controller" && controllers.length >= MAX_CONTROLLERS) {
       const quietest = controllers
         .map(([socket, lease]) => ({ socket, lease, at: lastActive(lease, this.state.getWebSocketAutoResponseTimestamp(socket)) }))
         .sort((a, b) => a.at - b.at)[0];
       if (!quietest || now - quietest.at < EVICTABLE_IDLE_MS) {
-        return new Response("Too many controllers", { status: 429 });
+        return refuse(429, "too_many_controllers", "Too many controllers", deviceId, role);
       }
       this.end(quietest.socket, quietest.lease, { code: CLOSE_IDLE, reason: "Replaced by a newer connection" });
     }
@@ -271,6 +279,7 @@ export class RemoteSession {
     const lease = leaseOf(socket);
     if (lease?.role === "controller" && lease.connectionId) this.announceGone(lease);
     socket.close(code, wasClean ? reason : "Connection closed");
+    if (lease && !leaseEnded.has(socket)) this.traceClose("socket_closed", socket, lease, code, reason, wasClean);
   }
 
   private live(role: SocketLease["role"]): Array<[WebSocket, SocketLease]> {
@@ -289,6 +298,45 @@ export class RemoteSession {
       // Already closing; the peer notice below still has to go out.
     }
     if (lease.role === "controller" && lease.connectionId) this.announceGone(lease);
+    leaseEnded.add(socket);
+    this.traceClose("lease_closed", socket, lease, end.code, end.reason);
+  }
+
+  private traceClose(
+    event: string,
+    socket: WebSocket,
+    lease: SocketLease,
+    code: number,
+    reason: string,
+    clean?: boolean,
+  ): void {
+    try {
+      this.logClose(event, socket, lease, code, reason, clean);
+    } catch {
+      // Logging must not disturb closing a connection.
+    }
+  }
+
+  private logClose(
+    event: string,
+    socket: WebSocket,
+    lease: SocketLease,
+    code: number,
+    reason: string,
+    clean?: boolean,
+  ): void {
+    const autoResponseAt = this.state.getWebSocketAutoResponseTimestamp(socket);
+    const now = Date.now();
+    trace(event, {
+      code,
+      reason: reason.slice(0, 60),
+      role: lease.role,
+      device: coarseHash(lease.deviceId),
+      ageS: Math.round((now - lease.admittedAt) / 1000),
+      idleS: Math.round((now - lastActive(lease, autoResponseAt)) / 1000),
+      reauthInS: lease.reauthAt === null ? null : Math.round((lease.reauthAt - now) / 1000),
+      clean,
+    });
   }
 
   private announceGone(lease: SocketLease): void {
