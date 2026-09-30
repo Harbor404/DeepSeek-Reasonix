@@ -2,6 +2,7 @@
 // anonymous launch ping. Frontend reports are user-initiated; native fatal and
 // lifecycle reports are sent on the next launch under the same opt-out desktop
 // telemetry gate as pings.
+import { workersDevGate } from "./workersdev_gate";
 import { z } from "zod";
 import type { Env } from "./env";
 import { html, redirect } from "./shell";
@@ -1886,6 +1887,8 @@ export { scrubSensitiveText };
 
 export default {
   async fetch(request: Request, env: Env): Promise<Response> {
+    const gated = workersDevGate(request);
+    if (gated) return gated;
     const url = new URL(request.url);
     const path = url.pathname;
     const method = request.method;

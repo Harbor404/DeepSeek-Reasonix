@@ -165,6 +165,17 @@ describe("images stay private until released", () => {
     expect(item.attachments[0].url).toContain(keyOf());
   });
 
+  it.each(["https://crash.test", "https://reasonix-crash-report.reasonix.workers.dev", "https://crash.reasonix.io"])(
+    "builds attachment urls from the public origin when asked via %s",
+    async (origin) => {
+      const r = await receiptOf(withImage);
+      await act(r, "release", { publishImages: true });
+      const res = await handleFeedbackRoute(new Request(`${origin}/v1/admin/feedback/pending`, { headers: admin }), env);
+      const item = (await json(res as Response)).items[0];
+      expect(item.attachments[0].url).toBe(`https://crash.reasonix.io/v1/feedback/attachments/${keyOf()}`);
+    },
+  );
+
   it("lets the operator view an unreleased image behind the admin token only", async () => {
     const r = await receiptOf(withImage);
     const path = `/v1/admin/feedback/${r}/attachments/${keyOf()}`;

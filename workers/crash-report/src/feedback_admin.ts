@@ -8,6 +8,8 @@ import { RecordedBody, StatusBody } from "./feedback_schema";
 import { adminAttachment, adminReply, answer, ask, detail, held, reject, release, takedown } from "./feedback_triage";
 import { statusRank, type FeedbackRow } from "./feedback_types";
 
+// Attachment URLs are public links, so they never follow the origin the admin request arrived on.
+export const PUBLIC_ORIGIN = "https://crash.reasonix.io";
 const OPEN_LIMIT = 200;
 const CONCRETE_VERSION = /^v\d+\.\d+\.\d+$/;
 const ACTIVE = ["recorded", "in_progress"];
@@ -15,7 +17,7 @@ const ACTIVE = ["recorded", "in_progress"];
 async function pending(env: Env, url: URL): Promise<Response> {
   const { results } = await env.DB.prepare("SELECT * FROM feedback WHERE status = 'received' ORDER BY created_at ASC LIMIT ?").bind(listLimit(url)).all<FeedbackRow>();
   const released = await releasedKeys(env, results.map((r) => r.receipt));
-  return jsonResponse({ items: results.map((r) => pendingItem(r, url.origin, released)) });
+  return jsonResponse({ items: results.map((r) => pendingItem(r, PUBLIC_ORIGIN, released)) });
 }
 
 async function open(env: Env): Promise<Response> {

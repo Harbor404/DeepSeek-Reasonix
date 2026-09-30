@@ -3,6 +3,9 @@ name = "reasonix-crash-report"
 main = "src/index.ts"
 compatibility_date = "2026-06-01"
 
+# workers.dev serves only the feedback converter's admin paths (src/workersdev_gate.ts).
+workers_dev = true
+preview_urls = false
 routes = [{ pattern = "crash.reasonix.io", custom_domain = true }]
 
 # First entry: daily retention purge (03:47 Beijing) — drops time-series rows
