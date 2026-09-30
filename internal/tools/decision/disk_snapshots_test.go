@@ -3,11 +3,9 @@ package decision
 import (
 	"context"
 	"encoding/json"
-	"fmt"
 	"os"
 	"path/filepath"
 	"reflect"
-	"sync"
 	"testing"
 	"time"
 )
@@ -57,7 +55,7 @@ func TestPersistentRestartAndEvidenceVersions(t *testing.T) {
 			t.Fatalf("version binding lost: %+v", got)
 		}
 	}
-	repo := &diskRepository{path: path, now: time.Now}
+	repo := newDiskRepository(path, time.Now)
 	old, invalid := repo.load(context.Background(), original.SnapshotID)
 	if invalid != nil || !reflect.DeepEqual(old.Request, fixture()) {
 		t.Fatal("old request changed")
@@ -85,60 +83,6 @@ func TestPersistentFailureAndIsolation(t *testing.T) {
 	assertSnapshotError(t, runtimeResult(t, tools[0], fixture()), "decision.store_open_failed")
 }
 
-func TestPersistentCorruptionDetected(t *testing.T) {
-	for _, column := range []string{"request", "expires", "parent", "digest", "checksum"} {
-		t.Run(column, func(t *testing.T) {
-			repo := &diskRepository{path: filepath.Join(t.TempDir(), "state.sqlite"), now: time.Now}
-			id, _, invalid := repo.save(context.Background(), fixture(), "")
-			if invalid != nil {
-				t.Fatal(invalid)
-			}
-			db, invalid := repo.open(context.Background(), true)
-			if invalid != nil {
-				t.Fatal(invalid)
-			}
-			_, err := db.Exec("UPDATE decision_snapshots SET "+column+"=? WHERE id=?", "corrupt", id)
-			_ = db.Close()
-			if err != nil {
-				t.Fatal(err)
-			}
-			_, invalid = repo.load(context.Background(), id)
-			if invalid == nil || (invalid.Code != "decision.snapshot_corrupt" && invalid.Code != "decision.store_read_failed") {
-				t.Fatalf("corruption not rejected: %v", invalid)
-			}
-		})
-	}
-}
-
-func TestPersistentConcurrentDedupAndExpiry(t *testing.T) {
-	path := filepath.Join(t.TempDir(), "state.sqlite")
-	now := time.Now().UTC()
-	repo := &diskRepository{path: path, now: func() time.Time { return now }}
-	id, expires, invalid := repo.save(context.Background(), fixture(), "")
-	if invalid != nil || expires.Sub(now) != diskTTL {
-		t.Fatal("incorrect retention")
-	}
-	var wg sync.WaitGroup
-	for range 8 {
-		wg.Go(func() {
-			other := &diskRepository{path: path, now: func() time.Time { return now }}
-			got, until, invalid := other.save(context.Background(), fixture(), "")
-			if invalid != nil || got != id || !until.Equal(expires) {
-				t.Errorf("concurrent retry changed identity: %s %v", got, invalid)
-			}
-		})
-	}
-	wg.Wait()
-	now = expires
-	if _, invalid := repo.load(context.Background(), id); invalid == nil || invalid.Code != "decision.snapshot_expired" {
-		t.Fatal("expired snapshot accepted")
-	}
-	newID, _, invalid := repo.save(context.Background(), fixture(), "")
-	if invalid != nil || newID == id {
-		t.Fatal("expired snapshot not replaced")
-	}
-}
-
 func TestEvidenceUpdateRejectsImplicitReplacement(t *testing.T) {
 	tools := NewRuntime()
 	original := decodeResult(t, runtimeResult(t, tools[0], fixture()))
@@ -159,29 +103,21 @@ func TestEvidenceUpdateRejectsImplicitReplacement(t *testing.T) {
 	}
 }
 
-func TestPersistentCapacityAndUnsupportedVersion(t *testing.T) {
-	repo := &diskRepository{path: filepath.Join(t.TempDir(), "state.sqlite"), now: time.Now}
+func TestPersistentStoreErrorsKeepDomainCodes(t *testing.T) {
+	repo := newDiskRepository(filepath.Join(t.TempDir(), "state.sqlite"), time.Now)
 	ctx := context.Background()
-	for i := range diskCapacity {
-		req := fixture()
-		req.Options[0].Name = fmt.Sprintf("option-%d", i)
-		if _, _, invalid := repo.save(ctx, req, ""); invalid != nil {
-			t.Fatal(invalid)
-		}
-	}
-	if _, _, invalid := repo.save(ctx, fixture(), ""); invalid == nil || invalid.Code != "decision.snapshot_capacity" {
-		t.Fatal("capacity ignored")
-	}
-	db, invalid := repo.open(ctx, true)
+	id, _, invalid := repo.save(ctx, fixture(), "")
 	if invalid != nil {
 		t.Fatal(invalid)
 	}
-	_, err := db.Exec("PRAGMA user_version=99")
-	_ = db.Close()
-	if err != nil {
-		t.Fatal(err)
+	missing := "00000000000000000000000000000000"
+	if _, invalid := repo.load(ctx, missing); invalid == nil || invalid.Code != "decision.snapshot_not_found" || invalid.ID != missing {
+		t.Fatalf("missing: %v", invalid)
 	}
-	if _, _, invalid := repo.save(ctx, fixture(), ""); invalid == nil || invalid.Code != "decision.store_version_unsupported" {
-		t.Fatal("unsupported store overwritten")
+	if _, _, invalid := repo.save(ctx, fixture(), missing); invalid == nil || invalid.Code != "decision.snapshot_not_found" || invalid.ID != missing {
+		t.Fatalf("missing parent: %v", invalid)
+	}
+	if got, invalid := repo.load(ctx, id); invalid != nil || !reflect.DeepEqual(got.Request, fixture()) {
+		t.Fatal("round trip changed request")
 	}
 }

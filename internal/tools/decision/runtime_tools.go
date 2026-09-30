@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"reasonix/internal/contract/tool"
+	"reasonix/internal/state/decisionstore"
 )
 
 type runtimeCompare struct {
@@ -27,7 +28,7 @@ func NewRuntime() []tool.Tool {
 
 // NewPersistentRuntime uses a host-selected database path without memory fallback.
 func NewPersistentRuntime(path string) []tool.Tool {
-	store := &diskRepository{path: path, now: time.Now}
+	store := newDiskRepository(path, time.Now)
 	return runtimeTools(store)
 }
 
@@ -99,14 +100,4 @@ func (t runtimeCheck) Execute(ctx context.Context, args json.RawMessage) (string
 	return string(data), err
 }
 
-func validSnapshotID(id string) bool {
-	if len(id) != 32 {
-		return false
-	}
-	for _, character := range id {
-		if !(character >= '0' && character <= '9' || character >= 'a' && character <= 'f') {
-			return false
-		}
-	}
-	return true
-}
+func validSnapshotID(id string) bool { return decisionstore.ValidID(id) }

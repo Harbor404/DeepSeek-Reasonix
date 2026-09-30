@@ -31,6 +31,7 @@ var leaves = []string{
 	"internal/platform/computer",
 	"internal/base/diff",
 	"internal/ext/extension/rpcwire",
+	"internal/state/decisionstore",
 	"internal/state/execgraph",
 	"internal/state/execjournal",
 	"internal/ext/extensioncontract",

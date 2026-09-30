@@ -299,9 +299,8 @@ type Options struct {
 	// SubagentGate is the shared gate every headless-only sub-agent surface
 	// reads; nil disables gating there. The approval-mode setters Update it so
 	// a runtime switch reaches sub-agents, not only the executor's own gate.
-	SubagentGate *SharedHeadlessGate
-	Label        string
-	ModelRef     string
+	SubagentGate    *SharedHeadlessGate
+	Label, ModelRef string
 	// ModelModes are the optional modes the session's model declares.
 	ModelModes    []config.ModelMode
 	SystemPrompt  string
@@ -325,6 +324,7 @@ type Options struct {
 	ReadOnlySkillRunner skill.SubagentRunner
 	SkillProfile        skill.ProfileResolver
 	Hooks               *hook.Runner
+	DecisionReporter    DecisionReporter
 	Memory              *memory.Set
 	Cleanup             func()
 	// Balance reads the active provider's optional wallet endpoint. Nil, or a
@@ -339,10 +339,10 @@ type Options struct {
 	TaskStore taskmonitor.WriteStore
 	// WorkspaceLease is the Delivery writer owner shared with the executor.
 	WorkspaceLease *workspacelease.Owner
-	// Registry and PluginCtx support session-scoped MCP server registration.
-	Registry         *tool.Registry
-	DecisionReporter DecisionReporter
-	PluginCtx        context.Context
+	// Registry is the executor's live tool set, and PluginCtx the session-scoped
+	// context; both are needed for hot-adding MCP servers via AddMCPServer.
+	Registry  *tool.Registry
+	PluginCtx context.Context
 	// MCPDefaultCallTimeout is the global MCP call cap used by hot-connected
 	// servers when they do not declare a server- or tool-specific override.
 	MCPDefaultCallTimeout time.Duration
