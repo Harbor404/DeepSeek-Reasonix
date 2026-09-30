@@ -11,6 +11,7 @@ import {
   REMOTE_AUTH_PROTOCOL_PREFIX,
   REMOTE_WEBSOCKET_PROTOCOL,
 } from "./protocol";
+import { coarseHash, trace } from "./trace";
 export { RemoteSession } from "./session";
 
 const DEVICE_PATH = /^\/v1\/devices\/([0-9a-f]{64})\/connect$/;
@@ -122,6 +123,34 @@ function jsonError(status: number, code: string, message: string): Response {
   return Response.json({ error: { code, message } }, { status });
 }
 
+function routeOf(pathname: string): string {
+  if (DEVICE_PATH.test(pathname)) return "device";
+  if (pathname === "/v1/sessions/connect") return "controller";
+  if (pathname === "/v1/probe") return "probe";
+  if (ATTACHMENT_PATH.test(pathname)) return "attachment";
+  if (pathname.startsWith("/v1/devices/")) return "admin";
+  return "other";
+}
+
+// `hashed` is a device id, or the grant token for rate_limited and invalid_grant;
+// only its 32-bit hash is logged.
+function refuseHandshake(
+  request: Request,
+  status: number,
+  code: string,
+  message: string,
+  hashed?: string,
+): Response {
+  trace("handshake_rejected", {
+    code,
+    status,
+    path: routeOf(new URL(request.url).pathname),
+    origin: requestOrigin(request)?.slice(0, 80) ?? null,
+    subject: hashed ? coarseHash(hashed) : null,
+  });
+  return jsonError(status, code, message);
+}
+
 function requestOrigin(request: Request): string | null {
   const origin = request.headers.get("origin")?.trim();
   return origin || null;
@@ -204,7 +233,13 @@ const worker: ExportedHandler<Env> = {
       return Response.json({ ok: true, service: "reasonix-remote-gateway" });
     }
     if (!originAllowed(request, env)) {
-      return jsonError(403, "origin_rejected", "This website is not allowed to use the remote gateway.");
+      const refused = refuseHandshake(request, 403, "origin_rejected", "This website is not allowed to use the remote gateway.");
+      refused.headers.set("access-control-allow-origin", "*");
+      refused.headers.set("cache-control", "no-store");
+      return refused;
+    }
+    if (url.pathname === "/v1/probe" && request.method === "GET") {
+      return withAttachmentCors(request, Response.json({ ok: true }, { headers: { "cache-control": "no-store" } }));
     }
     if (url.pathname === "/v1/devices/revoke" && request.method === "POST") {
       if (!gatewayAuthenticated(request, env)) {
@@ -263,12 +298,12 @@ const worker: ExportedHandler<Env> = {
       return withAttachmentCors(request, response);
     }
     if (request.headers.get("upgrade")?.toLowerCase() !== "websocket") {
-      return jsonError(426, "upgrade_required", "A WebSocket connection is required.");
+      return refuseHandshake(request, 426, "upgrade_required", "A WebSocket connection is required.");
     }
     const token = connectionToken(request);
-    if (!token) return jsonError(401, "invalid_token", "A valid connection credential is required.");
+    if (!token) return refuseHandshake(request, 401, "invalid_token", "A valid connection credential is required.");
     if (!(await withinBudget(request, env, token))) {
-      return jsonError(429, "rate_limited", "Too many connection attempts.");
+      return refuseHandshake(request, 429, "rate_limited", "Too many connection attempts.", token);
     }
 
     // Taken before the account service answers, so a revocation that lands
@@ -278,7 +313,7 @@ const worker: ExportedHandler<Env> = {
     if (deviceMatch?.[1]) {
       const authenticated = await authenticateDevice(env, deviceMatch[1], token);
       if (!authenticated || authenticated.device.id !== deviceMatch[1]) {
-        return jsonError(401, "invalid_device", "The device credential is invalid or revoked.");
+        return refuseHandshake(request, 401, "invalid_device", "The device credential is invalid or revoked.", deviceMatch[1]);
       }
       return forwardToSession(request, env, authenticated.device.id, {
         role: "device",
@@ -290,10 +325,12 @@ const worker: ExportedHandler<Env> = {
 
     if (url.pathname === "/v1/sessions/connect") {
       const consumed = await consumeGrant(env, token);
-      if (!consumed) return jsonError(401, "invalid_grant", "The connection grant is invalid or expired.");
+      if (!consumed) return refuseHandshake(request, 401, "invalid_grant", "The connection grant is invalid or expired.", token);
       const reauthAt = Date.parse(consumed.grant.reauthAt ?? "");
       if (!Number.isSafeInteger(reauthAt) || reauthAt <= Date.now()) {
-        return jsonError(401, "reauth_required", "Sign in again to control this computer remotely.");
+        return refuseHandshake(
+          request, 401, "reauth_required", "Sign in again to control this computer remotely.", consumed.grant.targetDeviceId,
+        );
       }
       return forwardToSession(request, env, consumed.grant.targetDeviceId, {
         role: "controller",

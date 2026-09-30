@@ -1,6 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 import worker from "./index";
 import type { Env } from "./env";
+import { resetTrace } from "./trace";
 
 interface ForwardedRequest {
   id: string;
@@ -58,7 +59,11 @@ function run(request: Request, env: Env): Promise<Response> {
   return Promise.resolve(worker.fetch!(request as never, env, {} as ExecutionContext));
 }
 
-afterEach(() => vi.unstubAllGlobals());
+afterEach(() => {
+  vi.unstubAllGlobals();
+  vi.restoreAllMocks();
+  resetTrace();
+});
 
 describe("remote gateway admission", () => {
   it("serves health without opening a session", async () => {
@@ -340,5 +345,66 @@ describe("remote gateway admission", () => {
     expect(response.headers.get("x-content-type-options")).toBe("nosniff");
     expect(response.headers.get("cache-control")).toContain("no-store");
     await expect(response.text()).resolves.toBe("cipher");
+  });
+
+  it("traces each refused handshake with its code and a hashed subject, never the credential", async () => {
+    const logged: string[] = [];
+    vi.spyOn(console, "log").mockImplementation((line: string) => { logged.push(line); });
+    const ticket = "d".repeat(64);
+    vi.stubGlobal("fetch", vi.fn(async () => new Response(null, { status: 401 })));
+
+    const invalid = await run(browserWebsocketRequest("/v1/sessions/connect", ticket), environment([]));
+    const limited = environment([]);
+    limited.GATEWAY_LIMITER = { limit: vi.fn(async () => ({ success: false })) };
+    const throttled = await run(browserWebsocketRequest("/v1/sessions/connect", ticket), limited);
+    const foreign = await run(new Request("https://remote.reasonix.io/v1/sessions/connect", {
+      headers: { origin: "https://attacker.example", upgrade: "websocket" },
+    }), environment([]));
+
+    expect([invalid.status, throttled.status, foreign.status]).toEqual([401, 429, 403]);
+    const events = logged.map((line) => JSON.parse(line) as Record<string, unknown>);
+    expect(events.map((event) => event.code)).toEqual(["invalid_grant", "rate_limited", "origin_rejected"]);
+    expect(events[0]).toMatchObject({ event: "handshake_rejected", status: 401, path: "controller", origin: "https://reasonix.io" });
+    expect(events[0]?.subject).toMatch(/^[0-9a-f]{8}$/);
+    expect(events[2]).toMatchObject({ origin: "https://attacker.example" });
+    expect(logged.join("\n")).not.toContain(ticket);
+  });
+
+  it("lets a browser read whether its origin is allowed, and only that", async () => {
+    const allowed = await run(new Request("https://remote.reasonix.io/v1/probe", {
+      headers: { origin: "https://reasonix.io" },
+    }), environment([]));
+    expect(allowed.status).toBe(200);
+    expect(allowed.headers.get("access-control-allow-origin")).toBe("https://reasonix.io");
+
+    const refused = await run(new Request("https://remote.reasonix.io/v1/probe", {
+      headers: { origin: "https://attacker.example" },
+    }), environment([]));
+    expect(refused.status).toBe(403);
+    expect(refused.headers.get("access-control-allow-origin")).toBe("*");
+    await expect(refused.json()).resolves.toMatchObject({ error: { code: "origin_rejected" } });
+  });
+
+  it("allows only origins that match the list exactly", async () => {
+    const probe = (origin: string) => run(new Request("https://remote.reasonix.io/v1/probe", { headers: { origin } }), environment([]));
+    for (const origin of [
+      "https://reasonix.io.evil.com", "https://reasonix.io:8443", "https://REASONIX.IO", "https://reasonix.io.",
+      "https://xn--reasonix-9ya.io", "null", "http://reasonix.io", "https://reasonix.io/",
+    ]) {
+      expect((await probe(origin)).status, origin).toBe(403);
+    }
+    expect((await probe("https://www.reasonix.io")).status).toBe(200);
+  });
+
+  it("answers the probe only to GET, per origin and uncached", async () => {
+    const ok = await run(new Request("https://remote.reasonix.io/v1/probe", { headers: { origin: "https://reasonix.io" } }), environment([]));
+    expect(ok.headers.get("vary")).toContain("Origin");
+    expect(ok.headers.get("cache-control")).toBe("no-store");
+    const refused = await run(new Request("https://remote.reasonix.io/v1/probe", { headers: { origin: "https://evil.example" } }), environment([]));
+    expect(refused.headers.get("cache-control")).toBe("no-store");
+    for (const method of ["HEAD", "POST", "PUT"]) {
+      const response = await run(new Request("https://remote.reasonix.io/v1/probe", { method, headers: { origin: "https://reasonix.io" } }), environment([]));
+      expect(response.status, method).not.toBe(200);
+    }
   });
 });

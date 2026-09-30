@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import worker from "./index";
 import { RemoteSession } from "./session";
 import type { Env } from "./env";
+import { resetTrace } from "./trace";
 import {
   CLOSE_IDLE,
   CLOSE_REAUTH_REQUIRED,
@@ -153,7 +154,12 @@ function connectionOf(device: FakeSocket): string {
   return String(frame?.connectionId ?? "");
 }
 
+let traced: Array<Record<string, unknown>>;
+
 beforeEach(() => {
+  resetTrace();
+  traced = [];
+  vi.spyOn(console, "log").mockImplementation((line: string) => { traced.push(JSON.parse(line)); });
   vi.useFakeTimers({ toFake: ["Date"] });
   vi.setSystemTime(Date.parse("2026-09-28T00:00:00.000Z"));
   vi.stubGlobal("WebSocket", { OPEN: 1 });
@@ -163,6 +169,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.restoreAllMocks();
   vi.unstubAllGlobals();
   vi.useRealTimers();
 });
@@ -398,5 +405,38 @@ describe("relay connection lease, end to end", () => {
     });
     expect(phone.closed?.code).toBe(CLOSE_IDLE);
     expect(device.closed?.code).toBe(CLOSE_IDLE);
+  });
+
+  it("traces why and when a lease ended, and which admission was refused, without full ids", async () => {
+    const relay = new Relay();
+    relay.accounts.signIn("1".repeat(64));
+    const device = (await relay.connectDevice()).socket!;
+    await relay.connectController("1".repeat(64));
+
+    await relay.advance(CONTROLLER_IDLE_MS + 2 * MINUTE, () => heartbeat(device));
+    const idle = traced.find((line) => line.event === "lease_closed" && line.code === CLOSE_IDLE);
+    expect(idle).toMatchObject({ role: "controller", reason: "Idle timeout" });
+    expect(Number(idle?.idleS)).toBeGreaterThanOrEqual(CONTROLLER_IDLE_MS / 1000);
+    expect(idle?.device).toMatch(/^[0-9a-f]{8}$/);
+    await relay.room.webSocketClose(relay.state.sockets.at(-1) as unknown as WebSocket, CLOSE_IDLE, "Idle timeout", true);
+    expect(traced.filter((line) => line.event === "socket_closed")).toHaveLength(0);
+
+    relay.accounts.signIn("2".repeat(64));
+    relay.accounts.sessions.get("2".repeat(64))!.createdAt -= REAUTH_MS;
+    const refused = await relay.connectController("2".repeat(64));
+    expect(refused.status).toBe(401);
+    expect(traced).toContainEqual(expect.objectContaining({ event: "handshake_rejected", code: "reauth_required" }));
+    expect(JSON.stringify(traced)).not.toContain(DEVICE);
+    expect(JSON.stringify(traced)).not.toContain(CREDENTIAL);
+  });
+
+  it("traces a full room turning a fifth controller away", async () => {
+    const relay = new Relay();
+    relay.accounts.signIn("1".repeat(64));
+    await relay.connectDevice();
+    for (let index = 0; index < 4; index += 1) await relay.connectController("1".repeat(64));
+    const fifth = await relay.connectController("1".repeat(64));
+    expect(fifth.status).toBe(429);
+    expect(traced).toContainEqual(expect.objectContaining({ event: "handshake_rejected", code: "too_many_controllers", path: "room" }));
   });
 });
