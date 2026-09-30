@@ -43,8 +43,9 @@ type controllerDeps struct {
 	// evaluator is the bounded Goal completion evaluator consulted when the
 	// working model submits no update_goal report. nil fails closed: the goal
 	// pauses instead of defaulting to continue.
-	evaluator goaleval.Evaluator
-	refiner   *promptrefine.Refiner
+	evaluator        goaleval.Evaluator
+	refiner          *promptrefine.Refiner
+	decisionReporter DecisionReporter
 	// goalUsageTee accounts billable usage events into the active goal turn's
 	// observational token total. It wraps the public sink when the caller didn't provide one.
 	goalUsageTee *goalUsageTee
@@ -131,6 +132,7 @@ func newControllerDeps(opts Options, sink event.Sink, usageTee *goalUsageTee, ru
 		guardianSess:           opts.Guardian,
 		evaluator:              opts.GoalEvaluator,
 		refiner:                opts.PromptRefiner,
+		decisionReporter:       opts.DecisionReporter,
 		goalUsageTee:           usageTee,
 		sink:                   sink,
 		policy:                 opts.Policy,

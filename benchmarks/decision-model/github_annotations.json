@@ -1,0 +1,72 @@
+{
+  "annotator": "Codex, single review; not independent human annotation",
+  "policy": "Issue intent reviewed with linked PR title and paths for retrospective scope. No keyword label rules. One row per issue, no translations. Ambiguous docs, releases, unrelated links and image-only reports omitted.",
+  "repositories": {
+    "pallets/flask": {"split": "train", "issues": {
+      "6093": ["multi-file-bugfix", "IPv6 parsing affects app startup and test client, with changes in both implementation modules."],
+      "6071": ["failing-test-diagnosis", "Test collection crashes because fixtures use removed private pytest APIs."],
+      "5639": ["refactor", "Consolidate app and request context management."],
+      "5961": ["failing-test-diagnosis", "Existing test expectation fails after a Werkzeug dependency update."],
+      "5916": ["atomic-bugfix", "Fix the explicitly identified OPTIONS enabling override in the routing module; broader discussion is secondary."],
+      "5815": ["refactor", "Pass context objects through internal dispatch instead of repeated contextvar access."],
+      "5729": ["multi-file-bugfix", "Make decorator invocation work without parentheses across app and blueprint implementations."],
+      "5776": ["atomic-bugfix", "Widen send_file typing to accept IO bytes in one helper module."],
+      "5628": ["atomic-bugfix", "Correct dotenv precedence in CLI loading."],
+      "5472": ["codegen", "Implement first-class partitioned session cookie configuration."]
+    }},
+    "pallets/click": {"split": "train", "issues": {
+      "1054": ["read-only-output", "User asks how to call a decorated command as a Python function; clarification rather than new implementation."],
+      "3822": ["atomic-bugfix", "Correct generic Path typing in the parameter type module."],
+      "3802": ["atomic-bugfix", "Correct interrupt handling race in Command.main."],
+      "2869": ["codegen", "Add pathlib.Path support to the edit API; implementation spans public and internal UI."],
+      "3571": ["atomic-bugfix", "Correct final progress position in terminal UI."],
+      "2634": ["failing-test-diagnosis", "Platform-specific filename tests lack conditional skipping."],
+      "3487": ["atomic-bugfix", "Correct empty bytes handling in echo."],
+      "2012": ["atomic-bugfix", "Correct option flag_value conversion regression in core."],
+      "3084": ["atomic-bugfix", "Correct optional option value regression in core."],
+      "3128": ["failing-test-diagnosis", "Test depends on GNU sed behavior and fails with BSD sed."]
+    }},
+    "pytest-dev/pytest": {"split": "train", "issues": {
+      "9924": ["atomic-bugfix", "Prevent doctest flags leaking across docstrings in doctest implementation."],
+      "15043": ["atomic-bugfix", "Handle cache write and close errors in cacheprovider."],
+      "15052": ["atomic-bugfix", "Correct source line conversion in compat helper."],
+      "11680": ["codegen", "Add packaging support for versioning Git archives."],
+      "14942": ["atomic-bugfix", "Correct fixture collection performance regression in fixtures implementation."],
+      "14619": ["atomic-bugfix", "Improve invalid scalar parametrize handling in mark structures."],
+      "10644": ["atomic-bugfix", "Correct inherited attribute cleanup in MonkeyPatch."],
+      "14909": ["atomic-bugfix", "Record undo entries only after successful mutation in MonkeyPatch."],
+      "14445": ["atomic-bugfix", "Prevent assertion rewriter evaluating walrus expressions twice."],
+      "993": ["atomic-bugfix", "Correct plugin startup ImportError exit-code classification in config implementation."]
+    }},
+    "pallets/werkzeug": {"split": "validation", "issues": {
+      "3291": ["multi-file-bugfix", "Correct conditional and range HTTP handling spanning response, HTTP, range and file helpers."],
+      "3295": ["atomic-bugfix", "Correct Request.application overload typing in request wrapper."],
+      "3294": ["atomic-bugfix", "Stop ProxyFix modifying WSGI server identity."],
+      "3290": ["atomic-bugfix", "Correct HTML accept predicate in accept datastructure."],
+      "3242": ["atomic-bugfix", "Correct numeric converter accepted values and formatting in converters module."],
+      "3146": ["atomic-bugfix", "Correct scientific-notation URL round trip in FloatConverter."]
+    }},
+    "Textualize/rich": {"split": "test", "issues": {
+      "3176": ["multi-file-bugfix", "Correct double-width wrapping across wrapping and cell-width modules."],
+      "1640": ["atomic-bugfix", "Correct terminal color capability detection in console."],
+      "4041": ["atomic-bugfix", "Delegate FileProxy.isatty in file proxy implementation."],
+      "4038": ["atomic-bugfix", "Preserve inline code syntax spans in Markdown table cells."],
+      "3784": ["atomic-bugfix", "Correct console export path type annotations."],
+      "3142": ["atomic-bugfix", "Restore missing Panel.fit parameters in panel module."],
+      "2012": ["codegen", "Add NamedTuple support to pretty rendering."],
+      "2214": ["multi-file-bugfix", "Correct complex-number highlighting across styles and highlighter modules."],
+      "2240": ["codegen", "Add padding argument to Syntax rendering."],
+      "3569": ["atomic-bugfix", "Correct Panel title background rendering regression."]
+    }},
+    "psf/requests": {"split": "test", "issues": {
+      "7434": ["atomic-bugfix", "Correct JSON container type variance in type definitions."],
+      "7442": ["multi-file-bugfix", "Correct headers mapping type variance across type definitions and request model."],
+      "7432": ["atomic-bugfix", "Correct dynamic stream detection in PreparedRequest.prepare_body."],
+      "4795": ["atomic-bugfix", "Correct proxy bypass domain matching in utils."]
+    }},
+    "encode/httpx": {"split": "test", "issues": {
+      "306": ["codegen", "Add environment CA bundle support and documentation."],
+      "3411": ["atomic-bugfix", "Handle empty zstd responses in decoder."]
+    }}
+  }
+}

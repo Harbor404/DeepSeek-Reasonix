@@ -1,0 +1,316 @@
+{
+  "runs": [
+    {
+      "status": "interpretation_failed",
+      "pipeline_usage": {
+        "input_tokens": 599,
+        "output_tokens": 896,
+        "calls": 2,
+        "model_seconds": 21.553563000023132
+      },
+      "pipeline_wall_seconds_excluding_model_load": 21.55391509999754,
+      "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+      "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+      "model_load_seconds": 7.571950599987758,
+      "max_output_tokens_per_attempt": 512,
+      "name": "plain-initial",
+      "local_trace_path": "D:\\DeepSeek-Reasonix\\temp\\decision-engine\\pipeline-first.json",
+      "local_trace_sha256": "f41e0dd3f6267498955e1811aa7a71bf046605240b28cf7cd9090500457b29d4",
+      "interpretation_status": "interpretation_failed",
+      "plan": null,
+      "generation_protocols": [
+        "Greedy generation with reasoning prefix explicitly closed; local token counts include chat template and EOS"
+      ],
+      "trace_outcomes": {
+        "interpretation": [
+          {
+            "finish_reason": "eos",
+            "error_code": "interpretation.json_invalid",
+            "usage": {
+              "input_tokens": 277,
+              "output_tokens": 384
+            }
+          },
+          {
+            "finish_reason": "output_limit",
+            "error_code": "interpretation.output_limit",
+            "usage": {
+              "input_tokens": 322,
+              "output_tokens": 512
+            }
+          }
+        ]
+      }
+    },
+    {
+      "status": "explanation_failed",
+      "pipeline_usage": {
+        "input_tokens": 4445,
+        "output_tokens": 1043,
+        "calls": 3,
+        "model_seconds": 30.54923519998556
+      },
+      "pipeline_wall_seconds_excluding_model_load": 30.565099100000225,
+      "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+      "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+      "model_load_seconds": 7.218618799990509,
+      "max_output_tokens_per_attempt": 512,
+      "name": "prefill-initial",
+      "local_trace_path": "D:\\DeepSeek-Reasonix\\temp\\decision-engine\\pipeline-prefill.json",
+      "local_trace_sha256": "f39a21805ce7ad687bf31ef38fb09d592df1038d3f82be42914c0f98b52e155b",
+      "interpretation_status": "ready",
+      "plan": {
+        "topic_ids": [
+          "launch"
+        ],
+        "focus_option_ids": [
+          "a",
+          "c"
+        ],
+        "needs_information": []
+      },
+      "generation_protocols": [
+        "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS"
+      ],
+      "comparison": {
+        "pipeline_total_tokens": 5488,
+        "baseline_total_tokens": 3463,
+        "token_reduction_fraction": -0.5847531042448744,
+        "both_schema_valid": false,
+        "answer_quality_equivalent": null,
+        "cost_reduction": null,
+        "excludes": "Model loading, billing rates, upstream fact collection and independent answer-quality review",
+        "anchor": "Pipeline includes interpretation, explanation and all repairs; baseline includes direct explanation and all repairs"
+      },
+      "baseline_usage": {
+        "input_tokens": 3059,
+        "output_tokens": 404,
+        "calls": 2,
+        "model_seconds": 10.389076999999816
+      },
+      "baseline_status": "explanation_failed",
+      "trace_outcomes": {
+        "interpretation": [
+          {
+            "finish_reason": "eos",
+            "error_code": null,
+            "usage": {
+              "input_tokens": 278,
+              "output_tokens": 19
+            }
+          }
+        ],
+        "explanation": [
+          {
+            "finish_reason": "output_limit",
+            "error_code": "explanation.output_limit",
+            "usage": {
+              "input_tokens": 1821,
+              "output_tokens": 512
+            }
+          },
+          {
+            "finish_reason": "output_limit",
+            "error_code": "explanation.output_limit",
+            "usage": {
+              "input_tokens": 2346,
+              "output_tokens": 512
+            }
+          }
+        ],
+        "baseline": [
+          {
+            "finish_reason": "eos",
+            "error_code": "explanation.schema_invalid",
+            "usage": {
+              "input_tokens": 1419,
+              "output_tokens": 202
+            }
+          },
+          {
+            "finish_reason": "eos",
+            "error_code": "explanation.schema_invalid",
+            "usage": {
+              "input_tokens": 1640,
+              "output_tokens": 202
+            }
+          }
+        ]
+      }
+    },
+    {
+      "status": "explanation_failed",
+      "pipeline_usage": {
+        "input_tokens": 2244,
+        "output_tokens": 531,
+        "calls": 2,
+        "model_seconds": 15.138254900026368
+      },
+      "pipeline_wall_seconds_excluding_model_load": 15.170775800012052,
+      "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+      "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+      "model_load_seconds": 7.158433100004913,
+      "max_output_tokens_per_attempt": 512,
+      "name": "compact-shaped",
+      "local_trace_path": "D:\\DeepSeek-Reasonix\\temp\\decision-engine\\pipeline-shaped.json",
+      "local_trace_sha256": "d9bc69cf01e35a00cfa42a4d400578d668ed5b9cd38391a74e50c0c1c51c6216",
+      "interpretation_status": "ready",
+      "plan": {
+        "topic_ids": [
+          "launch"
+        ],
+        "focus_option_ids": [
+          "a",
+          "c"
+        ],
+        "needs_information": []
+      },
+      "generation_protocols": [
+        "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS"
+      ],
+      "comparison": {
+        "pipeline_total_tokens": 2775,
+        "baseline_total_tokens": 1932,
+        "token_reduction_fraction": -0.436335403726708,
+        "both_schema_valid": false,
+        "answer_quality_equivalent": null,
+        "cost_reduction": null,
+        "excludes": "Model loading, billing rates, upstream fact collection and independent answer-quality review",
+        "anchor": "Pipeline includes interpretation, explanation and all repairs; baseline includes direct explanation and all repairs"
+      },
+      "baseline_usage": {
+        "input_tokens": 1564,
+        "output_tokens": 368,
+        "calls": 1,
+        "model_seconds": 9.298034500010544
+      },
+      "baseline_status": "explanation_failed",
+      "trace_outcomes": {
+        "interpretation": [
+          {
+            "finish_reason": "eos",
+            "error_code": null,
+            "usage": {
+              "input_tokens": 278,
+              "output_tokens": 19
+            }
+          }
+        ],
+        "explanation": [
+          {
+            "finish_reason": "output_limit",
+            "error_code": "explanation.output_limit",
+            "usage": {
+              "input_tokens": 1966,
+              "output_tokens": 512
+            }
+          }
+        ],
+        "baseline": [
+          {
+            "finish_reason": "eos",
+            "error_code": "explanation.json_invalid",
+            "usage": {
+              "input_tokens": 1564,
+              "output_tokens": 368
+            }
+          }
+        ]
+      }
+    },
+    {
+      "status": "explanation_failed",
+      "pipeline_usage": {
+        "input_tokens": 2248,
+        "output_tokens": 531,
+        "calls": 2,
+        "model_seconds": 15.152730499976315
+      },
+      "pipeline_wall_seconds_excluding_model_load": 15.201042700005928,
+      "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+      "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+      "model_load_seconds": 6.947041099978378,
+      "max_output_tokens_per_attempt": 512,
+      "name": "long-shaped",
+      "local_trace_path": "D:\\DeepSeek-Reasonix\\temp\\decision-engine\\pipeline-long.json",
+      "local_trace_sha256": "2d9de01f613a3809d7cf7ec264b53accdfaef0685d8ab55deb4539313d24b6f2",
+      "interpretation_status": "ready",
+      "plan": {
+        "topic_ids": [
+          "launch"
+        ],
+        "focus_option_ids": [
+          "a",
+          "c"
+        ],
+        "needs_information": []
+      },
+      "generation_protocols": [
+        "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS"
+      ],
+      "comparison": {
+        "pipeline_total_tokens": 2779,
+        "baseline_total_tokens": 8158,
+        "token_reduction_fraction": 0.6593527825447414,
+        "both_schema_valid": false,
+        "answer_quality_equivalent": null,
+        "cost_reduction": null,
+        "excludes": "Model loading, billing rates, upstream fact collection and independent answer-quality review",
+        "anchor": "Pipeline includes interpretation, explanation and all repairs; baseline includes direct explanation and all repairs"
+      },
+      "baseline_usage": {
+        "input_tokens": 7646,
+        "output_tokens": 512,
+        "calls": 1,
+        "model_seconds": 34.24599200001103
+      },
+      "baseline_status": "explanation_failed",
+      "trace_outcomes": {
+        "interpretation": [
+          {
+            "finish_reason": "eos",
+            "error_code": null,
+            "usage": {
+              "input_tokens": 282,
+              "output_tokens": 19
+            }
+          }
+        ],
+        "explanation": [
+          {
+            "finish_reason": "output_limit",
+            "error_code": "explanation.output_limit",
+            "usage": {
+              "input_tokens": 1966,
+              "output_tokens": 512
+            }
+          }
+        ],
+        "baseline": [
+          {
+            "finish_reason": "output_limit",
+            "error_code": "explanation.output_limit",
+            "usage": {
+              "input_tokens": 7646,
+              "output_tokens": 512
+            }
+          }
+        ]
+      }
+    }
+  ],
+  "metric_contract": {
+    "population": "Developmental authored English product-planning question in compact and repeated-archive catalogs",
+    "anchor": "After local model loading; pipeline then direct baseline without warmup",
+    "includes": "All interpretation, explanation and repair input/output tokens including chat template, prefill and generated EOS",
+    "excludes": "Upstream evidence collection, startup, monetary billing and independent answer-quality review"
+  },
+  "limitations": [
+    "All reported local explanations failed validation; token counts do not demonstrate equivalent successful decisions.",
+    "Prompt formatting changed during development; runs are not an independent evaluation or a training result.",
+    "The long fixture deliberately contains irrelevant repetitive archive text.",
+    "Only one English question was exercised; no claim of general or Chinese understanding.",
+    "Topic and focus IDs are model proposals; existing constraints and options are retained by host structure.",
+    "No paid provider or production Reasonix integration was used."
+  ]
+}

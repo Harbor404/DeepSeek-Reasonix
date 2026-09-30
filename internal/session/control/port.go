@@ -2,6 +2,7 @@ package control
 
 import (
 	"context"
+	"encoding/json"
 	"reasonix/internal/state/sessionstore"
 
 	"reasonix/internal/contract/config"
@@ -381,10 +382,15 @@ type LocalShell interface {
 	RunShellWith(command string, opts ShellRun)
 }
 
+type DecisionReports interface {
+	DeliverDecision(context.Context, json.RawMessage) (json.RawMessage, error)
+}
+
 // SessionAPI is the full driving port — the composition of every sub-port, for
 // a frontend that drives all of it: the TUI does, and the HTTP server all but
 // one. A leaner frontend names EditorAPI instead.
 type SessionAPI interface {
+	DecisionReports
 	Lifecycle
 	TurnControl
 	Approvals

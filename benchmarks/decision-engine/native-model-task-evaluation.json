@@ -1,0 +1,186 @@
+{
+  "population": "Four authored development cases, one Chinese prompt contract, cached local 1.5B model, greedy decoding, no retries",
+  "comparison": "Full native tool result versus raw structured request with the same response contract; includes all input/output tokens in these explanation calls, excludes model loading and an actual agent's tool discovery/call generation",
+  "limits": "Not unseen tasks, not production agent behavior, not a source-verification or prose-quality test; no monetary savings established",
+  "protocol_variant": "task",
+  "runs": [
+    {
+      "case": "budget",
+      "expected": {
+        "options": {
+          "a": "feasible",
+          "b": "infeasible"
+        },
+        "frontier": [
+          "a"
+        ],
+        "comparison_state": "known_feasible_options_only",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"options\":{ \"a\": \"Plan A is feasible.\", \"b\": \"Plan B is feasible.\" }, \"frontier\": { \"a\": null, \"b\": null }, \"comparison_state\": \"known_feasible_options_only\", \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 537,
+          "output_tokens": 53
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.7423592999984976,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "error_code": "evaluation.decision_mismatch"
+      },
+      "native": {
+        "text": "{\"options\":{ \"a\": \"feasible\", \"b\": \"infeasible\"}, \"frontier\": { \"a\": \"known\", \"b\": \"unknown\"}, \"comparison_state\": \"known_feasible_options_only\", \"evidence\": { \"a\": \"Authored fixture: A costs 80 per month.\", \"b\": \"Authored fixture: B costs 120 per month.\" }, \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 874,
+          "output_tokens": 90
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 2.1600249000184704,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "error_code": "evaluation.decision_mismatch"
+      }
+    },
+    {
+      "case": "expired",
+      "expected": {
+        "options": {
+          "a": "unknown",
+          "b": "infeasible"
+        },
+        "frontier": [],
+        "comparison_state": "no_known_feasible_options",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"options\":{ \"a\": \"Plan A is feasible\", \"b\": \"Plan B is infeasible\"}, \"frontier\": { \"a\": null, \"b\": null }, \"comparison_state\": \"known_feasible_options_only\", \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 560,
+          "output_tokens": 54
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.361605399986729,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "error_code": "evaluation.decision_mismatch"
+      },
+      "native": {
+        "text": "{\"options\":{ \"a\": \"unknown\", \"b\": \"infeasible\" }, \"frontier\": { \"a\": null, \"b\": null }, \"comparison_state\": \"no_known_feasible_options\", \"evidence\": { \"a\": \"expired\", \"b\": \"current\" }, \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 903,
+          "output_tokens": 67
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.6862145999912173,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "error_code": "evaluation.decision_mismatch"
+      }
+    },
+    {
+      "case": "infeasible",
+      "expected": {
+        "options": {
+          "a": "infeasible",
+          "b": "infeasible"
+        },
+        "frontier": [],
+        "comparison_state": "no_feasible_options",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"options\":{ \"a\": \"Plan A is feasible.\", \"b\": \"Plan B is feasible.\" }, \"frontier\": { \"a\": null, \"b\": null }, \"comparison_state\": \"known_feasible_options_only\", \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 539,
+          "output_tokens": 53
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.3725505000038538,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "error_code": "evaluation.decision_mismatch"
+      },
+      "native": {
+        "text": "{\"options\":{ \"a\": \"infeasible\", \"b\": \"infeasible\", \"comparison_state\": \"no_feasible_options\", \"recommended_option\": null }, \"pareto_frontier\": {}, \"frontier\": {}, \"comparison_state\": \"no_feasible_options\" }",
+        "usage": {
+          "input_tokens": 874,
+          "output_tokens": 58
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.5005940000119153,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "error_code": "evaluation.decision_mismatch"
+      }
+    },
+    {
+      "case": "conflict",
+      "expected": {
+        "options": {
+          "a": "unknown",
+          "b": "infeasible"
+        },
+        "frontier": [],
+        "comparison_state": "no_known_feasible_options",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"options\":{ \"a\": \"Plan A is feasible\", \"b\": \"Plan B is feasible\"}, \"frontier\": { \"a\": null, \"b\": null }, \"comparison_state\": { \"a\": \"known_feasible_options_only\", \"b\": \"known_feasible_options_only\" }, \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 623,
+          "output_tokens": 68
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.6388129999977536,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "error_code": "evaluation.decision_mismatch"
+      },
+      "native": {
+        "text": "{\"options\":{ \"a\":{ \"id\": \"a\", \"name\": \"Plan A\", \"status\": \"unknown\", \"metrics\": { \"monthly_cost\": { \"state\": \"unknown\", \"evidence_ids\": [\"a-price\"] }, \"constraint_checks\": { \"budget\": { \"verdict\": \"unknown\", \"code\": \"constraint.value_evidence_unknown\", \"evidence_ids\": [\"a-price\", \"budget\"], \"value_evidence\": { \"state\": \"unknown\", \"evidence_ids\": [\"a-price\"] } } }, \"limit_evidence\": { \"state\": \"known\", \"value\": \"100\", \"unit\": \"USD/month\", \"evidence_ids\": [\"budget\"] } } }, \"constraints\": { \"budget\": { \"metric\": \"monthly_cost\", \"op\": \"lte\", \"limit\": \"100\", \"unit\": \"USD/month\", \"evidence_ids\": [\"budget\"]",
+        "usage": {
+          "input_tokens": 969,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 4.484364500007359,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "error_code": "evaluation.invalid_json"
+      }
+    }
+  ]
+}

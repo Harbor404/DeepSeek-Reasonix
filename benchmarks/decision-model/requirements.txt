@@ -1,0 +1,2 @@
+transformers==4.57.6
+hf_xet==1.2.0

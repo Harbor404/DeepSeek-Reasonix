@@ -1,0 +1,477 @@
+{
+  "schema_version": 1,
+  "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+  "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+  "feature_schema": "masked_mean_and_terminal_eos_v1",
+  "max_tokens": 1024,
+  "labels": [
+    "atomic-bugfix",
+    "multi-file-bugfix",
+    "failing-test-diagnosis",
+    "repo-exploration",
+    "read-only-output",
+    "refactor",
+    "codegen",
+    "api-integration"
+  ],
+  "dimension": 3072,
+  "head_sha256": "2af5484aa19f7766cbc205ffaf67d2aa1dc26bf1f0069da225daac9b66ee7094",
+  "head_bytes": 123184,
+  "trainable_parameters": 24584,
+  "backbone_trainable_parameters": 0,
+  "selection": "Minimum validation cross-entropy, 400 epochs maximum, patience 40; test never used for selection",
+  "hyperparameters": {
+    "seed": 42,
+    "learning_rate": 0.003,
+    "weight_decay": 0.1,
+    "class_weighting": "Inverse train class count",
+    "std_floor": 0.05
+  },
+  "dataset": {
+    "schema_version": 1,
+    "labels": [
+      "atomic-bugfix",
+      "multi-file-bugfix",
+      "failing-test-diagnosis",
+      "repo-exploration",
+      "read-only-output",
+      "refactor",
+      "codegen",
+      "api-integration"
+    ],
+    "audit": {
+      "exact_prompt_overlap": 0,
+      "family_overlap": 0
+    },
+    "split_rule": "Per label: families 0-7 train, 8-9 validation, 10-11 test",
+    "splits": {
+      "train": {
+        "count": 396,
+        "families": 76,
+        "classes": {
+          "atomic-bugfix": 50,
+          "multi-file-bugfix": 50,
+          "failing-test-diagnosis": 50,
+          "repo-exploration": 48,
+          "read-only-output": 49,
+          "refactor": 50,
+          "codegen": 50,
+          "api-integration": 49
+        },
+        "languages": {
+          "en": 204,
+          "zh": 192
+        },
+        "sha256": "8914011681664afce61846b372ca19f814edd9af82f2c157edd6a64ef4b703cb"
+      },
+      "validation": {
+        "count": 96,
+        "families": 16,
+        "classes": {
+          "atomic-bugfix": 12,
+          "multi-file-bugfix": 12,
+          "failing-test-diagnosis": 12,
+          "repo-exploration": 12,
+          "read-only-output": 12,
+          "refactor": 12,
+          "codegen": 12,
+          "api-integration": 12
+        },
+        "languages": {
+          "en": 48,
+          "zh": 48
+        },
+        "sha256": "49c34469c093efd95774711b068f82851201e440c0f163a1531e7e9bf549a32a"
+      },
+      "test": {
+        "count": 96,
+        "families": 16,
+        "classes": {
+          "atomic-bugfix": 12,
+          "multi-file-bugfix": 12,
+          "failing-test-diagnosis": 12,
+          "repo-exploration": 12,
+          "read-only-output": 12,
+          "refactor": 12,
+          "codegen": 12,
+          "api-integration": 12
+        },
+        "languages": {
+          "en": 48,
+          "zh": 48
+        },
+        "sha256": "e8cd8b92c66158df233a6fbe0725357d741cbf51162ae5baf4389d3af8d402a5"
+      }
+    },
+    "existing_training_excluded": [],
+    "limitations": [
+      "Six variants per authored family share meaning; rows are not independent observations.",
+      "Language and wrapper variants stay together; wrapper styles are shared across splits.",
+      "Scenario subjects differ across splits, but no claim of complete semantic separation is made.",
+      "Labels are author-provided task kinds, not measured cheapest successful routes.",
+      "The previous 51 e2e tasks are a development regression set, not a fresh test set.",
+      "Synthetic held-out performance does not establish performance on customer requests."
+    ]
+  },
+  "load_seconds": 6.062486899987562,
+  "feature_extraction_train_validation_seconds": 3.4358521999965888,
+  "training": {
+    "selected_epoch": 400,
+    "epochs_run": 400,
+    "validation_loss": 0.19389669597148895,
+    "head_training_seconds": 0.3156440000166185
+  },
+  "validation": {
+    "count": 96,
+    "attempted": 96,
+    "correct": 90,
+    "accuracy": 0.9375,
+    "balanced_accuracy": 0.9375,
+    "coverage": 1.0,
+    "majority_baseline_accuracy": 0.125,
+    "latency_ms_p50": null,
+    "latency_ms_p95": null,
+    "per_class": {
+      "api-integration": {
+        "count": 12,
+        "correct": 12,
+        "recall": 1.0
+      },
+      "atomic-bugfix": {
+        "count": 12,
+        "correct": 11,
+        "recall": 0.9166666666666666
+      },
+      "codegen": {
+        "count": 12,
+        "correct": 12,
+        "recall": 1.0
+      },
+      "failing-test-diagnosis": {
+        "count": 12,
+        "correct": 12,
+        "recall": 1.0
+      },
+      "multi-file-bugfix": {
+        "count": 12,
+        "correct": 11,
+        "recall": 0.9166666666666666
+      },
+      "read-only-output": {
+        "count": 12,
+        "correct": 12,
+        "recall": 1.0
+      },
+      "refactor": {
+        "count": 12,
+        "correct": 10,
+        "recall": 0.8333333333333334
+      },
+      "repo-exploration": {
+        "count": 12,
+        "correct": 10,
+        "recall": 0.8333333333333334
+      }
+    },
+    "languages": {
+      "en": {
+        "count": 48,
+        "attempted": 48,
+        "correct": 46,
+        "accuracy": 0.9583333333333334,
+        "balanced_accuracy": 0.9583333333333334,
+        "coverage": 1.0,
+        "majority_baseline_accuracy": 0.125,
+        "latency_ms_p50": null,
+        "latency_ms_p95": null,
+        "per_class": {
+          "api-integration": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "atomic-bugfix": {
+            "count": 6,
+            "correct": 5,
+            "recall": 0.8333333333333334
+          },
+          "codegen": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "failing-test-diagnosis": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "multi-file-bugfix": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "read-only-output": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "refactor": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "repo-exploration": {
+            "count": 6,
+            "correct": 5,
+            "recall": 0.8333333333333334
+          }
+        }
+      },
+      "zh": {
+        "count": 48,
+        "attempted": 48,
+        "correct": 44,
+        "accuracy": 0.9166666666666666,
+        "balanced_accuracy": 0.9166666666666666,
+        "coverage": 1.0,
+        "majority_baseline_accuracy": 0.125,
+        "latency_ms_p50": null,
+        "latency_ms_p95": null,
+        "per_class": {
+          "api-integration": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "atomic-bugfix": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "codegen": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "failing-test-diagnosis": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "multi-file-bugfix": {
+            "count": 6,
+            "correct": 5,
+            "recall": 0.8333333333333334
+          },
+          "read-only-output": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "refactor": {
+            "count": 6,
+            "correct": 4,
+            "recall": 0.6666666666666666
+          },
+          "repo-exploration": {
+            "count": 6,
+            "correct": 5,
+            "recall": 0.8333333333333334
+          }
+        }
+      }
+    },
+    "families": {
+      "count": 16,
+      "all_variants_correct": 11,
+      "mean_family_accuracy": 0.9375
+    }
+  },
+  "test": {
+    "count": 96,
+    "attempted": 96,
+    "correct": 91,
+    "accuracy": 0.9479166666666666,
+    "balanced_accuracy": 0.9479166666666666,
+    "coverage": 1.0,
+    "majority_baseline_accuracy": 0.125,
+    "latency_ms_p50": null,
+    "latency_ms_p95": null,
+    "per_class": {
+      "api-integration": {
+        "count": 12,
+        "correct": 12,
+        "recall": 1.0
+      },
+      "atomic-bugfix": {
+        "count": 12,
+        "correct": 9,
+        "recall": 0.75
+      },
+      "codegen": {
+        "count": 12,
+        "correct": 12,
+        "recall": 1.0
+      },
+      "failing-test-diagnosis": {
+        "count": 12,
+        "correct": 12,
+        "recall": 1.0
+      },
+      "multi-file-bugfix": {
+        "count": 12,
+        "correct": 11,
+        "recall": 0.9166666666666666
+      },
+      "read-only-output": {
+        "count": 12,
+        "correct": 12,
+        "recall": 1.0
+      },
+      "refactor": {
+        "count": 12,
+        "correct": 12,
+        "recall": 1.0
+      },
+      "repo-exploration": {
+        "count": 12,
+        "correct": 11,
+        "recall": 0.9166666666666666
+      }
+    },
+    "languages": {
+      "en": {
+        "count": 48,
+        "attempted": 48,
+        "correct": 43,
+        "accuracy": 0.8958333333333334,
+        "balanced_accuracy": 0.8958333333333334,
+        "coverage": 1.0,
+        "majority_baseline_accuracy": 0.125,
+        "latency_ms_p50": null,
+        "latency_ms_p95": null,
+        "per_class": {
+          "api-integration": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "atomic-bugfix": {
+            "count": 6,
+            "correct": 3,
+            "recall": 0.5
+          },
+          "codegen": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "failing-test-diagnosis": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "multi-file-bugfix": {
+            "count": 6,
+            "correct": 5,
+            "recall": 0.8333333333333334
+          },
+          "read-only-output": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "refactor": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "repo-exploration": {
+            "count": 6,
+            "correct": 5,
+            "recall": 0.8333333333333334
+          }
+        }
+      },
+      "zh": {
+        "count": 48,
+        "attempted": 48,
+        "correct": 48,
+        "accuracy": 1.0,
+        "balanced_accuracy": 1.0,
+        "coverage": 1.0,
+        "majority_baseline_accuracy": 0.125,
+        "latency_ms_p50": null,
+        "latency_ms_p95": null,
+        "per_class": {
+          "api-integration": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "atomic-bugfix": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "codegen": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "failing-test-diagnosis": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "multi-file-bugfix": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "read-only-output": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "refactor": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          },
+          "repo-exploration": {
+            "count": 6,
+            "correct": 6,
+            "recall": 1.0
+          }
+        }
+      }
+    },
+    "families": {
+      "count": 16,
+      "all_variants_correct": 13,
+      "mean_family_accuracy": 0.9479166666666666
+    }
+  },
+  "device": "NVIDIA GeForce RTX 3060",
+  "torch": "2.13.0+cu126",
+  "peak_gpu_allocated_bytes": 3291022848,
+  "metric_contract": {
+    "accuracy": "Argmax agrees with author-provided task kind; all included rows",
+    "anchor": "After checkpoint selection on validation; test encoded and scored once",
+    "population": "Synthetic held-out scenario families with paired English/Chinese and three wrappers",
+    "excludes": "Real customer traffic, execution success, costs, and per-request runtime latency",
+    "statistical_unit": "Scenario family; six variants per family are correlated"
+  },
+  "limitations": [
+    "Six variants per authored family share meaning; rows are not independent observations.",
+    "Language and wrapper variants stay together; wrapper styles are shared across splits.",
+    "Scenario subjects differ across splits, but no claim of complete semantic separation is made.",
+    "Labels are author-provided task kinds, not measured cheapest successful routes.",
+    "The previous 51 e2e tasks are a development regression set, not a fresh test set.",
+    "Synthetic held-out performance does not establish performance on customer requests.",
+    "Only the linear head changed; the DeepSeek backbone remains frozen.",
+    "Head scores are uncalibrated; no automatic routing threshold is established.",
+    "Feature extraction used the full frozen backbone; a tiny head does not mean a tiny total model."
+  ]
+}

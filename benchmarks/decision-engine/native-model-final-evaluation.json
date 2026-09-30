@@ -1,0 +1,1157 @@
+{
+  "population": "Four authored development cases, one Chinese prompt contract, cached local 1.5B model, greedy decoding, no retries",
+  "comparison": "Full native tool result versus raw structured request with the same response contract; includes all input/output tokens in these explanation calls, excludes model loading and an actual agent's tool discovery/call generation",
+  "limits": "Not unseen tasks, not production agent behavior, not a source-verification or prose-quality test; no monetary savings established",
+  "protocol_variant": "task",
+  "runs": [
+    {
+      "case": "budget",
+      "input_request": {
+        "as_of": "2026-09-29T12:00:00Z",
+        "options": [
+          {
+            "id": "a",
+            "name": "Plan A",
+            "metrics": {
+              "monthly_cost": [
+                "a-price"
+              ]
+            }
+          },
+          {
+            "id": "b",
+            "name": "Plan B",
+            "metrics": {
+              "monthly_cost": [
+                "b-price"
+              ]
+            }
+          }
+        ],
+        "constraints": [
+          {
+            "id": "budget",
+            "metric": "monthly_cost",
+            "op": "lte",
+            "limit": "100",
+            "unit": "USD/month",
+            "evidence_ids": [
+              "budget"
+            ]
+          }
+        ],
+        "preferences": [
+          {
+            "metric": "monthly_cost",
+            "unit": "USD/month",
+            "direction": "min"
+          }
+        ],
+        "evidence": [
+          {
+            "id": "a-price",
+            "key": "a.monthly_cost",
+            "text": "Authored fixture: A costs 80 per month.",
+            "source": {
+              "uri": "fixture://plan-a",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "80",
+              "unit": "USD/month"
+            }
+          },
+          {
+            "id": "b-price",
+            "key": "b.monthly_cost",
+            "text": "Authored fixture: B costs 120 per month.",
+            "source": {
+              "uri": "fixture://plan-b",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "120",
+              "unit": "USD/month"
+            }
+          },
+          {
+            "id": "budget",
+            "key": "user.monthly_budget",
+            "text": "Authored fixture: monthly budget is 100.",
+            "source": {
+              "uri": "fixture://user",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "100",
+              "unit": "USD/month"
+            }
+          }
+        ]
+      },
+      "native_packet": {
+        "status": "computed",
+        "as_of": "2026-09-29T12:00:00Z",
+        "advisory": true,
+        "provenance": "caller_supplied_not_independently_verified",
+        "snapshot_sha256": "c96f7b73939acb4428887177e5c924c2ad514f47e1088297438ed1d476f075b6",
+        "options": [
+          {
+            "id": "a",
+            "name": "Plan A",
+            "status": "feasible",
+            "metrics": {
+              "monthly_cost": {
+                "state": "known",
+                "value": "80",
+                "unit": "USD/month",
+                "evidence_ids": [
+                  "a-price"
+                ]
+              }
+            },
+            "constraint_checks": [
+              {
+                "constraint_id": "budget",
+                "verdict": "pass",
+                "code": "constraint.satisfied",
+                "evidence_ids": [
+                  "a-price",
+                  "budget"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "name": "Plan B",
+            "status": "infeasible",
+            "metrics": {
+              "monthly_cost": {
+                "state": "known",
+                "value": "120",
+                "unit": "USD/month",
+                "evidence_ids": [
+                  "b-price"
+                ]
+              }
+            },
+            "constraint_checks": [
+              {
+                "constraint_id": "budget",
+                "verdict": "fail",
+                "code": "constraint.violated",
+                "evidence_ids": [
+                  "b-price",
+                  "budget"
+                ]
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "id": "budget",
+            "metric": "monthly_cost",
+            "op": "lte",
+            "limit": "100",
+            "unit": "USD/month",
+            "evidence_ids": [
+              "budget"
+            ]
+          }
+        ],
+        "preferences": [
+          {
+            "metric": "monthly_cost",
+            "unit": "USD/month",
+            "direction": "min"
+          }
+        ],
+        "pareto_frontier": [
+          "a"
+        ],
+        "comparison_state": "known_feasible_options_only",
+        "evidence": [
+          {
+            "id": "a-price",
+            "key": "a.monthly_cost",
+            "text": "Authored fixture: A costs 80 per month.",
+            "source": {
+              "uri": "fixture://plan-a",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "80",
+              "unit": "USD/month"
+            },
+            "state": "current"
+          },
+          {
+            "id": "b-price",
+            "key": "b.monthly_cost",
+            "text": "Authored fixture: B costs 120 per month.",
+            "source": {
+              "uri": "fixture://plan-b",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "120",
+              "unit": "USD/month"
+            },
+            "state": "current"
+          },
+          {
+            "id": "budget",
+            "key": "user.monthly_budget",
+            "text": "Authored fixture: monthly budget is 100.",
+            "source": {
+              "uri": "fixture://user",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "100",
+              "unit": "USD/month"
+            },
+            "state": "current"
+          }
+        ],
+        "recommended_option": null
+      },
+      "expected": {
+        "options": {
+          "a": "feasible",
+          "b": "infeasible"
+        },
+        "frontier": [
+          "a"
+        ],
+        "comparison_state": "known_feasible_options_only",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"options\":{ \"a\": \"Plan A is feasible.\", \"b\": \"Plan B is feasible.\" }, \"frontier\": { \"a\": null, \"b\": null }, \"comparison_state\": \"known_feasible_options_only\", \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 537,
+          "output_tokens": 53
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.71684930002084,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "option_statuses_match": false,
+        "comparison_state_match": true,
+        "error_code": "evaluation.decision_mismatch"
+      },
+      "native": {
+        "text": "{\"options\":{ \"a\": \"feasible\", \"b\": \"infeasible\" }, \"frontier\": [\"a\"], \"comparison_state\": \"known_feasible_options_only\", \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 769,
+          "output_tokens": 42
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.1997190000256523,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": true,
+        "option_statuses_match": true,
+        "comparison_state_match": true,
+        "error_code": null
+      }
+    },
+    {
+      "case": "expired",
+      "input_request": {
+        "as_of": "2026-09-29T12:00:00Z",
+        "options": [
+          {
+            "id": "a",
+            "name": "Plan A",
+            "metrics": {
+              "monthly_cost": [
+                "a-price"
+              ]
+            }
+          },
+          {
+            "id": "b",
+            "name": "Plan B",
+            "metrics": {
+              "monthly_cost": [
+                "b-price"
+              ]
+            }
+          }
+        ],
+        "constraints": [
+          {
+            "id": "budget",
+            "metric": "monthly_cost",
+            "op": "lte",
+            "limit": "100",
+            "unit": "USD/month",
+            "evidence_ids": [
+              "budget"
+            ]
+          }
+        ],
+        "preferences": [
+          {
+            "metric": "monthly_cost",
+            "unit": "USD/month",
+            "direction": "min"
+          }
+        ],
+        "evidence": [
+          {
+            "id": "a-price",
+            "key": "a.monthly_cost",
+            "text": "Authored fixture: A costs 80 per month.",
+            "source": {
+              "uri": "fixture://plan-a",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "80",
+              "unit": "USD/month"
+            },
+            "valid_until": "2026-09-29T12:00:00Z"
+          },
+          {
+            "id": "b-price",
+            "key": "b.monthly_cost",
+            "text": "Authored fixture: B costs 120 per month.",
+            "source": {
+              "uri": "fixture://plan-b",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "120",
+              "unit": "USD/month"
+            }
+          },
+          {
+            "id": "budget",
+            "key": "user.monthly_budget",
+            "text": "Authored fixture: monthly budget is 100.",
+            "source": {
+              "uri": "fixture://user",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "100",
+              "unit": "USD/month"
+            }
+          }
+        ]
+      },
+      "native_packet": {
+        "status": "computed",
+        "as_of": "2026-09-29T12:00:00Z",
+        "advisory": true,
+        "provenance": "caller_supplied_not_independently_verified",
+        "snapshot_sha256": "56d08b4c2423dc928a3d115ce7dc3d9ac661bfd57a41eb615931be16959aae60",
+        "options": [
+          {
+            "id": "a",
+            "name": "Plan A",
+            "status": "unknown",
+            "metrics": {
+              "monthly_cost": {
+                "state": "unknown",
+                "evidence_ids": [
+                  "a-price"
+                ],
+                "issues": [
+                  {
+                    "code": "evidence.expired",
+                    "id": "a-price"
+                  }
+                ]
+              }
+            },
+            "constraint_checks": [
+              {
+                "constraint_id": "budget",
+                "verdict": "unknown",
+                "code": "constraint.value_evidence_unknown",
+                "evidence_ids": [
+                  "a-price",
+                  "budget"
+                ],
+                "value_evidence": {
+                  "state": "unknown",
+                  "evidence_ids": [
+                    "a-price"
+                  ],
+                  "issues": [
+                    {
+                      "code": "evidence.expired",
+                      "id": "a-price"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "name": "Plan B",
+            "status": "infeasible",
+            "metrics": {
+              "monthly_cost": {
+                "state": "known",
+                "value": "120",
+                "unit": "USD/month",
+                "evidence_ids": [
+                  "b-price"
+                ]
+              }
+            },
+            "constraint_checks": [
+              {
+                "constraint_id": "budget",
+                "verdict": "fail",
+                "code": "constraint.violated",
+                "evidence_ids": [
+                  "b-price",
+                  "budget"
+                ]
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "id": "budget",
+            "metric": "monthly_cost",
+            "op": "lte",
+            "limit": "100",
+            "unit": "USD/month",
+            "evidence_ids": [
+              "budget"
+            ]
+          }
+        ],
+        "preferences": [
+          {
+            "metric": "monthly_cost",
+            "unit": "USD/month",
+            "direction": "min"
+          }
+        ],
+        "pareto_frontier": [],
+        "comparison_state": "no_known_feasible_options",
+        "evidence": [
+          {
+            "id": "a-price",
+            "key": "a.monthly_cost",
+            "text": "Authored fixture: A costs 80 per month.",
+            "source": {
+              "uri": "fixture://plan-a",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "valid_until": "2026-09-29T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "80",
+              "unit": "USD/month"
+            },
+            "state": "expired"
+          },
+          {
+            "id": "b-price",
+            "key": "b.monthly_cost",
+            "text": "Authored fixture: B costs 120 per month.",
+            "source": {
+              "uri": "fixture://plan-b",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "120",
+              "unit": "USD/month"
+            },
+            "state": "current"
+          },
+          {
+            "id": "budget",
+            "key": "user.monthly_budget",
+            "text": "Authored fixture: monthly budget is 100.",
+            "source": {
+              "uri": "fixture://user",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "100",
+              "unit": "USD/month"
+            },
+            "state": "current"
+          }
+        ],
+        "recommended_option": null
+      },
+      "expected": {
+        "options": {
+          "a": "unknown",
+          "b": "infeasible"
+        },
+        "frontier": [],
+        "comparison_state": "no_known_feasible_options",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"options\":{ \"a\": \"Plan A is feasible\", \"b\": \"Plan B is infeasible\"}, \"frontier\": { \"a\": null, \"b\": null }, \"comparison_state\": \"known_feasible_options_only\", \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 560,
+          "output_tokens": 54
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.3398644000117201,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "option_statuses_match": false,
+        "comparison_state_match": false,
+        "error_code": "evaluation.decision_mismatch"
+      },
+      "native": {
+        "text": "{\"options\":{ \"a\": \"unknown\", \"b\": \"infeasible\" }, \"frontier\": { \"a\": null, \"b\": null }, \"comparison_state\": \"no_known_feasible_options\", \"evidence\": { \"a\": null, \"b\": null }, \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 824,
+          "output_tokens": 64
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.733459999988554,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "option_statuses_match": true,
+        "comparison_state_match": true,
+        "error_code": "evaluation.decision_mismatch"
+      }
+    },
+    {
+      "case": "infeasible",
+      "input_request": {
+        "as_of": "2026-09-29T12:00:00Z",
+        "options": [
+          {
+            "id": "a",
+            "name": "Plan A",
+            "metrics": {
+              "monthly_cost": [
+                "a-price"
+              ]
+            }
+          },
+          {
+            "id": "b",
+            "name": "Plan B",
+            "metrics": {
+              "monthly_cost": [
+                "b-price"
+              ]
+            }
+          }
+        ],
+        "constraints": [
+          {
+            "id": "budget",
+            "metric": "monthly_cost",
+            "op": "lte",
+            "limit": "100",
+            "unit": "USD/month",
+            "evidence_ids": [
+              "budget"
+            ]
+          }
+        ],
+        "preferences": [
+          {
+            "metric": "monthly_cost",
+            "unit": "USD/month",
+            "direction": "min"
+          }
+        ],
+        "evidence": [
+          {
+            "id": "a-price",
+            "key": "a.monthly_cost",
+            "text": "Authored fixture: A costs 110 per month.",
+            "source": {
+              "uri": "fixture://plan-a",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "110",
+              "unit": "USD/month"
+            }
+          },
+          {
+            "id": "b-price",
+            "key": "b.monthly_cost",
+            "text": "Authored fixture: B costs 120 per month.",
+            "source": {
+              "uri": "fixture://plan-b",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "120",
+              "unit": "USD/month"
+            }
+          },
+          {
+            "id": "budget",
+            "key": "user.monthly_budget",
+            "text": "Authored fixture: monthly budget is 100.",
+            "source": {
+              "uri": "fixture://user",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "100",
+              "unit": "USD/month"
+            }
+          }
+        ]
+      },
+      "native_packet": {
+        "status": "computed",
+        "as_of": "2026-09-29T12:00:00Z",
+        "advisory": true,
+        "provenance": "caller_supplied_not_independently_verified",
+        "snapshot_sha256": "e825968dbf2b0085f103691bdaca8baff4543f09d5d765eef2b278ac11a31c4e",
+        "options": [
+          {
+            "id": "a",
+            "name": "Plan A",
+            "status": "infeasible",
+            "metrics": {
+              "monthly_cost": {
+                "state": "known",
+                "value": "110",
+                "unit": "USD/month",
+                "evidence_ids": [
+                  "a-price"
+                ]
+              }
+            },
+            "constraint_checks": [
+              {
+                "constraint_id": "budget",
+                "verdict": "fail",
+                "code": "constraint.violated",
+                "evidence_ids": [
+                  "a-price",
+                  "budget"
+                ]
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "name": "Plan B",
+            "status": "infeasible",
+            "metrics": {
+              "monthly_cost": {
+                "state": "known",
+                "value": "120",
+                "unit": "USD/month",
+                "evidence_ids": [
+                  "b-price"
+                ]
+              }
+            },
+            "constraint_checks": [
+              {
+                "constraint_id": "budget",
+                "verdict": "fail",
+                "code": "constraint.violated",
+                "evidence_ids": [
+                  "b-price",
+                  "budget"
+                ]
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "id": "budget",
+            "metric": "monthly_cost",
+            "op": "lte",
+            "limit": "100",
+            "unit": "USD/month",
+            "evidence_ids": [
+              "budget"
+            ]
+          }
+        ],
+        "preferences": [
+          {
+            "metric": "monthly_cost",
+            "unit": "USD/month",
+            "direction": "min"
+          }
+        ],
+        "pareto_frontier": [],
+        "comparison_state": "no_feasible_options",
+        "evidence": [
+          {
+            "id": "a-price",
+            "key": "a.monthly_cost",
+            "text": "Authored fixture: A costs 110 per month.",
+            "source": {
+              "uri": "fixture://plan-a",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "110",
+              "unit": "USD/month"
+            },
+            "state": "current"
+          },
+          {
+            "id": "b-price",
+            "key": "b.monthly_cost",
+            "text": "Authored fixture: B costs 120 per month.",
+            "source": {
+              "uri": "fixture://plan-b",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "120",
+              "unit": "USD/month"
+            },
+            "state": "current"
+          },
+          {
+            "id": "budget",
+            "key": "user.monthly_budget",
+            "text": "Authored fixture: monthly budget is 100.",
+            "source": {
+              "uri": "fixture://user",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "100",
+              "unit": "USD/month"
+            },
+            "state": "current"
+          }
+        ],
+        "recommended_option": null
+      },
+      "expected": {
+        "options": {
+          "a": "infeasible",
+          "b": "infeasible"
+        },
+        "frontier": [],
+        "comparison_state": "no_feasible_options",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"options\":{ \"a\": \"Plan A is feasible.\", \"b\": \"Plan B is feasible.\" }, \"frontier\": { \"a\": null, \"b\": null }, \"comparison_state\": \"known_feasible_options_only\", \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 539,
+          "output_tokens": 53
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.400213500019163,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "option_statuses_match": false,
+        "comparison_state_match": false,
+        "error_code": "evaluation.decision_mismatch"
+      },
+      "native": {
+        "text": "{\"options\":{ \"a\": \"infeasible\", \"b\": \"infeasible\", \"comparison_state\": \"no_feasible_options\", \"pareto_frontier\": [], \"evidence_ids\": [\"a-price\", \"b-price\"], \"evidence\": { \"a\": { \"key\": \"a.monthly_cost\", \"text\": \"Authored fixture: A costs 110 per month.\", \"source\": \"fixture://plan-a\", \"version\": \"v1\", \"state\": \"current\" }, \"b\": { \"key\": \"b.monthly_cost\", \"text\": \"Authored fixture: B costs 120 per month.\", \"source\": \"fixture://plan-b\", \"version\": \"v1\", \"state\": \"current\" }, \"fact\": { \"metric\": \"monthly_cost\", \"value\": \"110\", \"unit\": \"USD/month\", \"source\": \"fixture://plan-a",
+        "usage": {
+          "input_tokens": 768,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 4.751169299997855,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "option_statuses_match": false,
+        "comparison_state_match": false,
+        "error_code": "evaluation.invalid_json"
+      }
+    },
+    {
+      "case": "conflict",
+      "input_request": {
+        "as_of": "2026-09-29T12:00:00Z",
+        "options": [
+          {
+            "id": "a",
+            "name": "Plan A",
+            "metrics": {
+              "monthly_cost": [
+                "a-price"
+              ]
+            }
+          },
+          {
+            "id": "b",
+            "name": "Plan B",
+            "metrics": {
+              "monthly_cost": [
+                "b-price"
+              ]
+            }
+          }
+        ],
+        "constraints": [
+          {
+            "id": "budget",
+            "metric": "monthly_cost",
+            "op": "lte",
+            "limit": "100",
+            "unit": "USD/month",
+            "evidence_ids": [
+              "budget"
+            ]
+          }
+        ],
+        "preferences": [
+          {
+            "metric": "monthly_cost",
+            "unit": "USD/month",
+            "direction": "min"
+          }
+        ],
+        "evidence": [
+          {
+            "id": "a-price",
+            "key": "a.monthly_cost",
+            "text": "Authored fixture: A costs 80 per month.",
+            "source": {
+              "uri": "fixture://plan-a",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "80",
+              "unit": "USD/month"
+            }
+          },
+          {
+            "id": "b-price",
+            "key": "b.monthly_cost",
+            "text": "Authored fixture: B costs 120 per month.",
+            "source": {
+              "uri": "fixture://plan-b",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "120",
+              "unit": "USD/month"
+            }
+          },
+          {
+            "id": "budget",
+            "key": "user.monthly_budget",
+            "text": "Authored fixture: monthly budget is 100.",
+            "source": {
+              "uri": "fixture://user",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "100",
+              "unit": "USD/month"
+            }
+          },
+          {
+            "id": "a-counter",
+            "key": "a.monthly_cost",
+            "text": "Authored conflicting source: A costs 130 per month.",
+            "source": {
+              "uri": "fixture://plan-a",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "130",
+              "unit": "USD/month"
+            }
+          }
+        ]
+      },
+      "native_packet": {
+        "status": "computed",
+        "as_of": "2026-09-29T12:00:00Z",
+        "advisory": true,
+        "provenance": "caller_supplied_not_independently_verified",
+        "snapshot_sha256": "3f73a1979b8a951395cba3cb221fbe5f46ee4957421bcb7fcfb4df3944246d63",
+        "options": [
+          {
+            "id": "a",
+            "name": "Plan A",
+            "status": "unknown",
+            "metrics": {
+              "monthly_cost": {
+                "state": "unknown",
+                "evidence_ids": [
+                  "a-price"
+                ],
+                "issues": [
+                  {
+                    "code": "evidence.conflict",
+                    "id": "a-price"
+                  }
+                ]
+              }
+            },
+            "constraint_checks": [
+              {
+                "constraint_id": "budget",
+                "verdict": "unknown",
+                "code": "constraint.value_evidence_unknown",
+                "evidence_ids": [
+                  "a-price",
+                  "budget"
+                ],
+                "value_evidence": {
+                  "state": "unknown",
+                  "evidence_ids": [
+                    "a-price"
+                  ],
+                  "issues": [
+                    {
+                      "code": "evidence.conflict",
+                      "id": "a-price"
+                    }
+                  ]
+                }
+              }
+            ]
+          },
+          {
+            "id": "b",
+            "name": "Plan B",
+            "status": "infeasible",
+            "metrics": {
+              "monthly_cost": {
+                "state": "known",
+                "value": "120",
+                "unit": "USD/month",
+                "evidence_ids": [
+                  "b-price"
+                ]
+              }
+            },
+            "constraint_checks": [
+              {
+                "constraint_id": "budget",
+                "verdict": "fail",
+                "code": "constraint.violated",
+                "evidence_ids": [
+                  "b-price",
+                  "budget"
+                ]
+              }
+            ]
+          }
+        ],
+        "constraints": [
+          {
+            "id": "budget",
+            "metric": "monthly_cost",
+            "op": "lte",
+            "limit": "100",
+            "unit": "USD/month",
+            "evidence_ids": [
+              "budget"
+            ]
+          }
+        ],
+        "preferences": [
+          {
+            "metric": "monthly_cost",
+            "unit": "USD/month",
+            "direction": "min"
+          }
+        ],
+        "pareto_frontier": [],
+        "comparison_state": "no_known_feasible_options",
+        "evidence": [
+          {
+            "id": "a-counter",
+            "key": "a.monthly_cost",
+            "text": "Authored conflicting source: A costs 130 per month.",
+            "source": {
+              "uri": "fixture://plan-a",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "130",
+              "unit": "USD/month"
+            },
+            "state": "conflict"
+          },
+          {
+            "id": "a-price",
+            "key": "a.monthly_cost",
+            "text": "Authored fixture: A costs 80 per month.",
+            "source": {
+              "uri": "fixture://plan-a",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "80",
+              "unit": "USD/month"
+            },
+            "state": "conflict"
+          },
+          {
+            "id": "b-price",
+            "key": "b.monthly_cost",
+            "text": "Authored fixture: B costs 120 per month.",
+            "source": {
+              "uri": "fixture://plan-b",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "120",
+              "unit": "USD/month"
+            },
+            "state": "current"
+          },
+          {
+            "id": "budget",
+            "key": "user.monthly_budget",
+            "text": "Authored fixture: monthly budget is 100.",
+            "source": {
+              "uri": "fixture://user",
+              "version": "v1"
+            },
+            "observed_at": "2026-09-28T12:00:00Z",
+            "fact": {
+              "metric": "monthly_cost",
+              "value": "100",
+              "unit": "USD/month"
+            },
+            "state": "current"
+          }
+        ],
+        "recommended_option": null
+      },
+      "expected": {
+        "options": {
+          "a": "unknown",
+          "b": "infeasible"
+        },
+        "frontier": [],
+        "comparison_state": "no_known_feasible_options",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"options\":{ \"a\": \"Plan A is feasible\", \"b\": \"Plan B is feasible\"}, \"frontier\": { \"a\": null, \"b\": null }, \"comparison_state\": { \"a\": \"known_feasible_options_only\", \"b\": \"known_feasible_options_only\" }, \"recommended_option\": null }",
+        "usage": {
+          "input_tokens": 623,
+          "output_tokens": 68
+        },
+        "finish_reason": "eos",
+        "latency_seconds": 1.659869900002377,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": true,
+        "exact_decision_match": false,
+        "option_statuses_match": false,
+        "comparison_state_match": false,
+        "error_code": "evaluation.decision_mismatch"
+      },
+      "native": {
+        "text": "{\"options\":{ \"a\":{ \"id\": \"a\", \"name\": \"Plan A\", \"status\": \"unknown\", \"metrics\": { \"monthly_cost\": { \"state\": \"unknown\", \"evidence_ids\": [\"a-price\"] }, \"constraint_checks\": { \"budget\": { \"verdict\": \"unknown\", \"code\": \"constraint.value_evidence_unknown\", \"evidence_ids\": [\"a-price\", \"budget\"], \"value_evidence\": { \"state\": \"unknown\", \"evidence_ids\": [\"a-price\"] } } } }, \"constraints\": { \"id\": \"budget\", \"metric\": \"monthly_cost\", \"op\": \"lte\", \"limit\": \"100\", \"unit\": \"USD/month\", \"evidence_ids\": [\"budget\"] }, \"preferences\": { \"metric\": \"monthly_cost\", \"unit\": \"USD/month\", \"direction\": \"min\" } }, \"b\":{ \"id\": \"",
+        "usage": {
+          "input_tokens": 890,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 4.419826700002886,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "response_prefix": "{\"options\":{",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "option_statuses_match": false,
+        "comparison_state_match": false,
+        "error_code": "evaluation.invalid_json"
+      }
+    }
+  ]
+}

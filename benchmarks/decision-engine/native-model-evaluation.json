@@ -1,0 +1,177 @@
+{
+  "population": "Four authored development cases, one Chinese prompt contract, cached local 1.5B model, greedy decoding, no retries",
+  "comparison": "Full native tool result versus raw structured request with the same response contract; includes all input/output tokens in these explanation calls, excludes model loading and an actual agent's tool discovery/call generation",
+  "limits": "Not unseen tasks, not production agent behavior, not a source-verification or prose-quality test; no monetary savings established",
+  "runs": [
+    {
+      "case": "budget",
+      "expected": {
+        "options": {
+          "a": "feasible",
+          "b": "infeasible"
+        },
+        "frontier": [
+          "a"
+        ],
+        "comparison_state": "known_feasible_options_only",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"as_of\":\"2026-09-29T12:00:00Z\",\"options\":[{\"id\":\"a\",\"name\":\"Plan A\",\"metrics\":{\"monthly_cost\":[\"a-price\"]},{\"id\":\"b\",\"name\":\"Plan B\",\"metrics\":{\"monthly_cost\":[\"b-price\"]}}],\"constraints\":[{\"id\":\"budget\",\"metric\":\"monthly_cost\",\"op\":\"lte\",\"limit\":\"100\",\"unit\":\"USD/month\",\"evidence_ids\":[\"budget\"]}],\"preferences\":[{\"metric\":\"monthly_cost\",\"unit\":\"USD/month\",\"direction\":\"min\"}],\"evidence\":[{\"id\":\"a-price\",\"key\":\"a.monthly_cost\",\"text\":\"Authored fixture: A costs 80 per month.\",\"source\":{\"uri\":\"fixture://plan-a\",\"version\":\"v1\"},\"observed_at\":\"2026-09-28T12:00:00Z\",\"fact\":{\"metric\":\"monthly_cost\",\"value\":\"80",
+        "usage": {
+          "input_tokens": 515,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 5.328262999973958,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "error_code": "evaluation.invalid_json"
+      },
+      "native": {
+        "text": "{\"status\":\"computed\",\"as_of\":\"2026-09-29T12:00:00Z\",\"advisory\":true,\"provenance\":\"caller_supplied_not_independently_verified\",\"snapshot_sha256\":\"c96f7b73939acb4428887177e5c924c2ad514f47e1088297438ed1d476f075b6\",\"options\":[{\"id\":\"a\",\"name\":\"Plan A\",\"status\":\"feasible\",\"metrics\":{\"monthly_cost\":{\"state\":\"known\",\"value\":\"80\",\"unit\":\"USD/month\",\"evidence_ids\":[\"a-price\"]}},\"constraint_checks\":[{\"constraint_id\":\"budget\",\"verdict\":\"pass\",\"code\":\"constraint.satisfied\",\"evidence_ids\":[\"a-price\",\"budget\"],\"value_evidence\":{\"state\":\"",
+        "usage": {
+          "input_tokens": 852,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 4.60665600001812,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "error_code": "evaluation.invalid_json"
+      }
+    },
+    {
+      "case": "expired",
+      "expected": {
+        "options": {
+          "a": "unknown",
+          "b": "infeasible"
+        },
+        "frontier": [],
+        "comparison_state": "no_known_feasible_options",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"as_of\":\"2026-09-29T12:00:00Z\",\"options\":[{\"id\":\"a\",\"name\":\"Plan A\",\"metrics\":{\"monthly_cost\":[\"a-price\"]}},{\"id\":\"b\",\"name\":\"Plan B\",\"metrics\":{\"monthly_cost\":[\"b-price\"]}}],\"constraints\":[{\"id\":\"budget\",\"metric\":\"monthly_cost\",\"op\":\"lte\",\"limit\":\"100\",\"unit\":\"USD/month\",\"evidence_ids\":[\"budget\"]}],\"preferences\":[{\"metric\":\"monthly_cost\",\"unit\":\"USD/month\",\"direction\":\"min\"}],\"evidence\":[{\"id\":\"a-price\",\"key\":\"a.monthly_cost\",\"text\":\"Authored fixture: A costs 80 per month.\",\"source\":{\"uri\":\"fixture://plan-a\",\"version\":\"v1\"},\"observed_at\":\"2026-09-28T12:00:00Z\",\"fact\":{\"metric\":\"monthly_cost\",\"value\":\"80",
+        "usage": {
+          "input_tokens": 538,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 4.549958899995545,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "error_code": "evaluation.invalid_json"
+      },
+      "native": {
+        "text": "{\"status\":\"computed\",\"as_of\":\"2026-09-29T12:00:00Z\",\"advisory\":true,\"provenance\":\"caller_supplied_not_independently_verified\",\"snapshot_sha256\":\"56d08b4c2423dc928a3d115ce7dc3d9ac661bfd57a41eb615931be16959aae60\",\"options\":[{\"id\":\"a\",\"name\":\"Plan A\",\"status\":\"unknown\",\"metrics\":{\"monthly_cost\":{\"state\":\"unknown\",\"evidence_ids\":[\"a-price\"],\"issues\":[{\"code\":\"evidence.expired\",\"id\":\"a-price\"}]}},\"constraint_checks\":[{\"constraint_id\":\"budget\",\"verdict\":\"unknown\",\"code\":\"constraint.value_evidence_unknown\",\"evidence_ids\":[\"a-price\",\"budget\"],\"value_evidence\":{\"state",
+        "usage": {
+          "input_tokens": 881,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 4.560669300000882,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "error_code": "evaluation.invalid_json"
+      }
+    },
+    {
+      "case": "infeasible",
+      "expected": {
+        "options": {
+          "a": "infeasible",
+          "b": "infeasible"
+        },
+        "frontier": [],
+        "comparison_state": "no_feasible_options",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"as_of\":\"2026-09-29T12:00:00Z\",\"options\":[{\"id\":\"a\",\"name\":\"Plan A\",\"metrics\":{\"monthly_cost\":[\"a-price\"]},{\"id\":\"b\",\"name\":\"Plan B\",\"metrics\":{\"monthly_cost\":[\"b-price\"]}}],\"constraints\":[{\"id\":\"budget\",\"metric\":\"monthly_cost\",\"op\":\"lte\",\"limit\":\"100\",\"unit\":\"USD/month\",\"evidence_ids\":[\"budget\"]}],\"preferences\":[{\"metric\":\"monthly_cost\",\"unit\":\"USD/month\",\"direction\":\"min\"}],\"evidence\":[{\"id\":\"a-price\",\"key\":\"a.monthly_cost\",\"text\":\"Authored fixture: A costs 80 per month.\",\"source\":{\"uri\":\"fixture://plan-a\",\"version\":\"v1\"},\"observed_at\":\"2026-09-28T12:00:00Z\",\"fact\":{\"metric\":\"monthly_cost\",\"value\":\"11",
+        "usage": {
+          "input_tokens": 516,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 4.573686899995664,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "error_code": "evaluation.invalid_json"
+      },
+      "native": {
+        "text": "{\"status\":\"computed\",\"as_of\":\"2026-09-29T12:00:00Z\",\"advisory\":true,\"provenance\":\"caller_supplied_not_independently_verified\",\"snapshot_sha256\":\"03265b996d9bbfc2f90cc0d9f1f8e502d3d277fd455204dd5bfe29e137da264a\",\"options\":[{\"id\":\"a\",\"name\":\"Plan A\",\"status\":\"infeasible\",\"metrics\":{\"monthly_cost\":{\"state\":\"known\",\"value\":\"110\",\"unit\":\"USD/month\",\"evidence_ids\":[\"a-price\"]}},\"constraint_checks\":[{\"constraint_id\":\"budget\",\"verdict\":\"fail\",\"code\":\"constraint.violated\",\"evidence_ids\":[\"a-price\",\"budget\"],\"value_evidence\":{\"state\":\"",
+        "usage": {
+          "input_tokens": 852,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 4.5461871000006795,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "error_code": "evaluation.invalid_json"
+      }
+    },
+    {
+      "case": "conflict",
+      "expected": {
+        "options": {
+          "a": "unknown",
+          "b": "infeasible"
+        },
+        "frontier": [],
+        "comparison_state": "no_known_feasible_options",
+        "recommended_option": null
+      },
+      "raw": {
+        "text": "{\"as_of\":\"2026-09-29T12:00:00Z\",\"options\":[{\"id\":\"a\",\"name\":\"Plan A\",\"metrics\":{\"monthly_cost\":[\"a-price\"]}},{\"id\":\"b\",\"name\":\"Plan B\",\"metrics\":{\"monthly_cost\":[\"b-price\"]}}],\"constraints\":[{\"id\":\"budget\",\"metric\":\"monthly_cost\",\"op\":\"lte\",\"limit\":\"100\",\"unit\":\"USD/month\",\"evidence_ids\":[\"budget\"]}],\"preferences\":[{\"metric\":\"monthly_cost\",\"unit\":\"USD/month\",\"direction\":\"min\"}],\"evidence\":[{\"id\":\"a-price\",\"key\":\"a.monthly_cost\",\"text\":\"Authored fixture: A costs 80 per month.\",\"source\":{\"uri\":\"fixture://plan-a\",\"version\":\"v1\"},\"observed_at\":\"2026-09-28T12:00:00Z\",\"fact\":{\"metric\":\"monthly_cost\",\"value\":\"80",
+        "usage": {
+          "input_tokens": 601,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 4.605850599997211,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "error_code": "evaluation.invalid_json"
+      },
+      "native": {
+        "text": "{\"status\":\"computed\",\"as_of\":\"2026-09-29T12:00:00Z\",\"advisory\":true,\"provenance\":\"caller_supplied_not_independently_verified\",\"snapshot_sha256\":\"3f73a1979b8a951395cba3cb221fbe5f46ee4957421bcb7fcfb4df3944246d63\",\"options\":[{\"id\":\"a\",\"name\":\"Plan A\",\"status\":\"unknown\",\"metrics\":{\"monthly_cost\":{\"state\":\"unknown\",\"evidence_ids\":[\"a-price\"],\"issues\":[{\"code\":\"evidence.conflict\",\"id\":\"a-price\"}]}},\"constraint_checks\":[{\"constraint_id\":\"budget\",\"verdict\":\"unknown\",\"code\":\"constraint.value_evidence_unknown\",\"evidence_ids\":[\"a-price\",\"budget\"],\"value_evidence\":{\"state\":\"",
+        "usage": {
+          "input_tokens": 947,
+          "output_tokens": 192
+        },
+        "finish_reason": "output_limit",
+        "latency_seconds": 4.4629665999964345,
+        "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "protocol": "Greedy JSON-prefilled generation with reasoning prefix explicitly closed; local counts include chat template, input prefill and generated EOS",
+        "valid_json": false,
+        "exact_decision_match": false,
+        "error_code": "evaluation.invalid_json"
+      }
+    }
+  ]
+}

@@ -1,0 +1,25 @@
+决策报告
+参考时间："2026-09-29T12:00:00Z"
+快照：63198813bed6b296e06c01fafa4dd062
+有效至："2026-09-30T01:02:58.5187129-07:00"
+计算基于调用方提供的资料；来源未独立核实，结果仅供参考。
+优选集合仅覆盖已知满足约束的方案；若有未确定方案，仍需补充信息。
+优选集合："a"
+不指定唯一推荐；集合内方案可能存在取舍。
+
+约束与偏好
+- "budget"："monthly_cost" 不超过 "100" "USD/month"；依据 "budget"
+- 偏好："monthly_cost" "USD/month"，越小越好
+
+方案 "a" "Plan A"：满足已列约束
+- "monthly_cost"："80" "USD/month"；依据 "a-price"
+- 约束 "budget"：通过；依据 "a-price, budget"
+
+方案 "b" "Plan B"：不满足已列约束
+- "monthly_cost"："120" "USD/month"；依据 "b-price"
+- 约束 "budget"：不通过；依据 "b-price, budget"
+
+引用资料（来源信息由调用方提供）
+- "a-price" [参考时间内有效]："fixture://plan-a"；版本 "v1"；观察时间 "2026-09-28T12:00:00Z"
+- "b-price" [参考时间内有效]："fixture://plan-b"；版本 "v1"；观察时间 "2026-09-28T12:00:00Z"
+- "budget" [参考时间内有效]："fixture://user"；版本 "v1"；观察时间 "2026-09-28T12:00:00Z"

@@ -339,10 +339,10 @@ type Options struct {
 	TaskStore taskmonitor.WriteStore
 	// WorkspaceLease is the Delivery writer owner shared with the executor.
 	WorkspaceLease *workspacelease.Owner
-	// Registry is the executor's live tool set, and PluginCtx the session-scoped
-	// context; both are needed for hot-adding MCP servers via AddMCPServer.
-	Registry  *tool.Registry
-	PluginCtx context.Context
+	// Registry and PluginCtx support session-scoped MCP server registration.
+	Registry         *tool.Registry
+	DecisionReporter DecisionReporter
+	PluginCtx        context.Context
 	// MCPDefaultCallTimeout is the global MCP call cap used by hot-connected
 	// servers when they do not declare a server- or tool-specific override.
 	MCPDefaultCallTimeout time.Duration

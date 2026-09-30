@@ -1,0 +1,236 @@
+{
+  "scope": "Eight previously recorded outputs from four authored cases; no new model calls. Measures canonical decision binding and candidate-independent report generation, not source truth, real-user quality, latency improvement or end-to-end token savings.",
+  "cases": 4,
+  "outputs": 8,
+  "canonical_matches": 8,
+  "accepted": 1,
+  "fallback": 7,
+  "candidate_independent_reports": 4,
+  "additional_report_model_calls": 0,
+  "runs": [
+    {
+      "case": "budget",
+      "mode": "raw",
+      "output": {
+        "status": "computed_fallback",
+        "validation_scope": "structured_consistency_with_host_snapshot_only",
+        "reasons": [
+          {
+            "code": "answer.schema_invalid"
+          }
+        ],
+        "decision": {
+          "options": {
+            "a": "feasible",
+            "b": "infeasible"
+          },
+          "frontier": [
+            "a"
+          ],
+          "comparison_state": "known_feasible_options_only",
+          "recommended_option": null
+        },
+        "snapshot_id": "63198813bed6b296e06c01fafa4dd062",
+        "snapshot_sha256": "c96f7b73939acb4428887177e5c924c2ad514f47e1088297438ed1d476f075b6",
+        "report": {
+          "media_type": "text/plain",
+          "text": "决策报告\n参考时间：\"2026-09-29T12:00:00Z\"\n快照：63198813bed6b296e06c01fafa4dd062\n有效至：\"2026-09-30T01:02:58.5187129-07:00\"\n计算基于调用方提供的资料；来源未独立核实，结果仅供参考。\n优选集合仅覆盖已知满足约束的方案；若有未确定方案，仍需补充信息。\n优选集合：\"a\"\n不指定唯一推荐；集合内方案可能存在取舍。\n\n约束与偏好\n- \"budget\"：\"monthly_cost\" 不超过 \"100\" \"USD/month\"；依据 \"budget\"\n- 偏好：\"monthly_cost\" \"USD/month\"，越小越好\n\n方案 \"a\" \"Plan A\"：满足已列约束\n- \"monthly_cost\"：\"80\" \"USD/month\"；依据 \"a-price\"\n- 约束 \"budget\"：通过；依据 \"a-price, budget\"\n\n方案 \"b\" \"Plan B\"：不满足已列约束\n- \"monthly_cost\"：\"120\" \"USD/month\"；依据 \"b-price\"\n- 约束 \"budget\"：不通过；依据 \"b-price, budget\"\n\n引用资料（来源信息由调用方提供）\n- \"a-price\" [参考时间内有效]：\"fixture://plan-a\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"b-price\" [参考时间内有效]：\"fixture://plan-b\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"budget\" [参考时间内有效]：\"fixture://user\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n"
+        }
+      }
+    },
+    {
+      "case": "budget",
+      "mode": "native",
+      "output": {
+        "status": "answer_accepted",
+        "validation_scope": "structured_consistency_with_host_snapshot_only",
+        "reasons": [],
+        "decision": {
+          "options": {
+            "a": "feasible",
+            "b": "infeasible"
+          },
+          "frontier": [
+            "a"
+          ],
+          "comparison_state": "known_feasible_options_only",
+          "recommended_option": null
+        },
+        "snapshot_id": "63198813bed6b296e06c01fafa4dd062",
+        "snapshot_sha256": "c96f7b73939acb4428887177e5c924c2ad514f47e1088297438ed1d476f075b6",
+        "report": {
+          "media_type": "text/plain",
+          "text": "决策报告\n参考时间：\"2026-09-29T12:00:00Z\"\n快照：63198813bed6b296e06c01fafa4dd062\n有效至：\"2026-09-30T01:02:58.5187129-07:00\"\n计算基于调用方提供的资料；来源未独立核实，结果仅供参考。\n优选集合仅覆盖已知满足约束的方案；若有未确定方案，仍需补充信息。\n优选集合：\"a\"\n不指定唯一推荐；集合内方案可能存在取舍。\n\n约束与偏好\n- \"budget\"：\"monthly_cost\" 不超过 \"100\" \"USD/month\"；依据 \"budget\"\n- 偏好：\"monthly_cost\" \"USD/month\"，越小越好\n\n方案 \"a\" \"Plan A\"：满足已列约束\n- \"monthly_cost\"：\"80\" \"USD/month\"；依据 \"a-price\"\n- 约束 \"budget\"：通过；依据 \"a-price, budget\"\n\n方案 \"b\" \"Plan B\"：不满足已列约束\n- \"monthly_cost\"：\"120\" \"USD/month\"；依据 \"b-price\"\n- 约束 \"budget\"：不通过；依据 \"b-price, budget\"\n\n引用资料（来源信息由调用方提供）\n- \"a-price\" [参考时间内有效]：\"fixture://plan-a\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"b-price\" [参考时间内有效]：\"fixture://plan-b\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"budget\" [参考时间内有效]：\"fixture://user\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n"
+        }
+      }
+    },
+    {
+      "case": "expired",
+      "mode": "raw",
+      "output": {
+        "status": "computed_fallback",
+        "validation_scope": "structured_consistency_with_host_snapshot_only",
+        "reasons": [
+          {
+            "code": "answer.schema_invalid"
+          }
+        ],
+        "decision": {
+          "options": {
+            "a": "unknown",
+            "b": "infeasible"
+          },
+          "frontier": [],
+          "comparison_state": "no_known_feasible_options",
+          "recommended_option": null
+        },
+        "snapshot_id": "6fb847fb25ec5d8568ba262260bd795c",
+        "snapshot_sha256": "56d08b4c2423dc928a3d115ce7dc3d9ac661bfd57a41eb615931be16959aae60",
+        "report": {
+          "media_type": "text/plain",
+          "text": "决策报告\n参考时间：\"2026-09-29T12:00:00Z\"\n快照：6fb847fb25ec5d8568ba262260bd795c\n有效至：\"2026-09-30T01:02:58.5426553-07:00\"\n计算基于调用方提供的资料；来源未独立核实，结果仅供参考。\n尚无已知满足约束的方案；存在未确定项。\n优选集合：\"\"\n不指定唯一推荐；集合内方案可能存在取舍。\n\n约束与偏好\n- \"budget\"：\"monthly_cost\" 不超过 \"100\" \"USD/month\"；依据 \"budget\"\n- 偏好：\"monthly_cost\" \"USD/month\"，越小越好\n\n方案 \"a\" \"Plan A\"：尚未确定\n- \"monthly_cost\"：尚未确定；依据 \"a-price\"\n  未确定原因：资料已过期 \"a-price\"\n- 约束 \"budget\"：尚未确定；依据 \"a-price, budget\"\n  未确定原因：资料已过期 \"a-price\"\n\n方案 \"b\" \"Plan B\"：不满足已列约束\n- \"monthly_cost\"：\"120\" \"USD/month\"；依据 \"b-price\"\n- 约束 \"budget\"：不通过；依据 \"b-price, budget\"\n\n引用资料（来源信息由调用方提供）\n- \"a-price\" [已过期]：\"fixture://plan-a\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n  资料有效至 \"2026-09-29T12:00:00Z\"\n- \"b-price\" [参考时间内有效]：\"fixture://plan-b\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"budget\" [参考时间内有效]：\"fixture://user\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n"
+        }
+      }
+    },
+    {
+      "case": "expired",
+      "mode": "native",
+      "output": {
+        "status": "computed_fallback",
+        "validation_scope": "structured_consistency_with_host_snapshot_only",
+        "reasons": [
+          {
+            "code": "answer.schema_invalid"
+          }
+        ],
+        "decision": {
+          "options": {
+            "a": "unknown",
+            "b": "infeasible"
+          },
+          "frontier": [],
+          "comparison_state": "no_known_feasible_options",
+          "recommended_option": null
+        },
+        "snapshot_id": "6fb847fb25ec5d8568ba262260bd795c",
+        "snapshot_sha256": "56d08b4c2423dc928a3d115ce7dc3d9ac661bfd57a41eb615931be16959aae60",
+        "report": {
+          "media_type": "text/plain",
+          "text": "决策报告\n参考时间：\"2026-09-29T12:00:00Z\"\n快照：6fb847fb25ec5d8568ba262260bd795c\n有效至：\"2026-09-30T01:02:58.5426553-07:00\"\n计算基于调用方提供的资料；来源未独立核实，结果仅供参考。\n尚无已知满足约束的方案；存在未确定项。\n优选集合：\"\"\n不指定唯一推荐；集合内方案可能存在取舍。\n\n约束与偏好\n- \"budget\"：\"monthly_cost\" 不超过 \"100\" \"USD/month\"；依据 \"budget\"\n- 偏好：\"monthly_cost\" \"USD/month\"，越小越好\n\n方案 \"a\" \"Plan A\"：尚未确定\n- \"monthly_cost\"：尚未确定；依据 \"a-price\"\n  未确定原因：资料已过期 \"a-price\"\n- 约束 \"budget\"：尚未确定；依据 \"a-price, budget\"\n  未确定原因：资料已过期 \"a-price\"\n\n方案 \"b\" \"Plan B\"：不满足已列约束\n- \"monthly_cost\"：\"120\" \"USD/month\"；依据 \"b-price\"\n- 约束 \"budget\"：不通过；依据 \"b-price, budget\"\n\n引用资料（来源信息由调用方提供）\n- \"a-price\" [已过期]：\"fixture://plan-a\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n  资料有效至 \"2026-09-29T12:00:00Z\"\n- \"b-price\" [参考时间内有效]：\"fixture://plan-b\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"budget\" [参考时间内有效]：\"fixture://user\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n"
+        }
+      }
+    },
+    {
+      "case": "infeasible",
+      "mode": "raw",
+      "output": {
+        "status": "computed_fallback",
+        "validation_scope": "structured_consistency_with_host_snapshot_only",
+        "reasons": [
+          {
+            "code": "answer.schema_invalid"
+          }
+        ],
+        "decision": {
+          "options": {
+            "a": "infeasible",
+            "b": "infeasible"
+          },
+          "frontier": [],
+          "comparison_state": "no_feasible_options",
+          "recommended_option": null
+        },
+        "snapshot_id": "aeaa7dbdb906d80728cabae7b5204f27",
+        "snapshot_sha256": "e825968dbf2b0085f103691bdaca8baff4543f09d5d765eef2b278ac11a31c4e",
+        "report": {
+          "media_type": "text/plain",
+          "text": "决策报告\n参考时间：\"2026-09-29T12:00:00Z\"\n快照：aeaa7dbdb906d80728cabae7b5204f27\n有效至：\"2026-09-30T01:02:58.5431685-07:00\"\n计算基于调用方提供的资料；来源未独立核实，结果仅供参考。\n没有满足约束的方案。\n优选集合：\"\"\n不指定唯一推荐；集合内方案可能存在取舍。\n\n约束与偏好\n- \"budget\"：\"monthly_cost\" 不超过 \"100\" \"USD/month\"；依据 \"budget\"\n- 偏好：\"monthly_cost\" \"USD/month\"，越小越好\n\n方案 \"a\" \"Plan A\"：不满足已列约束\n- \"monthly_cost\"：\"110\" \"USD/month\"；依据 \"a-price\"\n- 约束 \"budget\"：不通过；依据 \"a-price, budget\"\n\n方案 \"b\" \"Plan B\"：不满足已列约束\n- \"monthly_cost\"：\"120\" \"USD/month\"；依据 \"b-price\"\n- 约束 \"budget\"：不通过；依据 \"b-price, budget\"\n\n引用资料（来源信息由调用方提供）\n- \"a-price\" [参考时间内有效]：\"fixture://plan-a\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"b-price\" [参考时间内有效]：\"fixture://plan-b\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"budget\" [参考时间内有效]：\"fixture://user\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n"
+        }
+      }
+    },
+    {
+      "case": "infeasible",
+      "mode": "native",
+      "output": {
+        "status": "computed_fallback",
+        "validation_scope": "structured_consistency_with_host_snapshot_only",
+        "reasons": [
+          {
+            "code": "answer.json_invalid"
+          }
+        ],
+        "decision": {
+          "options": {
+            "a": "infeasible",
+            "b": "infeasible"
+          },
+          "frontier": [],
+          "comparison_state": "no_feasible_options",
+          "recommended_option": null
+        },
+        "snapshot_id": "aeaa7dbdb906d80728cabae7b5204f27",
+        "snapshot_sha256": "e825968dbf2b0085f103691bdaca8baff4543f09d5d765eef2b278ac11a31c4e",
+        "report": {
+          "media_type": "text/plain",
+          "text": "决策报告\n参考时间：\"2026-09-29T12:00:00Z\"\n快照：aeaa7dbdb906d80728cabae7b5204f27\n有效至：\"2026-09-30T01:02:58.5431685-07:00\"\n计算基于调用方提供的资料；来源未独立核实，结果仅供参考。\n没有满足约束的方案。\n优选集合：\"\"\n不指定唯一推荐；集合内方案可能存在取舍。\n\n约束与偏好\n- \"budget\"：\"monthly_cost\" 不超过 \"100\" \"USD/month\"；依据 \"budget\"\n- 偏好：\"monthly_cost\" \"USD/month\"，越小越好\n\n方案 \"a\" \"Plan A\"：不满足已列约束\n- \"monthly_cost\"：\"110\" \"USD/month\"；依据 \"a-price\"\n- 约束 \"budget\"：不通过；依据 \"a-price, budget\"\n\n方案 \"b\" \"Plan B\"：不满足已列约束\n- \"monthly_cost\"：\"120\" \"USD/month\"；依据 \"b-price\"\n- 约束 \"budget\"：不通过；依据 \"b-price, budget\"\n\n引用资料（来源信息由调用方提供）\n- \"a-price\" [参考时间内有效]：\"fixture://plan-a\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"b-price\" [参考时间内有效]：\"fixture://plan-b\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"budget\" [参考时间内有效]：\"fixture://user\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n"
+        }
+      }
+    },
+    {
+      "case": "conflict",
+      "mode": "raw",
+      "output": {
+        "status": "computed_fallback",
+        "validation_scope": "structured_consistency_with_host_snapshot_only",
+        "reasons": [
+          {
+            "code": "answer.schema_invalid"
+          }
+        ],
+        "decision": {
+          "options": {
+            "a": "unknown",
+            "b": "infeasible"
+          },
+          "frontier": [],
+          "comparison_state": "no_known_feasible_options",
+          "recommended_option": null
+        },
+        "snapshot_id": "997053c2bcf15996c75bc9add265bc1c",
+        "snapshot_sha256": "3f73a1979b8a951395cba3cb221fbe5f46ee4957421bcb7fcfb4df3944246d63",
+        "report": {
+          "media_type": "text/plain",
+          "text": "决策报告\n参考时间：\"2026-09-29T12:00:00Z\"\n快照：997053c2bcf15996c75bc9add265bc1c\n有效至：\"2026-09-30T01:02:58.5436837-07:00\"\n计算基于调用方提供的资料；来源未独立核实，结果仅供参考。\n尚无已知满足约束的方案；存在未确定项。\n优选集合：\"\"\n不指定唯一推荐；集合内方案可能存在取舍。\n\n约束与偏好\n- \"budget\"：\"monthly_cost\" 不超过 \"100\" \"USD/month\"；依据 \"budget\"\n- 偏好：\"monthly_cost\" \"USD/month\"，越小越好\n\n方案 \"a\" \"Plan A\"：尚未确定\n- \"monthly_cost\"：尚未确定；依据 \"a-price\"\n  未确定原因：同一事实的资料相互冲突 \"a-price\"\n- 约束 \"budget\"：尚未确定；依据 \"a-price, budget\"\n  未确定原因：同一事实的资料相互冲突 \"a-price\"\n\n方案 \"b\" \"Plan B\"：不满足已列约束\n- \"monthly_cost\"：\"120\" \"USD/month\"；依据 \"b-price\"\n- 约束 \"budget\"：不通过；依据 \"b-price, budget\"\n\n引用资料（来源信息由调用方提供）\n- \"a-counter\" [资料相互冲突]：\"fixture://plan-a\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"a-price\" [资料相互冲突]：\"fixture://plan-a\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"b-price\" [参考时间内有效]：\"fixture://plan-b\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"budget\" [参考时间内有效]：\"fixture://user\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n"
+        }
+      }
+    },
+    {
+      "case": "conflict",
+      "mode": "native",
+      "output": {
+        "status": "computed_fallback",
+        "validation_scope": "structured_consistency_with_host_snapshot_only",
+        "reasons": [
+          {
+            "code": "answer.json_invalid"
+          }
+        ],
+        "decision": {
+          "options": {
+            "a": "unknown",
+            "b": "infeasible"
+          },
+          "frontier": [],
+          "comparison_state": "no_known_feasible_options",
+          "recommended_option": null
+        },
+        "snapshot_id": "997053c2bcf15996c75bc9add265bc1c",
+        "snapshot_sha256": "3f73a1979b8a951395cba3cb221fbe5f46ee4957421bcb7fcfb4df3944246d63",
+        "report": {
+          "media_type": "text/plain",
+          "text": "决策报告\n参考时间：\"2026-09-29T12:00:00Z\"\n快照：997053c2bcf15996c75bc9add265bc1c\n有效至：\"2026-09-30T01:02:58.5436837-07:00\"\n计算基于调用方提供的资料；来源未独立核实，结果仅供参考。\n尚无已知满足约束的方案；存在未确定项。\n优选集合：\"\"\n不指定唯一推荐；集合内方案可能存在取舍。\n\n约束与偏好\n- \"budget\"：\"monthly_cost\" 不超过 \"100\" \"USD/month\"；依据 \"budget\"\n- 偏好：\"monthly_cost\" \"USD/month\"，越小越好\n\n方案 \"a\" \"Plan A\"：尚未确定\n- \"monthly_cost\"：尚未确定；依据 \"a-price\"\n  未确定原因：同一事实的资料相互冲突 \"a-price\"\n- 约束 \"budget\"：尚未确定；依据 \"a-price, budget\"\n  未确定原因：同一事实的资料相互冲突 \"a-price\"\n\n方案 \"b\" \"Plan B\"：不满足已列约束\n- \"monthly_cost\"：\"120\" \"USD/month\"；依据 \"b-price\"\n- 约束 \"budget\"：不通过；依据 \"b-price, budget\"\n\n引用资料（来源信息由调用方提供）\n- \"a-counter\" [资料相互冲突]：\"fixture://plan-a\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"a-price\" [资料相互冲突]：\"fixture://plan-a\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"b-price\" [参考时间内有效]：\"fixture://plan-b\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n- \"budget\" [参考时间内有效]：\"fixture://user\"；版本 \"v1\"；观察时间 \"2026-09-28T12:00:00Z\"\n"
+        }
+      }
+    }
+  ]
+}

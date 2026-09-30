@@ -1,0 +1,283 @@
+{
+  "schema_version": 1,
+  "as_of": "2026-09-29T00:00:00Z",
+  "question": "Which product improvement can fit the launch budget and deadline, and what are the tradeoffs?",
+  "required_topics": [
+    "launch"
+  ],
+  "evidence": [
+    {
+      "id": "budget",
+      "key": "limits/budget",
+      "topic_id": "launch",
+      "text": "Recorded limits/budget: 1000 USD.",
+      "source": {
+        "uri": "fixture://planning/budget",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "cost",
+        "value": 1000,
+        "unit": "USD"
+      }
+    },
+    {
+      "id": "deadline",
+      "key": "limits/deadline",
+      "topic_id": "launch",
+      "text": "Recorded limits/deadline: 14 day.",
+      "source": {
+        "uri": "fixture://planning/deadline",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "days",
+        "value": 14,
+        "unit": "day"
+      }
+    },
+    {
+      "id": "a/cost",
+      "key": "a/cost",
+      "topic_id": "launch",
+      "text": "Recorded a/cost: 700 USD.",
+      "source": {
+        "uri": "fixture://planning/a/cost",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "cost",
+        "value": 700,
+        "unit": "USD"
+      }
+    },
+    {
+      "id": "a/days",
+      "key": "a/days",
+      "topic_id": "launch",
+      "text": "Recorded a/days: 7 day.",
+      "source": {
+        "uri": "fixture://planning/a/days",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "days",
+        "value": 7,
+        "unit": "day"
+      }
+    },
+    {
+      "id": "a/impact",
+      "key": "a/impact",
+      "topic_id": "launch",
+      "text": "Recorded a/impact: 20 score.",
+      "source": {
+        "uri": "fixture://planning/a/impact",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "impact",
+        "value": 20,
+        "unit": "score"
+      }
+    },
+    {
+      "id": "b/cost",
+      "key": "b/cost",
+      "topic_id": "launch",
+      "text": "Recorded b/cost: 1500 USD.",
+      "source": {
+        "uri": "fixture://planning/b/cost",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "cost",
+        "value": 1500,
+        "unit": "USD"
+      }
+    },
+    {
+      "id": "b/days",
+      "key": "b/days",
+      "topic_id": "launch",
+      "text": "Recorded b/days: 21 day.",
+      "source": {
+        "uri": "fixture://planning/b/days",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "days",
+        "value": 21,
+        "unit": "day"
+      }
+    },
+    {
+      "id": "b/impact",
+      "key": "b/impact",
+      "topic_id": "launch",
+      "text": "Recorded b/impact: 40 score.",
+      "source": {
+        "uri": "fixture://planning/b/impact",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "impact",
+        "value": 40,
+        "unit": "score"
+      }
+    },
+    {
+      "id": "c/cost",
+      "key": "c/cost",
+      "topic_id": "launch",
+      "text": "Recorded c/cost: 900 USD.",
+      "source": {
+        "uri": "fixture://planning/c/cost",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "cost",
+        "value": 900,
+        "unit": "USD"
+      }
+    },
+    {
+      "id": "c/days",
+      "key": "c/days",
+      "topic_id": "launch",
+      "text": "Recorded c/days: 10 day.",
+      "source": {
+        "uri": "fixture://planning/c/days",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "days",
+        "value": 10,
+        "unit": "day"
+      }
+    },
+    {
+      "id": "c/impact",
+      "key": "c/impact",
+      "topic_id": "launch",
+      "text": "Recorded c/impact: 30 score.",
+      "source": {
+        "uri": "fixture://planning/c/impact",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "fact": {
+        "metric": "impact",
+        "value": 30,
+        "unit": "score"
+      }
+    }
+  ],
+  "memory": [
+    {
+      "id": "decision/launch-limits",
+      "topic_id": "launch",
+      "text": "The launch budget is 1000 USD and the deadline is 14 days.",
+      "source": {
+        "uri": "fixture://planning/decision",
+        "version": "1"
+      },
+      "observed_at": "2026-09-28T00:00:00Z",
+      "evidence_ids": [
+        "budget",
+        "deadline"
+      ]
+    }
+  ],
+  "options": [
+    {
+      "id": "a",
+      "name": "Improve onboarding",
+      "metrics": {
+        "cost": [
+          "a/cost"
+        ],
+        "days": [
+          "a/days"
+        ],
+        "impact": [
+          "a/impact"
+        ]
+      }
+    },
+    {
+      "id": "b",
+      "name": "Launch enterprise dashboard",
+      "metrics": {
+        "cost": [
+          "b/cost"
+        ],
+        "days": [
+          "b/days"
+        ],
+        "impact": [
+          "b/impact"
+        ]
+      }
+    },
+    {
+      "id": "c",
+      "name": "Improve search",
+      "metrics": {
+        "cost": [
+          "c/cost"
+        ],
+        "days": [
+          "c/days"
+        ],
+        "impact": [
+          "c/impact"
+        ]
+      }
+    }
+  ],
+  "constraints": [
+    {
+      "id": "budget-limit",
+      "metric": "cost",
+      "op": "lte",
+      "limit": 1000,
+      "unit": "USD",
+      "evidence_ids": [
+        "budget"
+      ]
+    },
+    {
+      "id": "deadline-limit",
+      "metric": "days",
+      "op": "lte",
+      "limit": 14,
+      "unit": "day",
+      "evidence_ids": [
+        "deadline"
+      ]
+    }
+  ],
+  "preferences": [
+    {
+      "metric": "cost",
+      "unit": "USD",
+      "direction": "min"
+    },
+    {
+      "metric": "impact",
+      "unit": "score",
+      "direction": "max"
+    }
+  ]
+}

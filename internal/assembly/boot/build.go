@@ -225,6 +225,7 @@ func (b *builder) wireTools() error {
 	env := t.env
 	// The full inventory registers for use_capability; the provider-visible surface narrows later.
 	addBuiltins(t.reg, cfg.Tools.Enabled, env.writeRoots, env.bash, env.bashTimeout, env.search, b.stderr, root, b.proxy, env.forbidReadRoots, env.readPaths, env.sessionGuard, env.managedConfig, opts.FileOverlay, opts.TerminalRunner, env.sessionTemp, b.fileWriteReceipt)
+	registerPersistentDecisionTools(t.reg, cfg.Tools.Enabled, b.session.dir, root)
 	bindFileViews(t.reg, cfg.Tools.ChangedFilesProtected())
 	addSystemOne(t.reg, cfg.Tools.Enabled, cfg, b.balanceClient)
 	addAdvisor(t.reg, cfg, b.proxy, b.sink)
@@ -439,6 +440,7 @@ func (b *builder) controllerOptions(runner agent.Runner, executor *agent.Agent, 
 		TaskStore:             opts.TaskStore,
 		WorkspaceLease:        b.session.lease,
 		Registry:              t.reg,
+		DecisionReporter:      decisionReporter(t.reg),
 		PluginCtx:             b.ctx,
 		MCPDefaultCallTimeout: specOptions.DefaultCallTimeout,
 		MCPConfigureSpec: func(spec *plugin.Spec) {

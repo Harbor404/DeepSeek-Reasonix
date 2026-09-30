@@ -1,0 +1,219 @@
+{
+  "schema_version": 1,
+  "labels": [
+    "atomic-bugfix",
+    "multi-file-bugfix",
+    "failing-test-diagnosis",
+    "repo-exploration",
+    "read-only-output",
+    "refactor",
+    "codegen",
+    "api-integration"
+  ],
+  "audit": {
+    "exact_prompt_overlap": 0,
+    "family_overlap": 0
+  },
+  "split_rule": "GitHub repositories assigned wholly to one split before training; synthetic training rows retained",
+  "sources": [
+    {
+      "repository": "pallets/flask",
+      "split": "train",
+      "snapshot_sha256": "06e9ee70075c1c195f09e3c272af9dfbac67c2e08347607721e54d23c7a7ea2c",
+      "repository_license_spdx": "BSD-3-Clause"
+    },
+    {
+      "repository": "pallets/click",
+      "split": "train",
+      "snapshot_sha256": "b56bea604dd4b19d78d2f4571ffc79d51968f0182af04978db0867ed3647b81f",
+      "repository_license_spdx": "BSD-3-Clause"
+    },
+    {
+      "repository": "pytest-dev/pytest",
+      "split": "train",
+      "snapshot_sha256": "f3a8dfdd371fdbc9d8668b32d151667e1addf30bb25ee61f91ae1cff4a73a336",
+      "repository_license_spdx": "MIT"
+    },
+    {
+      "repository": "pallets/werkzeug",
+      "split": "validation",
+      "snapshot_sha256": "4a2c0334168291213fc97feb8932aeec01c3211e519839b1e5122365144df3f9",
+      "repository_license_spdx": "BSD-3-Clause"
+    },
+    {
+      "repository": "Textualize/rich",
+      "split": "test",
+      "snapshot_sha256": "516d53169dfea77e7157f365345ab160aa3c362fef12cce3b58d6561bb1ca6c0",
+      "repository_license_spdx": "MIT"
+    },
+    {
+      "repository": "psf/requests",
+      "split": "test",
+      "snapshot_sha256": "fb70e39837150c73bc39961cedb86317bb557aa460bcc20853601d0922443eb7",
+      "repository_license_spdx": "Apache-2.0"
+    },
+    {
+      "repository": "encode/httpx",
+      "split": "test",
+      "snapshot_sha256": "85c70bfab43761b72a84d7787066c96d48c64e0452090b64b3dc6b9c8435bf9c",
+      "repository_license_spdx": "BSD-3-Clause"
+    }
+  ],
+  "excluded": [],
+  "annotation": {
+    "annotator": "Codex, single review; not independent human annotation",
+    "policy": "Issue intent reviewed with linked PR title and paths for retrospective scope. No keyword label rules. One row per issue, no translations. Ambiguous docs, releases, unrelated links and image-only reports omitted."
+  },
+  "synthetic_training_manifest": {
+    "schema_version": 1,
+    "labels": [
+      "atomic-bugfix",
+      "multi-file-bugfix",
+      "failing-test-diagnosis",
+      "repo-exploration",
+      "read-only-output",
+      "refactor",
+      "codegen",
+      "api-integration"
+    ],
+    "audit": {
+      "exact_prompt_overlap": 0,
+      "family_overlap": 0
+    },
+    "split_rule": "Per label: families 0-7 train, 8-9 validation, 10-11 test",
+    "splits": {
+      "train": {
+        "count": 396,
+        "families": 76,
+        "classes": {
+          "atomic-bugfix": 50,
+          "multi-file-bugfix": 50,
+          "failing-test-diagnosis": 50,
+          "repo-exploration": 48,
+          "read-only-output": 49,
+          "refactor": 50,
+          "codegen": 50,
+          "api-integration": 49
+        },
+        "languages": {
+          "en": 204,
+          "zh": 192
+        },
+        "sha256": "8914011681664afce61846b372ca19f814edd9af82f2c157edd6a64ef4b703cb"
+      },
+      "validation": {
+        "count": 96,
+        "families": 16,
+        "classes": {
+          "atomic-bugfix": 12,
+          "multi-file-bugfix": 12,
+          "failing-test-diagnosis": 12,
+          "repo-exploration": 12,
+          "read-only-output": 12,
+          "refactor": 12,
+          "codegen": 12,
+          "api-integration": 12
+        },
+        "languages": {
+          "en": 48,
+          "zh": 48
+        },
+        "sha256": "49c34469c093efd95774711b068f82851201e440c0f163a1531e7e9bf549a32a"
+      },
+      "test": {
+        "count": 96,
+        "families": 16,
+        "classes": {
+          "atomic-bugfix": 12,
+          "multi-file-bugfix": 12,
+          "failing-test-diagnosis": 12,
+          "repo-exploration": 12,
+          "read-only-output": 12,
+          "refactor": 12,
+          "codegen": 12,
+          "api-integration": 12
+        },
+        "languages": {
+          "en": 48,
+          "zh": 48
+        },
+        "sha256": "e8cd8b92c66158df233a6fbe0725357d741cbf51162ae5baf4389d3af8d402a5"
+      }
+    },
+    "existing_training_excluded": [],
+    "limitations": [
+      "Six variants per authored family share meaning; rows are not independent observations.",
+      "Language and wrapper variants stay together; wrapper styles are shared across splits.",
+      "Scenario subjects differ across splits, but no claim of complete semantic separation is made.",
+      "Labels are author-provided task kinds, not measured cheapest successful routes.",
+      "The previous 51 e2e tasks are a development regression set, not a fresh test set.",
+      "Synthetic held-out performance does not establish performance on customer requests."
+    ]
+  },
+  "splits": {
+    "train": {
+      "count": 426,
+      "families": 106,
+      "classes": {
+        "atomic-bugfix": 68,
+        "multi-file-bugfix": 52,
+        "failing-test-diagnosis": 54,
+        "repo-exploration": 48,
+        "read-only-output": 50,
+        "refactor": 52,
+        "codegen": 53,
+        "api-integration": 49
+      },
+      "languages": {
+        "en": 234,
+        "zh": 192
+      },
+      "sha256": "98bdd3f81257d8e1c05eb5278acb709aefda90fbfa7609ef14e3e318b0bb42bb",
+      "github_count": 30
+    },
+    "validation": {
+      "count": 6,
+      "families": 6,
+      "classes": {
+        "multi-file-bugfix": 1,
+        "atomic-bugfix": 5
+      },
+      "languages": {
+        "en": 6
+      },
+      "sha256": "a0a3d116e5a07e67bd39ddf69a2f2873e5c0c5aa0351da963989c8f4a717f82d",
+      "github_count": 6
+    },
+    "test": {
+      "count": 16,
+      "families": 16,
+      "classes": {
+        "multi-file-bugfix": 3,
+        "atomic-bugfix": 10,
+        "codegen": 3
+      },
+      "languages": {
+        "en": 16
+      },
+      "sha256": "a173133d658af963b0f7a86da60339a0382221a7fac964353102f0885f139635",
+      "github_count": 16
+    }
+  },
+  "metric_contract": {
+    "population": "Manually selected linked GitHub issue reports within seven Python projects",
+    "accuracy": "Agreement with retrospective single-Codex task-kind labels",
+    "anchor": "One issue title and current body at retrieval, excluding PR metadata from model input",
+    "excludes": "Task execution, reproduction, costs, customer requests and unsupported category coverage"
+  },
+  "limitations": [
+    "Small convenience sample, mostly bug reports; not a balanced eight-category benchmark.",
+    "Labels use retrospective PR scope and a single Codex reviewer, not independent human adjudication.",
+    "Current issue bodies may contain suggested fixes or edits after resolution; pre-resolution text was not reconstructed.",
+    "Backbone pretraining contamination is unknown, especially for older public issues.",
+    "Merged PR references are evidence of linkage, not locally verified fixes or tests.",
+    "baseRefOid is the PR base ref at retrieval, not necessarily the historical pre-fix checkout; merge parent needs verification before replay.",
+    "Repository code license does not alone establish rights to every contributor's issue prose; commercial data-rights review remains outstanding.",
+    "No personal author profiles or private repositories were collected. Issue bodies remain untrusted data.",
+    "No claim of full semantic independence across projects, nor of real-task cost savings."
+  ]
+}

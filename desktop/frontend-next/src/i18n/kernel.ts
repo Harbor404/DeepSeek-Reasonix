@@ -21,6 +21,24 @@ export const ACCOUNT_SIGNIN_DISABLED = "account.signin_disabled";
 export const SAVED_NOT_APPLIED: readonly string[] = ["provider.saved_while_running", "provider.saved_model_unlisted", "runtime.rebuild_failed"];
 
 const SAID: Record<string, string> = {
+  "decision.report_input_limit": "决策请求超过大小限制",
+  "decision.request_read_failed": "无法读取决策请求",
+  "decision.unavailable": "当前未启用决策报告能力",
+  "decision.runtime_changed": "会话已切换，请在当前会话重试",
+  "decision.timeout": "生成决策报告超时，请重试",
+  "decision.failed": "无法生成决策报告",
+  "decision.snapshot_not_found": "找不到此决策版本，请确认工作区和版本编号",
+  "decision.snapshot_expired": "此决策版本已过期，请重新提交比较资料",
+  "decision.snapshot_corrupt": "决策记录不完整，无法生成可靠报告",
+  "decision.store_open_failed": "无法打开决策记录存储",
+  "decision.store_read_failed": "无法读取决策记录",
+  "decision.store_version_unsupported": "不支持当前决策存储版本",
+  "decision.report_output_limit": "决策报告超过大小限制，请缩小比较范围",
+  "decision.snapshot_arguments_invalid": "决策版本编号或候选答案参数不正确",
+  "decision.json_invalid": "决策请求不是完整的 JSON",
+  "decision.schema_invalid": "决策请求包含缺失或不支持的字段",
+  "decision.duplicate_field": "决策请求包含重复字段",
+  "decision.json_depth_limit": "决策请求嵌套层数过多",
   // ── 忙：不是出错，是「现在不行」 ─────────────────────────────────
   "plan.decision_stale": "该决定已不符合当前状态：计划在你回答前已发生变更",
   "busy.switch_model": "任务正在运行，请先停止再切换模型",

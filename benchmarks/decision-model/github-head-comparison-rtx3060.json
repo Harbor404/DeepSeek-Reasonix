@@ -1,0 +1,320 @@
+{
+  "model_revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+  "test_sha256": "a173133d658af963b0f7a86da60339a0382221a7fac964353102f0885f139635",
+  "metric_contract": {
+    "population": "Manually selected linked GitHub issue reports within seven Python projects",
+    "accuracy": "Agreement with retrospective single-Codex task-kind labels",
+    "anchor": "One issue title and current body at retrieval, excluding PR metadata from model input",
+    "excludes": "Task execution, reproduction, costs, customer requests and unsupported category coverage"
+  },
+  "limitations": [
+    "Small convenience sample, mostly bug reports; not a balanced eight-category benchmark.",
+    "Labels use retrospective PR scope and a single Codex reviewer, not independent human adjudication.",
+    "Current issue bodies may contain suggested fixes or edits after resolution; pre-resolution text was not reconstructed.",
+    "Backbone pretraining contamination is unknown, especially for older public issues.",
+    "Merged PR references are evidence of linkage, not locally verified fixes or tests.",
+    "baseRefOid is the PR base ref at retrieval, not necessarily the historical pre-fix checkout; merge parent needs verification before replay.",
+    "Repository code license does not alone establish rights to every contributor's issue prose; commercial data-rights review remains outstanding.",
+    "No personal author profiles or private repositories were collected. Issue bodies remain untrusted data.",
+    "No claim of full semantic independence across projects, nor of real-task cost savings."
+  ],
+  "comparisons": {
+    "head-v1": {
+      "head_sha256": "2af5484aa19f7766cbc205ffaf67d2aa1dc26bf1f0069da225daac9b66ee7094",
+      "metrics": {
+        "count": 16,
+        "attempted": 16,
+        "correct": 1,
+        "accuracy": 0.0625,
+        "balanced_accuracy": 0.1111111111111111,
+        "coverage": 1.0,
+        "majority_baseline_accuracy": 0.625,
+        "latency_ms_p50": null,
+        "latency_ms_p95": null,
+        "per_class": {
+          "atomic-bugfix": {
+            "count": 10,
+            "correct": 0,
+            "recall": 0.0
+          },
+          "codegen": {
+            "count": 3,
+            "correct": 1,
+            "recall": 0.3333333333333333
+          },
+          "multi-file-bugfix": {
+            "count": 3,
+            "correct": 0,
+            "recall": 0.0
+          }
+        },
+        "languages": {
+          "en": {
+            "count": 16,
+            "attempted": 16,
+            "correct": 1,
+            "accuracy": 0.0625,
+            "balanced_accuracy": 0.1111111111111111,
+            "coverage": 1.0,
+            "majority_baseline_accuracy": 0.625,
+            "latency_ms_p50": null,
+            "latency_ms_p95": null,
+            "per_class": {
+              "atomic-bugfix": {
+                "count": 10,
+                "correct": 0,
+                "recall": 0.0
+              },
+              "codegen": {
+                "count": 3,
+                "correct": 1,
+                "recall": 0.3333333333333333
+              },
+              "multi-file-bugfix": {
+                "count": 3,
+                "correct": 0,
+                "recall": 0.0
+              }
+            }
+          }
+        },
+        "families": {
+          "count": 16,
+          "all_variants_correct": 1,
+          "mean_family_accuracy": 0.0625
+        }
+      },
+      "predictions": [
+        {
+          "url": "https://github.com/Textualize/rich/issues/3176",
+          "label": "multi-file-bugfix",
+          "prediction": "codegen"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/1640",
+          "label": "atomic-bugfix",
+          "prediction": "failing-test-diagnosis"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/4041",
+          "label": "atomic-bugfix",
+          "prediction": "failing-test-diagnosis"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/4038",
+          "label": "atomic-bugfix",
+          "prediction": "failing-test-diagnosis"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/3784",
+          "label": "atomic-bugfix",
+          "prediction": "failing-test-diagnosis"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/3142",
+          "label": "atomic-bugfix",
+          "prediction": "failing-test-diagnosis"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/2012",
+          "label": "codegen",
+          "prediction": "codegen"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/2214",
+          "label": "multi-file-bugfix",
+          "prediction": "failing-test-diagnosis"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/2240",
+          "label": "codegen",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/3569",
+          "label": "atomic-bugfix",
+          "prediction": "read-only-output"
+        },
+        {
+          "url": "https://github.com/psf/requests/issues/7434",
+          "label": "atomic-bugfix",
+          "prediction": "failing-test-diagnosis"
+        },
+        {
+          "url": "https://github.com/psf/requests/issues/7442",
+          "label": "multi-file-bugfix",
+          "prediction": "read-only-output"
+        },
+        {
+          "url": "https://github.com/psf/requests/issues/7432",
+          "label": "atomic-bugfix",
+          "prediction": "api-integration"
+        },
+        {
+          "url": "https://github.com/psf/requests/issues/4795",
+          "label": "atomic-bugfix",
+          "prediction": "failing-test-diagnosis"
+        },
+        {
+          "url": "https://github.com/encode/httpx/issues/306",
+          "label": "codegen",
+          "prediction": "multi-file-bugfix"
+        },
+        {
+          "url": "https://github.com/encode/httpx/issues/3411",
+          "label": "atomic-bugfix",
+          "prediction": "failing-test-diagnosis"
+        }
+      ]
+    },
+    "head-v2-github": {
+      "head_sha256": "8064c56139e355f05d0170d5a9f6abd79d1bb8f4ab6699ba59938750eb3a0fa6",
+      "metrics": {
+        "count": 16,
+        "attempted": 16,
+        "correct": 10,
+        "accuracy": 0.625,
+        "balanced_accuracy": 0.3333333333333333,
+        "coverage": 1.0,
+        "majority_baseline_accuracy": 0.625,
+        "latency_ms_p50": null,
+        "latency_ms_p95": null,
+        "per_class": {
+          "atomic-bugfix": {
+            "count": 10,
+            "correct": 10,
+            "recall": 1.0
+          },
+          "codegen": {
+            "count": 3,
+            "correct": 0,
+            "recall": 0.0
+          },
+          "multi-file-bugfix": {
+            "count": 3,
+            "correct": 0,
+            "recall": 0.0
+          }
+        },
+        "languages": {
+          "en": {
+            "count": 16,
+            "attempted": 16,
+            "correct": 10,
+            "accuracy": 0.625,
+            "balanced_accuracy": 0.3333333333333333,
+            "coverage": 1.0,
+            "majority_baseline_accuracy": 0.625,
+            "latency_ms_p50": null,
+            "latency_ms_p95": null,
+            "per_class": {
+              "atomic-bugfix": {
+                "count": 10,
+                "correct": 10,
+                "recall": 1.0
+              },
+              "codegen": {
+                "count": 3,
+                "correct": 0,
+                "recall": 0.0
+              },
+              "multi-file-bugfix": {
+                "count": 3,
+                "correct": 0,
+                "recall": 0.0
+              }
+            }
+          }
+        },
+        "families": {
+          "count": 16,
+          "all_variants_correct": 10,
+          "mean_family_accuracy": 0.625
+        }
+      },
+      "predictions": [
+        {
+          "url": "https://github.com/Textualize/rich/issues/3176",
+          "label": "multi-file-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/1640",
+          "label": "atomic-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/4041",
+          "label": "atomic-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/4038",
+          "label": "atomic-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/3784",
+          "label": "atomic-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/3142",
+          "label": "atomic-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/2012",
+          "label": "codegen",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/2214",
+          "label": "multi-file-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/2240",
+          "label": "codegen",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/Textualize/rich/issues/3569",
+          "label": "atomic-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/psf/requests/issues/7434",
+          "label": "atomic-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/psf/requests/issues/7442",
+          "label": "multi-file-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/psf/requests/issues/7432",
+          "label": "atomic-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/psf/requests/issues/4795",
+          "label": "atomic-bugfix",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/encode/httpx/issues/306",
+          "label": "codegen",
+          "prediction": "atomic-bugfix"
+        },
+        {
+          "url": "https://github.com/encode/httpx/issues/3411",
+          "label": "atomic-bugfix",
+          "prediction": "atomic-bugfix"
+        }
+      ]
+    }
+  },
+  "timing": "Shared cached frozen features; no per-request speed measurement"
+}

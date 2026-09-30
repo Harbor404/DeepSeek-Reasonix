@@ -1,0 +1,1314 @@
+[
+  {
+    "id": "github/pallets/flask/6093",
+    "repository": "pallets/flask",
+    "source_url": "https://github.com/pallets/flask/issues/6093",
+    "label": "multi-file-bugfix",
+    "sha256": "daa48bcff5bdd42d472caf2f9486c99b5873372dc082755d314c3cdf604253ae",
+    "review_rationale": "IPv6 parsing affects app startup and test client, with changes in both implementation modules.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:28:59.161970+00:00",
+      "issue_updated_at": "2026-08-26T00:07:11Z",
+      "linked_pr_url": "https://github.com/pallets/flask/pull/6096",
+      "base_ref_oid_at_snapshot": "514fc6b3e8402e4c646d5284e97a4f0ab50a7c4b",
+      "merge_commit": "05e9c6bd630ecf4ec0ec884b1fc7901663737bc7",
+      "changed_paths": [
+        "src/flask/app.py",
+        "src/flask/testing.py",
+        "tests/test_basic.py",
+        "tests/test_testing.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/flask/6071",
+    "repository": "pallets/flask",
+    "source_url": "https://github.com/pallets/flask/issues/6071",
+    "label": "failing-test-diagnosis",
+    "sha256": "f46e6902683fa2be5abd3de66c0494988f3fe921bfe4f8746b8de24ddaa4a1b8",
+    "review_rationale": "Test collection crashes because fixtures use removed private pytest APIs.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:28:59.161970+00:00",
+      "issue_updated_at": "2026-08-14T00:16:09Z",
+      "linked_pr_url": "https://github.com/pallets/flask/pull/6095",
+      "base_ref_oid_at_snapshot": "8285adf5a4f572dbf7a0a3b8f3a96ca0b19c50a4",
+      "merge_commit": "548994ea0c61465574cbfdd636a894a692f54b94",
+      "changed_paths": [
+        "tests/conftest.py",
+        "tests/test_cli.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/flask/5639",
+    "repository": "pallets/flask",
+    "source_url": "https://github.com/pallets/flask/issues/5639",
+    "label": "refactor",
+    "sha256": "8dac9f2307ec3d1f17ff9466fe84cb78e4ddbba3d24fa2f1416f7ee175087d0a",
+    "review_rationale": "Consolidate app and request context management.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:28:59.161970+00:00",
+      "issue_updated_at": "2025-10-04T00:07:46Z",
+      "linked_pr_url": "https://github.com/pallets/flask/pull/5812",
+      "base_ref_oid_at_snapshot": "330123258e8c3dc391cbe55ab1ed94891ca83af3",
+      "merge_commit": "adf363679da2d9a5ddc564bb2da563c7ca083916",
+      "changed_paths": [
+        "CHANGES.rst",
+        "docs/api.rst",
+        "docs/appcontext.rst",
+        "docs/design.rst",
+        "docs/extensiondev.rst",
+        "docs/index.rst",
+        "docs/lifecycle.rst",
+        "docs/patterns/sqlalchemy.rst",
+        "docs/patterns/sqlite3.rst",
+        "docs/patterns/streaming.rst",
+        "docs/quickstart.rst",
+        "docs/reqcontext.rst",
+        "docs/shell.rst",
+        "docs/signals.rst",
+        "docs/testing.rst",
+        "docs/tutorial/blog.rst",
+        "docs/tutorial/database.rst",
+        "docs/tutorial/templates.rst",
+        "docs/tutorial/tests.rst",
+        "docs/tutorial/views.rst",
+        "src/flask/app.py",
+        "src/flask/cli.py",
+        "src/flask/ctx.py",
+        "src/flask/debughelpers.py",
+        "src/flask/globals.py",
+        "src/flask/helpers.py",
+        "src/flask/json/__init__.py",
+        "src/flask/sansio/app.py",
+        "src/flask/sansio/scaffold.py",
+        "src/flask/templating.py",
+        "src/flask/testing.py",
+        "tests/conftest.py",
+        "tests/test_appctx.py",
+        "tests/test_reqctx.py",
+        "tests/test_session_interface.py",
+        "tests/test_testing.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/flask/5961",
+    "repository": "pallets/flask",
+    "source_url": "https://github.com/pallets/flask/issues/5961",
+    "label": "failing-test-diagnosis",
+    "sha256": "9d938d883aa4bcac85c0b4cc5bd37c2576d19402e2472e5d43bf081fef5c65ab",
+    "review_rationale": "Existing test expectation fails after a Werkzeug dependency update.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:28:59.161970+00:00",
+      "issue_updated_at": "2026-04-08T00:18:09Z",
+      "linked_pr_url": "https://github.com/pallets/flask/pull/5962",
+      "base_ref_oid_at_snapshot": "4cae5d8e411b1e69949d8fae669afeacbd3e5908",
+      "merge_commit": "7ef2946fb5151b745df30201b8c27790cac53875",
+      "changed_paths": [
+        "tests/test_reqctx.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/flask/5916",
+    "repository": "pallets/flask",
+    "source_url": "https://github.com/pallets/flask/issues/5916",
+    "label": "atomic-bugfix",
+    "sha256": "f1a73b024719442fc8573abeac229cdaaa798960147a24d63ccdee122d57bc8c",
+    "review_rationale": "Fix the explicitly identified OPTIONS enabling override in the routing module; broader discussion is secondary.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:28:59.161970+00:00",
+      "issue_updated_at": "2026-02-27T00:14:18Z",
+      "linked_pr_url": "https://github.com/pallets/flask/pull/5917",
+      "base_ref_oid_at_snapshot": "d3b78fd18a8d9e224cb9ef58a23cec9b1ffc9ce9",
+      "merge_commit": "12e95c93b488725f80753f34b2e0d24838ca4646",
+      "changed_paths": [
+        "CHANGES.rst",
+        "docs/config.rst",
+        "src/flask/sansio/app.py",
+        "tests/test_basic.py",
+        "tests/test_blueprints.py",
+        "tests/test_cli.py",
+        "tests/test_views.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/flask/5815",
+    "repository": "pallets/flask",
+    "source_url": "https://github.com/pallets/flask/issues/5815",
+    "label": "refactor",
+    "sha256": "ef904c21d88a68a238482b0fbee4723f61c24d9ee5bc6ffc2245a11d4bf18aa3",
+    "review_rationale": "Pass context objects through internal dispatch instead of repeated contextvar access.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:28:59.161970+00:00",
+      "issue_updated_at": "2025-12-02T00:09:31Z",
+      "linked_pr_url": "https://github.com/pallets/flask/pull/5818",
+      "base_ref_oid_at_snapshot": "adf363679da2d9a5ddc564bb2da563c7ca083916",
+      "merge_commit": "70d04b5a2620705011e65f79ccfd52caa86f5d6a",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/flask/app.py",
+        "src/flask/ctx.py",
+        "src/flask/templating.py",
+        "tests/test_reqctx.py",
+        "tests/test_subclassing.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/flask/5729",
+    "repository": "pallets/flask",
+    "source_url": "https://github.com/pallets/flask/issues/5729",
+    "label": "multi-file-bugfix",
+    "sha256": "969292ba2e5463dfa63f6423182720f1ae6e7c3c964309458003abfc0f26fcac",
+    "review_rationale": "Make decorator invocation work without parentheses across app and blueprint implementations.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:28:59.161970+00:00",
+      "issue_updated_at": "2025-09-03T00:08:07Z",
+      "linked_pr_url": "https://github.com/pallets/flask/pull/5736",
+      "base_ref_oid_at_snapshot": "85c5d93cbd049c4bd0679c36fd1ddcae8c37b642",
+      "merge_commit": "ed1c9e953e2d67c0994e32e6c8d878291e36d4f7",
+      "changed_paths": [
+        "CHANGES.rst",
+        "docs/templating.rst",
+        "src/flask/sansio/app.py",
+        "src/flask/sansio/blueprints.py",
+        "tests/test_blueprints.py",
+        "tests/test_templating.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/flask/5776",
+    "repository": "pallets/flask",
+    "source_url": "https://github.com/pallets/flask/issues/5776",
+    "label": "atomic-bugfix",
+    "sha256": "5d17e170503525534b373590886733874c1798aedb87a481ea3398f166eb1e0d",
+    "review_rationale": "Widen send_file typing to accept IO bytes in one helper module.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:28:59.161970+00:00",
+      "issue_updated_at": "2025-09-02T00:08:40Z",
+      "linked_pr_url": "https://github.com/pallets/flask/pull/5777",
+      "base_ref_oid_at_snapshot": "c56c5ec7c41e6ffd02516bf7cb80dd2ba9ba7aa3",
+      "merge_commit": "1dfd7cd5555d9e62a2e198a131c366242e724b35",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/flask/helpers.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/flask/5628",
+    "repository": "pallets/flask",
+    "source_url": "https://github.com/pallets/flask/issues/5628",
+    "label": "atomic-bugfix",
+    "sha256": "bc834c77fde0434e150e70ee6d41ae7c49288678cc7b8657c5e78bf06645126f",
+    "review_rationale": "Correct dotenv precedence in CLI loading.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:28:59.161970+00:00",
+      "issue_updated_at": "2024-11-22T00:08:14Z",
+      "linked_pr_url": "https://github.com/pallets/flask/pull/5630",
+      "base_ref_oid_at_snapshot": "ce08bc704e24c01582052f5c544fae181d08386f",
+      "merge_commit": "7522c4bcdb10449dc919e0ffbdebb92fe66822b5",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/flask/cli.py",
+        "tests/test_cli.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/flask/5472",
+    "repository": "pallets/flask",
+    "source_url": "https://github.com/pallets/flask/issues/5472",
+    "label": "codegen",
+    "sha256": "1133499b3d54e7bb56c0c111cd9fb29e4755610e066701b07f846bd678a4e5f3",
+    "review_rationale": "Implement first-class partitioned session cookie configuration.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:28:59.161970+00:00",
+      "issue_updated_at": "2024-11-16T00:08:49Z",
+      "linked_pr_url": "https://github.com/pallets/flask/pull/5499",
+      "base_ref_oid_at_snapshot": "6f2014d353d514e404c1f40e8f0a24e2bf62b941",
+      "merge_commit": "ce08bc704e24c01582052f5c544fae181d08386f",
+      "changed_paths": [
+        "CHANGES.rst",
+        "docs/config.rst",
+        "src/flask/app.py",
+        "src/flask/sessions.py",
+        "tests/test_basic.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/click/1054",
+    "repository": "pallets/click",
+    "source_url": "https://github.com/pallets/click/issues/1054",
+    "label": "read-only-output",
+    "sha256": "5782702ea02e91fbb679b4f1c203d300e600e5a937e9da5934c68a2d1b24cfa0",
+    "review_rationale": "User asks how to call a decorated command as a Python function; clarification rather than new implementation.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:03.058374+00:00",
+      "issue_updated_at": "2026-09-02T00:24:34Z",
+      "linked_pr_url": "https://github.com/pallets/click/pull/3820",
+      "base_ref_oid_at_snapshot": "b0241232f775c45e28c5d5d4e9ea2fbc70b8448f",
+      "merge_commit": "be13b152cf5949a362926322c835fa76019cc6fe",
+      "changed_paths": [
+        "docs/faqs.md"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/click/3822",
+    "repository": "pallets/click",
+    "source_url": "https://github.com/pallets/click/issues/3822",
+    "label": "atomic-bugfix",
+    "sha256": "82f36cbb898f64a313a6e3b2a3890e21e07db98d3a06156674051da59c49b434",
+    "review_rationale": "Correct generic Path typing in the parameter type module.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:03.058374+00:00",
+      "issue_updated_at": "2026-09-23T00:29:08Z",
+      "linked_pr_url": "https://github.com/pallets/click/pull/3858",
+      "base_ref_oid_at_snapshot": "7944461a80b780d060899c8835acab3c273a04a6",
+      "merge_commit": "86949d19b930ef68a45566544cb4b9508d895d0d",
+      "changed_paths": [
+        "CHANGES.md",
+        "src/click/types.py",
+        "tests/test_types/test_Path.py",
+        "tests/typing/typing_path.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/click/3802",
+    "repository": "pallets/click",
+    "source_url": "https://github.com/pallets/click/issues/3802",
+    "label": "atomic-bugfix",
+    "sha256": "2d4707af1c2c8fbb4dea29108e7e77b944ffa7a55325d7557a920829cb98fcd9",
+    "review_rationale": "Correct interrupt handling race in Command.main.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:03.058374+00:00",
+      "issue_updated_at": "2026-09-16T00:30:31Z",
+      "linked_pr_url": "https://github.com/pallets/click/pull/3818",
+      "base_ref_oid_at_snapshot": "cbb5b2df1ee3492115f8c2ee5cbb09e2271fc714",
+      "merge_commit": "00f257bb8e714064bea16425007543bbc0800445",
+      "changed_paths": [
+        "CHANGES.md",
+        "docs/exceptions.md",
+        "src/click/core.py",
+        "tests/test_abort_interrupt.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/click/2869",
+    "repository": "pallets/click",
+    "source_url": "https://github.com/pallets/click/issues/2869",
+    "label": "codegen",
+    "sha256": "6b75fa87c9f05a57a31b75120003f101f37c1899deedc118d3878cc5086495ee",
+    "review_rationale": "Add pathlib.Path support to the edit API; implementation spans public and internal UI.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:03.058374+00:00",
+      "issue_updated_at": "2026-09-04T00:29:15Z",
+      "linked_pr_url": "https://github.com/pallets/click/pull/3781",
+      "base_ref_oid_at_snapshot": "2103e157683c5e4cadc8ee1838df526a54bde9a4",
+      "merge_commit": "e1fd5946ab26aaf372009eaff1acf947140b40fb",
+      "changed_paths": [
+        "CHANGES.md",
+        "src/click/_termui_impl.py",
+        "src/click/termui.py",
+        "tests/test_termui.py",
+        "tests/typing/typing_edit.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/click/3571",
+    "repository": "pallets/click",
+    "source_url": "https://github.com/pallets/click/issues/3571",
+    "label": "atomic-bugfix",
+    "sha256": "272dc8d65faeb3547cfa513d37c02a09855efe4719656e3a8d3129c765d6c278",
+    "review_rationale": "Correct final progress position in terminal UI.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:03.058374+00:00",
+      "issue_updated_at": "2026-08-30T00:34:14Z",
+      "linked_pr_url": "https://github.com/pallets/click/pull/3769",
+      "base_ref_oid_at_snapshot": "8b44edfff7d9a6c895fa804148c16b3a0bc9efb5",
+      "merge_commit": "150d1071d69c5cdad7de78590013ffe56cf9e3bb",
+      "changed_paths": [
+        "CHANGES.md",
+        "src/click/_termui_impl.py",
+        "tests/test_termui.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/click/2634",
+    "repository": "pallets/click",
+    "source_url": "https://github.com/pallets/click/issues/2634",
+    "label": "failing-test-diagnosis",
+    "sha256": "7541a42781294826cc3f22ea40e34707feee641884e58936070eb029ecf2251a",
+    "review_rationale": "Platform-specific filename tests lack conditional skipping.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:03.058374+00:00",
+      "issue_updated_at": "2026-08-08T12:47:17Z",
+      "linked_pr_url": "https://github.com/pallets/click/pull/3526",
+      "base_ref_oid_at_snapshot": "97210f24eb22399eb6db87d01bfef14f78862d01",
+      "merge_commit": "567d7e9220d6d6f52104ddbccd333d3f0c5b2d41",
+      "changed_paths": [
+        "tests/test_types.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/click/3487",
+    "repository": "pallets/click",
+    "source_url": "https://github.com/pallets/click/issues/3487",
+    "label": "atomic-bugfix",
+    "sha256": "8f77fd7da35f1f9572d936d53e94d6413cdf5763a1a5ee8743673b6dc58c5449",
+    "review_rationale": "Correct empty bytes handling in echo.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:03.058374+00:00",
+      "issue_updated_at": "2026-08-08T13:08:23Z",
+      "linked_pr_url": "https://github.com/pallets/click/pull/3493",
+      "base_ref_oid_at_snapshot": "d42f15b71757de791a5781fb179fd972da9169f5",
+      "merge_commit": "a5f5aa6d4012d256ccca24638f2642fc371e9f77",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/click/utils.py",
+        "tests/test_utils.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/click/2012",
+    "repository": "pallets/click",
+    "source_url": "https://github.com/pallets/click/issues/2012",
+    "label": "atomic-bugfix",
+    "sha256": "851510fdc90810d9c949ab20b6ffdf0e145b56ab442d81ce648a56861e9b306d",
+    "review_rationale": "Correct option flag_value conversion regression in core.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:03.058374+00:00",
+      "issue_updated_at": "2026-05-14T00:48:31Z",
+      "linked_pr_url": "https://github.com/pallets/click/pull/3363",
+      "base_ref_oid_at_snapshot": "c8da1fcc2cb4523c1fb5bef7f0ca82394dde1efd",
+      "merge_commit": "b03f211e602d915f413068eba87ff08469b38477",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/click/3084",
+    "repository": "pallets/click",
+    "source_url": "https://github.com/pallets/click/issues/3084",
+    "label": "atomic-bugfix",
+    "sha256": "b479d42d65fbbac9ccebf4dfff3c1ce1a49dfb1bb9c8ad15820ce715df9f2a67",
+    "review_rationale": "Correct optional option value regression in core.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:03.058374+00:00",
+      "issue_updated_at": "2026-08-08T13:03:18Z",
+      "linked_pr_url": "https://github.com/pallets/click/pull/3152",
+      "base_ref_oid_at_snapshot": "7f7bbe4569ea68e8dabee232eade069ef3310aea",
+      "merge_commit": "ebcd548d50662bc8fa4f8b9ec7fe13cb8310bfaa",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/click/core.py",
+        "tests/test_options.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/click/3128",
+    "repository": "pallets/click",
+    "source_url": "https://github.com/pallets/click/issues/3128",
+    "label": "failing-test-diagnosis",
+    "sha256": "46edb27fdc9ced8b8559d502bca61e2fbdafe1623f3b1e583672aaaa3cf167a6",
+    "review_rationale": "Test depends on GNU sed behavior and fails with BSD sed.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:03.058374+00:00",
+      "issue_updated_at": "2026-08-08T13:04:33Z",
+      "linked_pr_url": "https://github.com/pallets/click/pull/3129",
+      "base_ref_oid_at_snapshot": "0b5c6b75f617e6ee2f9f6dcd071b8a4bf183d1ed",
+      "merge_commit": "a92c573f3195c9da3058eadf1735d38af186d22c",
+      "changed_paths": [
+        "tests/test_termui.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pytest-dev/pytest/9924",
+    "repository": "pytest-dev/pytest",
+    "source_url": "https://github.com/pytest-dev/pytest/issues/9924",
+    "label": "atomic-bugfix",
+    "sha256": "e32b27fc3f940065c7dd6e3c879737727c4d1073ee569a9e380e82ddf7442255",
+    "review_rationale": "Prevent doctest flags leaking across docstrings in doctest implementation.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:12.476945+00:00",
+      "issue_updated_at": "2026-09-23T07:29:43Z",
+      "linked_pr_url": "https://github.com/pytest-dev/pytest/pull/15033",
+      "base_ref_oid_at_snapshot": "f8ad1f6f95307ed5b7da9b73f1c585695bf2b51a",
+      "merge_commit": "f9554ee56d264da285f3951ebfdf6f1d59ba4077",
+      "changed_paths": [
+        "AUTHORS",
+        "changelog/9924.bugfix.rst",
+        "src/_pytest/doctest.py",
+        "testing/test_doctest.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pytest-dev/pytest/15043",
+    "repository": "pytest-dev/pytest",
+    "source_url": "https://github.com/pytest-dev/pytest/issues/15043",
+    "label": "atomic-bugfix",
+    "sha256": "3cfc9a2c5373276f4be133db5b27f2c62479addb6ab6a1dafaece97164b5c0a1",
+    "review_rationale": "Handle cache write and close errors in cacheprovider.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:12.476945+00:00",
+      "issue_updated_at": "2026-09-18T06:25:35Z",
+      "linked_pr_url": "https://github.com/pytest-dev/pytest/pull/15044",
+      "base_ref_oid_at_snapshot": "99ab2acccff15f757260a1e1fbb0d2a47fc01041",
+      "merge_commit": "6a0de9be56365e75ff30d75cee9654739ca95f97",
+      "changed_paths": [
+        "AUTHORS",
+        "changelog/15043.bugfix.rst",
+        "src/_pytest/cacheprovider.py",
+        "testing/test_cacheprovider.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pytest-dev/pytest/15052",
+    "repository": "pytest-dev/pytest",
+    "source_url": "https://github.com/pytest-dev/pytest/issues/15052",
+    "label": "atomic-bugfix",
+    "sha256": "dec7c5630603acf4f719f279687f26add95ca1df39655f274079be3a5217468e",
+    "review_rationale": "Correct source line conversion in compat helper.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:12.476945+00:00",
+      "issue_updated_at": "2026-09-17T12:33:38Z",
+      "linked_pr_url": "https://github.com/pytest-dev/pytest/pull/15053",
+      "base_ref_oid_at_snapshot": "99ab2acccff15f757260a1e1fbb0d2a47fc01041",
+      "merge_commit": "56a92c19d4a71152c594726efc9deb5f0e126e99",
+      "changed_paths": [
+        "changelog/15052.bugfix.rst",
+        "src/_pytest/compat.py",
+        "testing/python/fixtures.py",
+        "testing/python/show_fixtures_per_test.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pytest-dev/pytest/11680",
+    "repository": "pytest-dev/pytest",
+    "source_url": "https://github.com/pytest-dev/pytest/issues/11680",
+    "label": "codegen",
+    "sha256": "d006ceb1b890aee4d937101349c6c1f59cf9ca7772f80c5ac6ed9ffd15bc6cdc",
+    "review_rationale": "Add packaging support for versioning Git archives.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:12.476945+00:00",
+      "issue_updated_at": "2026-09-14T16:37:47Z",
+      "linked_pr_url": "https://github.com/pytest-dev/pytest/pull/15023",
+      "base_ref_oid_at_snapshot": "aceb21ab2fa19f91282adfdb978a6ae252b3b020",
+      "merge_commit": "de30d8417f3d93bc0c16fc0a64092e197c46e36a",
+      "changed_paths": [
+        ".git_archival.txt",
+        ".gitattributes",
+        "MANIFEST.in",
+        "changelog/11680.packaging.rst",
+        "pyproject.toml"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pytest-dev/pytest/14942",
+    "repository": "pytest-dev/pytest",
+    "source_url": "https://github.com/pytest-dev/pytest/issues/14942",
+    "label": "atomic-bugfix",
+    "sha256": "d016a7235f026a0ca513da2b6a9a7342e0a18f2299aa929b450d23a0c780093a",
+    "review_rationale": "Correct fixture collection performance regression in fixtures implementation.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:12.476945+00:00",
+      "issue_updated_at": "2026-09-14T08:24:54Z",
+      "linked_pr_url": "https://github.com/pytest-dev/pytest/pull/14984",
+      "base_ref_oid_at_snapshot": "3fd8675d6d798507c06cf9c60753be6d9d7b0e17",
+      "merge_commit": "aceb21ab2fa19f91282adfdb978a6ae252b3b020",
+      "changed_paths": [
+        "changelog/14942.bugfix.rst",
+        "src/_pytest/fixtures.py",
+        "testing/deprecated_test.py",
+        "testing/python/fixtures.py",
+        "tox.ini"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pytest-dev/pytest/14619",
+    "repository": "pytest-dev/pytest",
+    "source_url": "https://github.com/pytest-dev/pytest/issues/14619",
+    "label": "atomic-bugfix",
+    "sha256": "acc21d8a87f88ca79eefa22e4953bc6be9e95674fa38d903efeaf8d0c8fa55fd",
+    "review_rationale": "Improve invalid scalar parametrize handling in mark structures.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:12.476945+00:00",
+      "issue_updated_at": "2026-09-13T15:03:41Z",
+      "linked_pr_url": "https://github.com/pytest-dev/pytest/pull/14978",
+      "base_ref_oid_at_snapshot": "86c6c354e19d0c8713bb47d6cb1c4aaebea7cb6a",
+      "merge_commit": "a315b97ce61f158bef9957152c8415fe743aa553",
+      "changed_paths": [
+        "AUTHORS",
+        "changelog/14619.bugfix.rst",
+        "src/_pytest/mark/structures.py",
+        "testing/test_mark.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pytest-dev/pytest/10644",
+    "repository": "pytest-dev/pytest",
+    "source_url": "https://github.com/pytest-dev/pytest/issues/10644",
+    "label": "atomic-bugfix",
+    "sha256": "315a05230b3cace6dd96cd5963787da63cd02df5ba3ee1a0ac4c1e3db2032683",
+    "review_rationale": "Correct inherited attribute cleanup in MonkeyPatch.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:12.476945+00:00",
+      "issue_updated_at": "2026-09-07T19:44:34Z",
+      "linked_pr_url": "https://github.com/pytest-dev/pytest/pull/14969",
+      "base_ref_oid_at_snapshot": "51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7",
+      "merge_commit": "472b4de93d83c118e0d089a34918fd1210d9ebc8",
+      "changed_paths": [
+        "AUTHORS",
+        "changelog/10644.bugfix.rst",
+        "src/_pytest/monkeypatch.py",
+        "testing/test_monkeypatch.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pytest-dev/pytest/14909",
+    "repository": "pytest-dev/pytest",
+    "source_url": "https://github.com/pytest-dev/pytest/issues/14909",
+    "label": "atomic-bugfix",
+    "sha256": "a144a850c2cc5e278125e8be2313f138a6009b54f9e0c1424efe32fe66178482",
+    "review_rationale": "Record undo entries only after successful mutation in MonkeyPatch.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:12.476945+00:00",
+      "issue_updated_at": "2026-09-07T19:38:56Z",
+      "linked_pr_url": "https://github.com/pytest-dev/pytest/pull/14910",
+      "base_ref_oid_at_snapshot": "d724e161fbe681edc8dff8308d6523f4f59623a4",
+      "merge_commit": "ae777851d8b324de5eb3d0e860c28b219ce3fcd8",
+      "changed_paths": [
+        "changelog/14909.bugfix.rst",
+        "src/_pytest/monkeypatch.py",
+        "testing/test_monkeypatch.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pytest-dev/pytest/14445",
+    "repository": "pytest-dev/pytest",
+    "source_url": "https://github.com/pytest-dev/pytest/issues/14445",
+    "label": "atomic-bugfix",
+    "sha256": "536fc065aad512def770f5dcfca6b1475ec0c05e9ac9aedab64ca9ff2ac81c06",
+    "review_rationale": "Prevent assertion rewriter evaluating walrus expressions twice.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:12.476945+00:00",
+      "issue_updated_at": "2026-09-01T11:50:24Z",
+      "linked_pr_url": "https://github.com/pytest-dev/pytest/pull/14447",
+      "base_ref_oid_at_snapshot": "e984a9b94740697411f5a05fcdfc3299dd20f13a",
+      "merge_commit": "51e9a9f148cd2509a31e3fa0d2b1b3204c2b0dd7",
+      "changed_paths": [
+        "changelog/14445.bugfix.rst",
+        "src/_pytest/assertion/rewrite.py",
+        "testing/test_assertrewrite.py",
+        "testing/test_assertrewrite_coverage.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pytest-dev/pytest/993",
+    "repository": "pytest-dev/pytest",
+    "source_url": "https://github.com/pytest-dev/pytest/issues/993",
+    "label": "atomic-bugfix",
+    "sha256": "c016f7643c54cce4d31a99487b358dbbdb7a536ee5841c32cd2e98a0fc897226",
+    "review_rationale": "Correct plugin startup ImportError exit-code classification in config implementation.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:12.476945+00:00",
+      "issue_updated_at": "2026-08-30T20:29:55Z",
+      "linked_pr_url": "https://github.com/pytest-dev/pytest/pull/14824",
+      "base_ref_oid_at_snapshot": "fdba12e1708313f56e9cf713d260c029764ca2b7",
+      "merge_commit": "5d85267e3539968dad33937295b0a77b6c7eb7b3",
+      "changed_paths": [
+        "changelog/993.breaking.rst",
+        "doc/en/reference/exit-codes.rst",
+        "src/_pytest/config/__init__.py",
+        "testing/acceptance_test.py",
+        "testing/python/collect.py",
+        "testing/test_config.py",
+        "testing/test_pluginmanager.py",
+        "testing/test_session.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "train"
+  },
+  {
+    "id": "github/pallets/werkzeug/3291",
+    "repository": "pallets/werkzeug",
+    "source_url": "https://github.com/pallets/werkzeug/issues/3291",
+    "label": "multi-file-bugfix",
+    "sha256": "cc8cef5d58235048cd22e0a5959094281503a2946320d3374d7ee1eab84ee3e1",
+    "review_rationale": "Correct conditional and range HTTP handling spanning response, HTTP, range and file helpers.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:06.649880+00:00",
+      "issue_updated_at": "2026-09-27T17:19:57Z",
+      "linked_pr_url": "https://github.com/pallets/werkzeug/pull/3308",
+      "base_ref_oid_at_snapshot": "671537e0e5c7dcec4ac61ffc755dbd8936cefcfb",
+      "merge_commit": "830d4b3957e9532be5f510e499dd797964d064d6",
+      "changed_paths": [
+        "CHANGES.rst",
+        "docs/quickstart.rst",
+        "src/werkzeug/datastructures/etag.py",
+        "src/werkzeug/datastructures/range.py",
+        "src/werkzeug/http.py",
+        "src/werkzeug/middleware/shared_data.py",
+        "src/werkzeug/sansio/http.py",
+        "src/werkzeug/test.py",
+        "src/werkzeug/utils.py",
+        "src/werkzeug/wrappers/response.py",
+        "tests/test_apply_conditions.py",
+        "tests/test_apply_range.py",
+        "tests/test_http.py",
+        "tests/test_send_file.py",
+        "tests/test_wrappers.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "validation"
+  },
+  {
+    "id": "github/pallets/werkzeug/3295",
+    "repository": "pallets/werkzeug",
+    "source_url": "https://github.com/pallets/werkzeug/issues/3295",
+    "label": "atomic-bugfix",
+    "sha256": "cb6bc392be9feb377f4ece80c3d2a55cd0edb1167ace5b0614d944abacd5b2ad",
+    "review_rationale": "Correct Request.application overload typing in request wrapper.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:06.649880+00:00",
+      "issue_updated_at": "2026-09-25T04:37:10Z",
+      "linked_pr_url": "https://github.com/pallets/werkzeug/pull/3299",
+      "base_ref_oid_at_snapshot": "fa93b5cee027bc9baadba67f21360a8a39b2317b",
+      "merge_commit": "b5c57f308465deb39bcc801017c4edde1f81d6ea",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/werkzeug/wrappers/request.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "validation"
+  },
+  {
+    "id": "github/pallets/werkzeug/3294",
+    "repository": "pallets/werkzeug",
+    "source_url": "https://github.com/pallets/werkzeug/issues/3294",
+    "label": "atomic-bugfix",
+    "sha256": "2faf9e677f9a22153fb912f7e654f515149ef8dfbd2574c15f5c8571eca143a5",
+    "review_rationale": "Stop ProxyFix modifying WSGI server identity.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:06.649880+00:00",
+      "issue_updated_at": "2026-09-25T04:30:13Z",
+      "linked_pr_url": "https://github.com/pallets/werkzeug/pull/3298",
+      "base_ref_oid_at_snapshot": "25663ddc295879d362a206b4c33f16ea2e694392",
+      "merge_commit": "fa93b5cee027bc9baadba67f21360a8a39b2317b",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/werkzeug/middleware/proxy_fix.py",
+        "tests/middleware/test_proxy_fix.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "validation"
+  },
+  {
+    "id": "github/pallets/werkzeug/3290",
+    "repository": "pallets/werkzeug",
+    "source_url": "https://github.com/pallets/werkzeug/issues/3290",
+    "label": "atomic-bugfix",
+    "sha256": "80405fb204d23f7c7fa7581e460b35940f135537068e93ecb4b701c32386d695",
+    "review_rationale": "Correct HTML accept predicate in accept datastructure.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:06.649880+00:00",
+      "issue_updated_at": "2026-09-24T21:07:40Z",
+      "linked_pr_url": "https://github.com/pallets/werkzeug/pull/3293",
+      "base_ref_oid_at_snapshot": "cdc9e2d2fff5f576580d7c73ad5280778ec5d55b",
+      "merge_commit": "25663ddc295879d362a206b4c33f16ea2e694392",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/werkzeug/datastructures/accept.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "validation"
+  },
+  {
+    "id": "github/pallets/werkzeug/3242",
+    "repository": "pallets/werkzeug",
+    "source_url": "https://github.com/pallets/werkzeug/issues/3242",
+    "label": "atomic-bugfix",
+    "sha256": "b583828e1972156846a79f3124e131055661c646074cc7118daa18fd4ab88865",
+    "review_rationale": "Correct numeric converter accepted values and formatting in converters module.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:06.649880+00:00",
+      "issue_updated_at": "2026-09-13T02:28:07Z",
+      "linked_pr_url": "https://github.com/pallets/werkzeug/pull/3243",
+      "base_ref_oid_at_snapshot": "ef518e429b67a91a307de37a1845c93110180371",
+      "merge_commit": "53633feffb843932cd7b9f77eb6e42dbc6cb1a58",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/werkzeug/routing/converters.py",
+        "tests/test_routing.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "validation"
+  },
+  {
+    "id": "github/pallets/werkzeug/3146",
+    "repository": "pallets/werkzeug",
+    "source_url": "https://github.com/pallets/werkzeug/issues/3146",
+    "label": "atomic-bugfix",
+    "sha256": "2cc580528a174f014b77bac1bcd56a53ce304dc285118b6fbc503cbf9ef544bb",
+    "review_rationale": "Correct scientific-notation URL round trip in FloatConverter.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:06.649880+00:00",
+      "issue_updated_at": "2026-05-03T01:05:04Z",
+      "linked_pr_url": "https://github.com/pallets/werkzeug/pull/3147",
+      "base_ref_oid_at_snapshot": "b97e13cc74d8a45dca260d4037edd7d1f5094042",
+      "merge_commit": "a7e3ab2b42ab509148d2864e64a8f8378a638e7e",
+      "changed_paths": [
+        "CHANGES.rst",
+        "src/werkzeug/routing/converters.py",
+        "tests/test_routing.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "validation"
+  },
+  {
+    "id": "github/Textualize/rich/3176",
+    "repository": "Textualize/rich",
+    "source_url": "https://github.com/Textualize/rich/issues/3176",
+    "label": "multi-file-bugfix",
+    "sha256": "4d22a0ac08dec6958abd7c7170ecf33ce63cbec64b98d9f27fde9372d6bb15a0",
+    "review_rationale": "Correct double-width wrapping across wrapping and cell-width modules.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:16.918558+00:00",
+      "issue_updated_at": "2023-11-14T10:04:11Z",
+      "linked_pr_url": "https://github.com/Textualize/rich/pull/3180",
+      "base_ref_oid_at_snapshot": "e76f3c3ea78481342e21a7b3328075462ab69c2b",
+      "merge_commit": "59b1aca63bf9ec69ada93af960d8b2a7bd920477",
+      "changed_paths": [
+        ".gitignore",
+        "CHANGELOG.md",
+        "rich/_wrap.py",
+        "rich/cells.py",
+        "tests/test_cells.py",
+        "tests/test_text.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/Textualize/rich/1640",
+    "repository": "Textualize/rich",
+    "source_url": "https://github.com/Textualize/rich/issues/1640",
+    "label": "atomic-bugfix",
+    "sha256": "4c4155a5be52004404c028e26f7e8b4ee20168c7537e72c3ba60e8afa564b43f",
+    "review_rationale": "Correct terminal color capability detection in console.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:16.918558+00:00",
+      "issue_updated_at": "2021-11-05T10:27:56Z",
+      "linked_pr_url": "https://github.com/Textualize/rich/pull/1643",
+      "base_ref_oid_at_snapshot": "eb673d1204340738d3084ebc2e4c789a35a4e49b",
+      "merge_commit": "9ad5191913ed1d5ae3ebfd8285f0f8b36af78907",
+      "changed_paths": [
+        "rich/console.py",
+        "tests/test_console.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/Textualize/rich/4041",
+    "repository": "Textualize/rich",
+    "source_url": "https://github.com/Textualize/rich/issues/4041",
+    "label": "atomic-bugfix",
+    "sha256": "f377acc6c39a5b6f13bd4308f23aac2851db673cbebf23472da05ae476ea0801",
+    "review_rationale": "Delegate FileProxy.isatty in file proxy implementation.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:16.918558+00:00",
+      "issue_updated_at": "2026-04-12T04:11:26Z",
+      "linked_pr_url": "https://github.com/Textualize/rich/pull/4077",
+      "base_ref_oid_at_snapshot": "58ac15120fe254886c10d6253667733c83604cb4",
+      "merge_commit": "19c67b9a3479841e9133bea94607c89ee931d3fc",
+      "changed_paths": [
+        "CHANGELOG.md",
+        "rich/file_proxy.py",
+        "tests/test_file_proxy.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/Textualize/rich/4038",
+    "repository": "Textualize/rich",
+    "source_url": "https://github.com/Textualize/rich/issues/4038",
+    "label": "atomic-bugfix",
+    "sha256": "04783fa93b2a0f848f6b26187ed47053b0bb530dee5a2175a85bd131c375e9cd",
+    "review_rationale": "Preserve inline code syntax spans in Markdown table cells.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:16.918558+00:00",
+      "issue_updated_at": "2026-04-12T07:45:14Z",
+      "linked_pr_url": "https://github.com/Textualize/rich/pull/4079",
+      "base_ref_oid_at_snapshot": "19c67b9a3479841e9133bea94607c89ee931d3fc",
+      "merge_commit": "ffe2edc5968eac19d5493c2d7b27965031a692e9",
+      "changed_paths": [
+        "CHANGELOG.md",
+        "rich/markdown.py",
+        "tests/test_markdown.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/Textualize/rich/3784",
+    "repository": "Textualize/rich",
+    "source_url": "https://github.com/Textualize/rich/issues/3784",
+    "label": "atomic-bugfix",
+    "sha256": "15f983b9bac71c87a01ab01b39ca71f0e649094b4a34c92e89d87c7933469cb0",
+    "review_rationale": "Correct console export path type annotations.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:16.918558+00:00",
+      "issue_updated_at": "2026-04-11T09:07:55Z",
+      "linked_pr_url": "https://github.com/Textualize/rich/pull/3941",
+      "base_ref_oid_at_snapshot": "c595fa95068dd2c5095d25446b2f0571bc0b3995",
+      "merge_commit": "1fc7cb210ae52eb099df39818ddb9569e5b14c7b",
+      "changed_paths": [
+        "rich/console.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/Textualize/rich/3142",
+    "repository": "Textualize/rich",
+    "source_url": "https://github.com/Textualize/rich/issues/3142",
+    "label": "atomic-bugfix",
+    "sha256": "3c1ebf88ed6d3d24f7a76bc243aae47d71063a102bd1c5f6c416cec1c361a51e",
+    "review_rationale": "Restore missing Panel.fit parameters in panel module.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:16.918558+00:00",
+      "issue_updated_at": "2023-11-07T15:52:01Z",
+      "linked_pr_url": "https://github.com/Textualize/rich/pull/3192",
+      "base_ref_oid_at_snapshot": "21c0f25869bcdd0ef4e8ebc8d48c4b362147f740",
+      "merge_commit": "b97abfcaccb7ff137360e922d557acf34c26a708",
+      "changed_paths": [
+        "CHANGELOG.md",
+        "rich/panel.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/Textualize/rich/2012",
+    "repository": "Textualize/rich",
+    "source_url": "https://github.com/Textualize/rich/issues/2012",
+    "label": "codegen",
+    "sha256": "24259912454dc5bb456fac1d4704ee9179ddb1afe68563f701856b7cfc38f997",
+    "review_rationale": "Add NamedTuple support to pretty rendering.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:16.918558+00:00",
+      "issue_updated_at": "2022-03-08T14:14:47Z",
+      "linked_pr_url": "https://github.com/Textualize/rich/pull/2031",
+      "base_ref_oid_at_snapshot": "8e649fea51859e426b2f6300e0a9c88c9c4b6415",
+      "merge_commit": "9b3ca31d123b00570a7b0cd0218543dca9aa1ac0",
+      "changed_paths": [
+        "CHANGELOG.md",
+        "rich/pretty.py",
+        "tests/test_pretty.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/Textualize/rich/2214",
+    "repository": "Textualize/rich",
+    "source_url": "https://github.com/Textualize/rich/issues/2214",
+    "label": "multi-file-bugfix",
+    "sha256": "8e09134159ec44a738251a140a5b59775fc93385d90b845f3525da1360af26a7",
+    "review_rationale": "Correct complex-number highlighting across styles and highlighter modules.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:16.918558+00:00",
+      "issue_updated_at": "2022-04-26T10:35:56Z",
+      "linked_pr_url": "https://github.com/Textualize/rich/pull/2219",
+      "base_ref_oid_at_snapshot": "ed6ff7e9e40aded453f70366b5acfb455ba152b1",
+      "merge_commit": "a7e8a6b7da653237c4484480011e963b095742fe",
+      "changed_paths": [
+        "CHANGELOG.md",
+        "rich/default_styles.py",
+        "rich/highlighter.py",
+        "tests/test_highlighter.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/Textualize/rich/2240",
+    "repository": "Textualize/rich",
+    "source_url": "https://github.com/Textualize/rich/issues/2240",
+    "label": "codegen",
+    "sha256": "0795935cdddb29454d1d10fafb4383b4347026601cb83af705a0dfb8016b6323",
+    "review_rationale": "Add padding argument to Syntax rendering.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:16.918558+00:00",
+      "issue_updated_at": "2022-05-03T15:33:03Z",
+      "linked_pr_url": "https://github.com/Textualize/rich/pull/2247",
+      "base_ref_oid_at_snapshot": "5a999f49f9e1617ab6d31381a4c862caa0a75873",
+      "merge_commit": "79a41db38f3f2d20610d3b9cfe9b18074374ffca",
+      "changed_paths": [
+        "CHANGELOG.md",
+        "rich/syntax.py",
+        "tests/test_syntax.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/Textualize/rich/3569",
+    "repository": "Textualize/rich",
+    "source_url": "https://github.com/Textualize/rich/issues/3569",
+    "label": "atomic-bugfix",
+    "sha256": "c253d8adbc96c80786b5f590760bbcaf374d7f7bcbcb11f211bd7301cea5356a",
+    "review_rationale": "Correct Panel title background rendering regression.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:16.918558+00:00",
+      "issue_updated_at": "2025-05-01T18:33:57Z",
+      "linked_pr_url": "https://github.com/Textualize/rich/pull/3718",
+      "base_ref_oid_at_snapshot": "7d36119f8378b36129502c3281a7faffef837e02",
+      "merge_commit": "21b3800894f6a81d3f68a0e34796be67e3ccd39f",
+      "changed_paths": [
+        "CHANGELOG.md",
+        "rich/panel.py",
+        "tests/test_panel.py"
+      ],
+      "repository_license_spdx": "MIT",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/psf/requests/7434",
+    "repository": "psf/requests",
+    "source_url": "https://github.com/psf/requests/issues/7434",
+    "label": "atomic-bugfix",
+    "sha256": "0847273467cb32f2245e8871658c03a71e860d5b6fcbfd69ef156fbdf0335d97",
+    "review_rationale": "Correct JSON container type variance in type definitions.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:21.752963+00:00",
+      "issue_updated_at": "2026-05-13T14:43:19Z",
+      "linked_pr_url": "https://github.com/psf/requests/pull/7436",
+      "base_ref_oid_at_snapshot": "0b401c76b6e80a4eecf3c690085b2553f6e261ca",
+      "merge_commit": "5691f596134c2feb121e595c77a0178921fcce61",
+      "changed_paths": [
+        "src/requests/_types.py"
+      ],
+      "repository_license_spdx": "Apache-2.0",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/psf/requests/7442",
+    "repository": "psf/requests",
+    "source_url": "https://github.com/psf/requests/issues/7442",
+    "label": "multi-file-bugfix",
+    "sha256": "e1925b2a6b18018598fdddd5389442087626d2b8c135efdf9fd03d20bee04821",
+    "review_rationale": "Correct headers mapping type variance across type definitions and request model.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:21.752963+00:00",
+      "issue_updated_at": "2026-05-14T16:19:11Z",
+      "linked_pr_url": "https://github.com/psf/requests/pull/7441",
+      "base_ref_oid_at_snapshot": "b7b549b54571d03950b16afd2d01bc6ff0348224",
+      "merge_commit": "84d10f0be83e8f6aeca8a05230c52216431c4d0b",
+      "changed_paths": [
+        "src/requests/_types.py",
+        "src/requests/models.py"
+      ],
+      "repository_license_spdx": "Apache-2.0",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/psf/requests/7432",
+    "repository": "psf/requests",
+    "source_url": "https://github.com/psf/requests/issues/7432",
+    "label": "atomic-bugfix",
+    "sha256": "d909505b906c52870125318eeec4b0cfb35759b02b020b63b94203ce86aa3d9d",
+    "review_rationale": "Correct dynamic stream detection in PreparedRequest.prepare_body.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:21.752963+00:00",
+      "issue_updated_at": "2026-05-12T17:51:03Z",
+      "linked_pr_url": "https://github.com/psf/requests/pull/7433",
+      "base_ref_oid_at_snapshot": "0b401c76b6e80a4eecf3c690085b2553f6e261ca",
+      "merge_commit": "6404f345e562d962abe6700a1c357ec1e7e18232",
+      "changed_paths": [
+        "src/requests/models.py",
+        "tests/test_requests.py"
+      ],
+      "repository_license_spdx": "Apache-2.0",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/psf/requests/4795",
+    "repository": "psf/requests",
+    "source_url": "https://github.com/psf/requests/issues/4795",
+    "label": "atomic-bugfix",
+    "sha256": "9c07e083a36f6e0a0ab67280a5b288c37a46e6546bee11653b53fbbf8dc01e61",
+    "review_rationale": "Correct proxy bypass domain matching in utils.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:21.752963+00:00",
+      "issue_updated_at": "2026-05-11T19:24:22Z",
+      "linked_pr_url": "https://github.com/psf/requests/pull/7427",
+      "base_ref_oid_at_snapshot": "b684dcb9bbf3aa557d1238e72062c4a29737dd1c",
+      "merge_commit": "a4f9a5999bdb9bf2d6e7c8aa973b28cacb17134f",
+      "changed_paths": [
+        "src/requests/utils.py",
+        "tests/test_utils.py"
+      ],
+      "repository_license_spdx": "Apache-2.0",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/encode/httpx/306",
+    "repository": "encode/httpx",
+    "source_url": "https://github.com/encode/httpx/issues/306",
+    "label": "codegen",
+    "sha256": "7aefadceae5ce86dd1ae1fb7a35e6dfe356bca5ea73bf9d52cafbc275701a3a1",
+    "review_rationale": "Add environment CA bundle support and documentation.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:09.919036+00:00",
+      "issue_updated_at": "2020-10-13T05:10:16Z",
+      "linked_pr_url": "https://github.com/encode/httpx/pull/307",
+      "base_ref_oid_at_snapshot": "08355c62f56b899af15967906aa45392cd45dbdd",
+      "merge_commit": "c9810a79d9c61583165e9aa237d1ac039086f3a8",
+      "changed_paths": [
+        "docs/environment_variables.md",
+        "httpx/config.py",
+        "httpx/utils.py",
+        "tests/test_config.py",
+        "tests/test_utils.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  },
+  {
+    "id": "github/encode/httpx/3411",
+    "repository": "encode/httpx",
+    "source_url": "https://github.com/encode/httpx/issues/3411",
+    "label": "atomic-bugfix",
+    "sha256": "1e263d222ede293efeaf13dce4ec513ae03416bafeca2d5447000a335ebc36f4",
+    "review_rationale": "Handle empty zstd responses in decoder.",
+    "provenance": {
+      "retrieved_at": "2026-09-30T03:29:09.919036+00:00",
+      "issue_updated_at": "2024-11-22T11:42:53Z",
+      "linked_pr_url": "https://github.com/encode/httpx/pull/3412",
+      "base_ref_oid_at_snapshot": "189fc4bcbe5f314128775dec66a616ac9a31ad48",
+      "merge_commit": "47f4a96ffaaaa07dca1614409549b5d7a6e7af49",
+      "changed_paths": [
+        "CHANGELOG.md",
+        "README.md",
+        "httpx/__version__.py",
+        "httpx/_decoders.py",
+        "tests/test_decoders.py"
+      ],
+      "repository_license_spdx": "BSD-3-Clause",
+      "execution_verified": false,
+      "issue_text_rights_reviewed": false
+    },
+    "split": "test"
+  }
+]

@@ -1,0 +1,198 @@
+{
+  "engine_version": "decision-packet-v1",
+  "cases": [
+    {
+      "case": "normal",
+      "fixture_verdict_matches": true,
+      "referenced_evidence_count": 11,
+      "retained_referenced_count": 11,
+      "explicitly_missing_count": 0,
+      "unaccounted_count": 0,
+      "option_a_status": "feasible",
+      "pareto_frontier": [
+        "a",
+        "c"
+      ],
+      "packet_compute_seconds": 0.007570199988549575,
+      "cached_lookup_seconds": 0.00034679999225772917,
+      "measurements": {
+        "raw_utf8_bytes": 35975,
+        "packet_utf8_bytes": 6390,
+        "raw_tokens": 7394,
+        "packet_tokens": 1960,
+        "token_reduction_fraction": 0.7349202055720855,
+        "excludes": "Extraction, provider inference, outputs, retries, network and answer quality",
+        "tokenizer": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "token_count_seconds_excluding_load": 0.02420779998647049
+      }
+    },
+    {
+      "case": "compact-input",
+      "fixture_verdict_matches": true,
+      "referenced_evidence_count": 11,
+      "retained_referenced_count": 11,
+      "explicitly_missing_count": 0,
+      "unaccounted_count": 0,
+      "option_a_status": "feasible",
+      "pareto_frontier": [
+        "a",
+        "c"
+      ],
+      "packet_compute_seconds": 0.008735799987334758,
+      "cached_lookup_seconds": 0.00021860000560991466,
+      "measurements": {
+        "raw_utf8_bytes": 3925,
+        "packet_utf8_bytes": 6089,
+        "raw_tokens": 1312,
+        "packet_tokens": 1848,
+        "token_reduction_fraction": -0.4085365853658536,
+        "excludes": "Extraction, provider inference, outputs, retries, network and answer quality",
+        "tokenizer": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "token_count_seconds_excluding_load": 0.002893700002459809
+      }
+    },
+    {
+      "case": "expired",
+      "fixture_verdict_matches": true,
+      "referenced_evidence_count": 11,
+      "retained_referenced_count": 11,
+      "explicitly_missing_count": 0,
+      "unaccounted_count": 0,
+      "option_a_status": "unknown",
+      "pareto_frontier": [
+        "c"
+      ],
+      "packet_compute_seconds": 0.00896510001621209,
+      "cached_lookup_seconds": 0.00033999999868683517,
+      "measurements": {
+        "raw_utf8_bytes": 36012,
+        "packet_utf8_bytes": 6448,
+        "raw_tokens": 7418,
+        "packet_tokens": 1989,
+        "token_reduction_fraction": 0.7318684281477488,
+        "excludes": "Extraction, provider inference, outputs, retries, network and answer quality",
+        "tokenizer": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "token_count_seconds_excluding_load": 0.010209200001554564
+      }
+    },
+    {
+      "case": "conflict",
+      "fixture_verdict_matches": true,
+      "referenced_evidence_count": 11,
+      "retained_referenced_count": 11,
+      "explicitly_missing_count": 0,
+      "unaccounted_count": 0,
+      "option_a_status": "unknown",
+      "pareto_frontier": [
+        "c"
+      ],
+      "packet_compute_seconds": 0.005717699998058379,
+      "cached_lookup_seconds": 0.00033179999445565045,
+      "measurements": {
+        "raw_utf8_bytes": 36221,
+        "packet_utf8_bytes": 6784,
+        "raw_tokens": 7486,
+        "packet_tokens": 2093,
+        "token_reduction_fraction": 0.7204114346780657,
+        "excludes": "Extraction, provider inference, outputs, retries, network and answer quality",
+        "tokenizer": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "token_count_seconds_excluding_load": 0.010851800005184487
+      }
+    },
+    {
+      "case": "missing",
+      "fixture_verdict_matches": true,
+      "referenced_evidence_count": 11,
+      "retained_referenced_count": 10,
+      "explicitly_missing_count": 1,
+      "unaccounted_count": 0,
+      "option_a_status": "unknown",
+      "pareto_frontier": [
+        "c"
+      ],
+      "packet_compute_seconds": 0.00796349998563528,
+      "cached_lookup_seconds": 0.00033569999504834414,
+      "measurements": {
+        "raw_utf8_bytes": 35981,
+        "packet_utf8_bytes": 6423,
+        "raw_tokens": 7393,
+        "packet_tokens": 1960,
+        "token_reduction_fraction": 0.7348843500608684,
+        "excludes": "Extraction, provider inference, outputs, retries, network and answer quality",
+        "tokenizer": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "token_count_seconds_excluding_load": 0.010222399985650554
+      }
+    },
+    {
+      "case": "unit-mismatch",
+      "fixture_verdict_matches": true,
+      "referenced_evidence_count": 11,
+      "retained_referenced_count": 11,
+      "explicitly_missing_count": 0,
+      "unaccounted_count": 0,
+      "option_a_status": "unknown",
+      "pareto_frontier": [
+        "c"
+      ],
+      "packet_compute_seconds": 0.00548929997603409,
+      "cached_lookup_seconds": 0.00032839999767020345,
+      "measurements": {
+        "raw_utf8_bytes": 35975,
+        "packet_utf8_bytes": 6392,
+        "raw_tokens": 7394,
+        "packet_tokens": 1960,
+        "token_reduction_fraction": 0.7349202055720855,
+        "excludes": "Extraction, provider inference, outputs, retries, network and answer quality",
+        "tokenizer": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "token_count_seconds_excluding_load": 0.010388199996668845
+      }
+    },
+    {
+      "case": "revised",
+      "fixture_verdict_matches": true,
+      "referenced_evidence_count": 11,
+      "retained_referenced_count": 11,
+      "explicitly_missing_count": 0,
+      "unaccounted_count": 0,
+      "option_a_status": "infeasible",
+      "pareto_frontier": [
+        "c"
+      ],
+      "packet_compute_seconds": 0.0054982000146992505,
+      "cached_lookup_seconds": 0.0003657999914139509,
+      "measurements": {
+        "raw_utf8_bytes": 36242,
+        "packet_utf8_bytes": 6720,
+        "raw_tokens": 7498,
+        "packet_tokens": 2089,
+        "token_reduction_fraction": 0.7213923712990131,
+        "excludes": "Extraction, provider inference, outputs, retries, network and answer quality",
+        "tokenizer": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+        "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+        "token_count_seconds_excluding_load": 0.010366000002250075
+      }
+    }
+  ],
+  "metric_contract": {
+    "anchor": "After JSON fixture load, schema validation, state ingestion and tokenizer loading",
+    "population": "Seven authored variants of one product-planning scenario",
+    "token_count": "Canonical raw context versus full decision packet with the same evidence-use instruction, no chat template",
+    "compute_time": "Cache lookup, packet generation and packet persistence; one run per fixture",
+    "reference_retention": "Option metric and constraint references retained or explicitly flagged missing",
+    "excludes": "Natural-language extraction, semantic relevance, real users, provider calls, output tokens, answer quality and total cost"
+  },
+  "limitations": [
+    "Twenty-four deliberately unrelated, repetitive archive entries inflate the long-context baseline.",
+    "Topic identities, facts, sources and preferences are supplied by the fixture author, not discovered by a model.",
+    "Compact inputs may expand; token reduction is not universally positive.",
+    "Constraint truth is conditional on supplied facts, not independent verification of their sources.",
+    "Expected fixture verdicts verify mechanisms, not decision quality or benchmark generalization.",
+    "No claim of user savings, faster provider responses or commercial readiness."
+  ]
+}

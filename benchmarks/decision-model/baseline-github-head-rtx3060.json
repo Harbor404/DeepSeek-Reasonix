@@ -1,0 +1,93 @@
+{
+  "schema_version": 1,
+  "model": "deepseek-ai/DeepSeek-R1-Distill-Qwen-1.5B",
+  "revision": "ad9f0ae0864d7fbcd1cd905e3c6c5b069cc8b562",
+  "device": "NVIDIA GeForce RTX 3060",
+  "torch": "2.13.0+cu126",
+  "dtype": "float16",
+  "evaluation_sha256": "82a88ed43e71c8a96609dbea31c3f954c5342ff764553d1ebc778a4c1ba91d87",
+  "limit": null,
+  "method": "trained-head",
+  "answer_protocol": "Trained eight-way linear head on frozen features",
+  "head_sha256": "8064c56139e355f05d0170d5a9f6abd79d1bb8f4ab6699ba59938750eb3a0fa6",
+  "evaluation_role": "Previously seen development regression set; not a fresh test set",
+  "max_new_tokens": null,
+  "batch_size": 1,
+  "generation": null,
+  "load_seconds_including_download": 7.322676199983107,
+  "evaluation_wall_seconds": 1.4654449000081513,
+  "peak_gpu_allocated_bytes": 3106881024,
+  "metrics": {
+    "count": 51,
+    "attempted": 51,
+    "correct": 14,
+    "accuracy": 0.27450980392156865,
+    "balanced_accuracy": 0.2178030303030303,
+    "coverage": 1.0,
+    "majority_baseline_accuracy": 0.21568627450980393,
+    "latency_ms_p50": 28.312599984928966,
+    "latency_ms_p95": 36.93460000795312,
+    "per_class": {
+      "api-integration": {
+        "count": 4,
+        "correct": 0,
+        "recall": 0.0
+      },
+      "atomic-bugfix": {
+        "count": 11,
+        "correct": 10,
+        "recall": 0.9090909090909091
+      },
+      "codegen": {
+        "count": 4,
+        "correct": 1,
+        "recall": 0.25
+      },
+      "failing-test-diagnosis": {
+        "count": 8,
+        "correct": 0,
+        "recall": 0.0
+      },
+      "multi-file-bugfix": {
+        "count": 8,
+        "correct": 2,
+        "recall": 0.25
+      },
+      "read-only-output": {
+        "count": 3,
+        "correct": 1,
+        "recall": 0.3333333333333333
+      },
+      "refactor": {
+        "count": 6,
+        "correct": 0,
+        "recall": 0.0
+      },
+      "repo-exploration": {
+        "count": 7,
+        "correct": 0,
+        "recall": 0.0
+      }
+    }
+  },
+  "failure_reasons": {},
+  "total_output_tokens": 0,
+  "metric_contract": {
+    "anchor": "After one warmup request; before tokenization of each request or batch",
+    "population": "Included task.toml prompts, batches of up to 1",
+    "excludes": "Download, model loading, warmup, repository inspection and task execution",
+    "accuracy": "Agreement with declared task class; skipped input counts as incorrect",
+    "latency": "Tokenization, GPU transfer, inference and result extraction; all timed attempts, including invalid answers",
+    "batch_latency": "For batches, all requests receive batch completion time; not isolated-request latency"
+  },
+  "limitations": [
+    "Task-kind labels are not labels for cheapest successful model or optimal workflow.",
+    "Only prompt text is visible; repository contents are not supplied.",
+    "Declared classes can overlap semantically; labels have not been independently audited.",
+    "Option weights are not calibrated correctness probabilities.",
+    "No paid model comparison or end-to-end cost savings measured.",
+    "English benchmark prompts do not establish Chinese or production performance.",
+    "Training and evaluation families may have semantic overlap.",
+    "The GPU is shared with desktop activity; these are measurements on this host, not server capacity estimates."
+  ]
+}

@@ -3,6 +3,24 @@
 // code adds one here. i18n.test.ts is what stops one from being forgotten.
 
 export const EN_KERNEL: Record<string, string> = {
+  "决策请求超过大小限制": "The decision request exceeds the size limit",
+  "无法读取决策请求": "Could not read the decision request",
+  "当前未启用决策报告能力": "Decision reporting is not enabled",
+  "会话已切换，请在当前会话重试": "The session changed; retry in the active session",
+  "生成决策报告超时，请重试": "Decision reporting timed out; please retry",
+  "无法生成决策报告": "Could not generate the decision report",
+  "找不到此决策版本，请确认工作区和版本编号": "Decision snapshot not found; check the workspace and snapshot ID",
+  "此决策版本已过期，请重新提交比较资料": "This decision snapshot expired; submit the comparison again",
+  "决策记录不完整，无法生成可靠报告": "The decision record is inconsistent; a reliable report cannot be generated",
+  "无法打开决策记录存储": "Could not open decision storage",
+  "无法读取决策记录": "Could not read the decision record",
+  "不支持当前决策存储版本": "This decision storage version is unsupported",
+  "决策报告超过大小限制，请缩小比较范围": "The decision report exceeds the size limit; reduce the comparison scope",
+  "决策版本编号或候选答案参数不正确": "Invalid decision snapshot ID or candidate answer arguments",
+  "决策请求不是完整的 JSON": "The decision request is not complete JSON",
+  "决策请求包含缺失或不支持的字段": "The decision request has missing or unsupported fields",
+  "决策请求包含重复字段": "The decision request contains duplicate fields",
+  "决策请求嵌套层数过多": "The decision request is nested too deeply",
   "该决定已不符合当前状态：计划在你回答前已发生变更": "That decision is no longer current - the plan changed before you answered",
   "该条已发送给模型，无法撤回": "That line already reached the model - it cannot be taken back",
   // 能力开关：名字、这台机器的存档、以及服务器自己

@@ -19,10 +19,11 @@ import (
 // capabilityProbeProvider issues one scripted use_capability call per round,
 // then finishes. Round i+1's request carries round i's tool result.
 type capabilityProbeProvider struct {
-	mu    sync.Mutex
-	calls []string
-	round int
-	reqs  []provider.Request
+	mu       sync.Mutex
+	calls    []string
+	round    int
+	reqs     []provider.Request
+	callArgs func(int, provider.Request) string
 }
 
 func (p *capabilityProbeProvider) Name() string { return "boot-capability-probe" }
@@ -35,8 +36,12 @@ func (p *capabilityProbeProvider) Stream(_ context.Context, req provider.Request
 	p.mu.Unlock()
 	ch := make(chan provider.Chunk, 3)
 	if i < len(p.calls) {
+		args := p.calls[i]
+		if p.callArgs != nil {
+			args = p.callArgs(i, req)
+		}
 		ch <- provider.Chunk{Type: provider.ChunkToolCall, ToolCall: &provider.ToolCall{
-			ID: fmt.Sprintf("probe-%d", i), Name: "use_capability", Arguments: p.calls[i],
+			ID: fmt.Sprintf("probe-%d", i), Name: "use_capability", Arguments: args,
 		}}
 	} else {
 		ch <- provider.Chunk{Type: provider.ChunkText, Text: "done"}
