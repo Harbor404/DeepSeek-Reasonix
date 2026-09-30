@@ -25,7 +25,7 @@ const half = Math.ceil(community.list.length / 2);
 const rowA = community.list.slice(0, half);
 const rowB = community.list.slice(half);
 
-const desc = "Open-source AI coding agent you can leave running. One local engine, four ways in — terminal, desktop app, browser, or your editor over ACP. Plan mode, permissions, a workspace sandbox and checkpoints keep long autonomous runs reviewable. A single Go binary, no runtime to install. MIT.";
+const desc = "Open-source AI coding agent you can leave running. Four ways in — desktop app, terminal, browser, or your editor over ACP. Plan mode, permissions, a workspace sandbox and checkpoints keep long autonomous runs reviewable. A single Go binary, no runtime to install. MIT.";
 const ld = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
@@ -58,20 +58,20 @@ const ld = {
         <span class="l-zh">可以<span class="tt">一直开着跑</span>的<br />编码 Agent。</span>
       </h1>
       <p class="sub reveal" style="--d:0.12s">
-        <span class="l-en">One local engine, four ways in — terminal, desktop app, browser, or your editor over ACP. Plan mode, permissions, a workspace sandbox and per-turn checkpoints keep a long autonomous run something you can still read and undo.</span>
-        <span class="l-zh">一套本地引擎,四个入口——终端、桌面端、浏览器,或通过 ACP 接入你的编辑器。计划模式、权限、工作区沙箱与逐轮 checkpoint,让长时间自治运行始终可读、可撤销。</span>
+        <span class="l-en">Four ways in — desktop app, terminal, browser, or your editor over ACP. Plan mode, permissions, a workspace sandbox and per-turn checkpoints keep a long autonomous run something you can still read and undo.</span>
+        <span class="l-zh">四个入口——桌面端、终端、浏览器,或通过 ACP 接入你的编辑器。计划模式、权限、工作区沙箱与逐轮 checkpoint,让长时间自治运行始终可读、可撤销。</span>
       </p>
       <div class="hero-install reveal" style="--d:0.18s" aria-label="Reasonix install options">
         <div class="install-option install-option--desktop">
           <canvas class="particle-canvas"></canvas>
-          <span class="install-kicker"><span class="l-en">Stable 1.x desktop</span><span class="l-zh">稳定版 1.x 桌面端</span></span>
-          <strong><span class="l-en">The mature line for sessions, settings, approvals, and updates.</span><span class="l-zh">成熟稳定的产品线，可视化管理会话、设置、审批与更新。</span></strong>
-          <a class="btn btn-dark" data-os-dl data-goto="desktop" href="#start"><span class="l-en">Download stable 1.x</span><span class="l-zh">下载稳定版 1.x</span></a>
+          <span class="install-kicker"><span class="l-en">Reasonix Studio · recommended</span><span class="l-zh">Reasonix Studio · 推荐</span></span>
+          <strong><span class="l-en">The desktop app for sessions, settings, approvals, and updates.</span><span class="l-zh">桌面应用，可视化管理会话、设置、审批与更新。</span></strong>
+          <a class="btn btn-dark" data-os-dl data-goto="studio" href="#start"><span class="l-en">Download Studio<span class="os-for" hidden> for <span class="os-name"></span></span></span><span class="l-zh">下载 Studio<span class="os-for" hidden>（<span class="os-name"></span>）</span></span></a>
         </div>
         <div class="install-option install-option--cli">
           <canvas class="particle-canvas"></canvas>
-          <span class="install-kicker"><span class="l-en">CLI / TUI</span><span class="l-zh">CLI / TUI</span></span>
-          <strong><span class="l-en">Terminal-native agent with the same local Reasonix engine.</span><span class="l-zh">终端原生入口,使用同一套本地 Reasonix 引擎。</span></strong>
+          <span class="install-kicker"><span class="l-en">Command line (<span class="keep-case">1.x</span>)</span><span class="l-zh">命令行（<span class="keep-case">1.x</span>）</span></span>
+          <strong><span class="l-en">Terminal-native agent (CLI / TUI), stable 1.x.</span><span class="l-zh">终端原生入口（CLI / TUI），稳定的 1.x 版本线。</span></strong>
           <span class="install"><span class="ps1">$</span><span class="install-command">npm i -g reasonix</span><button data-copy="npm i -g reasonix">Copy</button></span>
         </div>
       </div>
@@ -167,31 +167,31 @@ const ld = {
     <div class="wrap">
       <div class="sec-head split reveal">
         <span class="kicker"><span class="l-en">Surfaces</span><span class="l-zh">使用形态</span></span>
-        <h2><span class="l-en">One engine. <span class="em">Four ways in.</span></span><span class="l-zh">同一个引擎。<span class="em">四个入口。</span></span></h2>
-        <p><span class="l-en">Not four products — one local engine behind four front ends. Sessions, permissions, skills and MCP servers are shared, so a task you start in the terminal is waiting for you in the desktop app.</span><span class="l-zh">不是四个产品,而是一个本地引擎配四个前端。会话、权限、技能与 MCP 服务器都共享——在终端起的任务,打开桌面端就在那儿等着。</span></p>
+        <h2><span class="l-en">Four surfaces. <span class="em">Pick how you work.</span></span><span class="l-zh">四个入口。<span class="em">按你的习惯选。</span></span></h2>
+        <p><span class="l-en">Four ways to run Reasonix, built around the same ideas: plan mode, gated tool calls, skills and MCP. Studio (2.x) and the 1.x command line are separate release lines and do not share sessions.</span><span class="l-zh">四种使用 Reasonix 的方式，围绕同样的理念：计划模式、受控的工具调用、技能与 MCP。Studio（2.x）与 1.x 命令行是各自独立的版本线，暂不共享会话。</span></p>
       </div>
       <div class="surf-grid">
         <div class="surf reveal">
-          <div class="surf-art" aria-hidden="true">
-            <span class="surf-win cli">
-              <i class="bar"></i>
-              <span class="body"><i class="l" style="--w:62%"></i><i class="l" style="--w:44%"></i><i class="l ok" style="--w:70%"></i><i class="l" style="--w:38%"></i><i class="cur"></i></span>
-            </span>
-          </div>
-          <h3><span class="l-en">Terminal</span><span class="l-zh">终端</span></h3>
-          <p><span class="l-en">Full-screen TUI — diff review, approvals, slash commands.</span><span class="l-zh">全屏 TUI——diff 审阅、审批、斜杠命令。</span></p>
-          <code>reasonix</code>
-        </div>
-        <div class="surf reveal" style="--d:0.06s">
           <div class="surf-art" aria-hidden="true">
             <span class="surf-win app">
               <i class="bar"></i>
               <span class="body"><span class="side"><i></i><i></i><i></i></span><span class="main"><i class="l" style="--w:80%"></i><i class="l" style="--w:55%"></i><i class="l ok" style="--w:66%"></i></span></span>
             </span>
           </div>
-          <h3><span class="l-en">Desktop app</span><span class="l-zh">桌面端</span></h3>
+          <h3><span class="l-en">Desktop app · Studio</span><span class="l-zh">桌面端 · Studio</span></h3>
           <p><span class="l-en">Sessions side by side, settings, approvals, auto-update.</span><span class="l-zh">多会话并列、设置、审批与自动更新。</span></p>
-          <code><span class="l-en">macOS · Windows · Linux</span><span class="l-zh">macOS · Windows · Linux</span></code>
+          <code><span class="l-en">macOS (Apple Silicon, Intel) · Windows x64 · Linux amd64 (.deb)</span><span class="l-zh">macOS（Apple Silicon、Intel）· Windows x64 · Linux amd64（.deb）</span></code>
+        </div>
+        <div class="surf reveal" style="--d:0.06s">
+          <div class="surf-art" aria-hidden="true">
+            <span class="surf-win cli">
+              <i class="bar"></i>
+              <span class="body"><i class="l" style="--w:62%"></i><i class="l" style="--w:44%"></i><i class="l ok" style="--w:70%"></i><i class="l" style="--w:38%"></i><i class="cur"></i></span>
+            </span>
+          </div>
+          <h3><span class="l-en">Terminal · 1.x</span><span class="l-zh">终端 · 1.x</span></h3>
+          <p><span class="l-en">Full-screen TUI — diff review, approvals, slash commands.</span><span class="l-zh">全屏 TUI——diff 审阅、审批、斜杠命令。</span></p>
+          <code>reasonix</code>
         </div>
         <div class="surf reveal" style="--d:0.12s">
           <div class="surf-art" aria-hidden="true">
@@ -227,13 +227,14 @@ const ld = {
         <div class="step reveal">
           <span class="num">01</span>
           <h3><span class="l-en">Install</span><span class="l-zh">安装</span></h3>
-          <p><span class="l-en">One command. macOS, Linux, Windows, and WSL.</span><span class="l-zh">一条命令,支持 macOS、Linux、Windows 与 WSL。</span></p>
+          <p><span class="l-en">Download Reasonix Studio for macOS, Windows, or Linux — or use the 1.x command line:</span><span class="l-zh">下载 macOS、Windows 或 Linux 版 Reasonix Studio，或使用 1.x 命令行：</span></p>
           <code>npm i -g reasonix</code>
+          <a class="step-link" href="#start" data-goto="studio"><span class="l-en">Get Studio →</span><span class="l-zh">获取 Studio →</span></a>
         </div>
         <div class="step reveal" style="--d:0.08s">
           <span class="num">02</span>
           <h3><span class="l-en">Point it at a repo</span><span class="l-zh">指向你的仓库</span></h3>
-          <p><span class="l-en">It maps the codebase once and keeps that map for the rest of the session.</span><span class="l-zh">只做一次代码库测绘,这份地图在整场会话里一直有效。</span></p>
+          <p><span class="l-en">Open a project folder in Studio, or run it from a terminal. It maps the codebase once and keeps that map for the session.</span><span class="l-zh">在 Studio 中打开项目文件夹，或在终端运行。只做一次代码库测绘,这份地图在整场会话里一直有效。</span></p>
           <code>cd your-project &amp;&amp; reasonix</code>
         </div>
         <div class="step reveal" style="--d:0.16s">
@@ -298,9 +299,9 @@ const ld = {
 
     <div class="dl reveal" style="--d:0.14s">
       <div class="dl-tabs" role="tablist" aria-label="Download method / 下载方式">
-        <button class="dl-tab active" id="download-tab-desktop" type="button" data-pane="desktop" role="tab" aria-controls="download-pane-desktop" aria-selected="true" tabindex="0"><span class="l-en">Stable 1.x</span><span class="l-zh">稳定版 1.x</span></button>
-        <button class="dl-tab" id="download-tab-studio" type="button" data-pane="studio" role="tab" aria-controls="download-pane-studio" aria-selected="false" tabindex="-1">Studio 2.x</button>
-        <button class="dl-tab" id="download-tab-cli" type="button" data-pane="cli" role="tab" aria-controls="download-pane-cli" aria-selected="false" tabindex="-1">CLI</button>
+        <button class="dl-tab active" id="download-tab-studio" type="button" data-pane="studio" role="tab" aria-controls="download-pane-studio" aria-selected="true" tabindex="0">Studio</button>
+        <button class="dl-tab" id="download-tab-desktop" type="button" data-pane="desktop" role="tab" aria-controls="download-pane-desktop" aria-selected="false" tabindex="-1"><span class="l-en">Desktop 1.x</span><span class="l-zh">桌面端 1.x</span></button>
+        <button class="dl-tab" id="download-tab-cli" type="button" data-pane="cli" role="tab" aria-controls="download-pane-cli" aria-selected="false" tabindex="-1"><span class="l-en">Command line 1.x</span><span class="l-zh">命令行 1.x</span></button>
         <button class="dl-tab" id="download-tab-npm" type="button" data-pane="npm" role="tab" aria-controls="download-pane-npm" aria-selected="false" tabindex="-1">npm</button>
         <button class="dl-tab" id="download-tab-brew" type="button" data-pane="brew" role="tab" aria-controls="download-pane-brew" aria-selected="false" tabindex="-1">Homebrew</button>
         <button class="dl-tab" id="download-tab-vscode" type="button" data-pane="vscode" role="tab" aria-controls="download-pane-vscode" aria-selected="false" tabindex="-1"><span class="l-en">Editor extension</span><span class="l-zh">编辑器扩展</span></button>
@@ -308,18 +309,49 @@ const ld = {
 
       <div class="version-guide" aria-label="Reasonix version lines / Reasonix 版本选择">
         <div>
-          <strong><span class="l-en">Stable 1.x</span><span class="l-zh">稳定版 1.x</span></strong>
-          <span><span class="l-en">Mature and maintained. Choose it when stability comes first.</span><span class="l-zh">成熟稳定，持续获得兼容、安全与问题修复。</span></span>
+          <strong>Studio 2.x <span class="version-guide-badge"><span class="l-en">recommended</span><span class="l-zh">推荐</span></span></strong>
+          <span><span class="l-en">The desktop app on the new architecture, with the newest features.</span><span class="l-zh">新架构桌面应用，包含最新功能。</span></span>
         </div>
         <div>
-          <strong>Studio 2.x <span class="version-guide-badge"><span class="l-en">preview</span><span class="l-zh">预览</span></span></strong>
-          <span><span class="l-en">The new architecture and newest features. Actively evolving.</span><span class="l-zh">新架构与最新功能，正在快速迭代中。</span></span>
+          <strong><span class="l-en">Command line &amp; stable 1.x</span><span class="l-zh">命令行与稳定版 1.x</span></strong>
+          <span><span class="l-en">Terminal, scripting and headless use — mature and maintained.</span><span class="l-zh">终端、脚本与无界面场景，成熟稳定，持续维护。</span></span>
         </div>
       </div>
 
-      <div class="dl-pane active" id="download-pane-desktop" data-pane="desktop" role="tabpanel" aria-labelledby="download-tab-desktop">
+      <div class="dl-pane active" id="download-pane-studio" data-pane="studio" role="tabpanel" aria-labelledby="download-tab-studio">
+        <div class="release-channel-summary" data-release-summary="studio" aria-live="polite">
+          <span><span class="l-en">Reasonix Studio 2.x · <span data-release-version="studio">latest</span></span><span class="l-zh">Reasonix Studio 2.x · <span data-release-version="studio">latest</span></span></span>
+        </div>
+        <p class="dl-platform-note" data-platform-note hidden><span class="l-en">Studio is a desktop app with builds for macOS (Apple Silicon, Intel), Windows x64 and Linux amd64 (.deb). <span data-platform-reason="mobile">Open this page on a computer to download it.</span><span data-platform-reason="chromeos">None matches ChromeOS.</span><span data-platform-reason="arm-linux">None matches Linux on ARM.</span> The 1.x command line below has more platforms.</span><span class="l-zh">Studio 是桌面应用，提供 macOS（Apple Silicon、Intel）、Windows x64 与 Linux amd64（.deb）安装包。<span data-platform-reason="mobile">请在电脑上打开本页下载。</span><span data-platform-reason="chromeos">暂无适用于 ChromeOS 的安装包。</span><span data-platform-reason="arm-linux">暂无适用于 ARM 架构 Linux 的安装包。</span>下方的 1.x 命令行支持更多平台。</span></p>
+        <div class="os-grid">
+          <div class="os-card" data-os="mac">
+            <h4>macOS</h4>
+            <span class="meta"><span class="l-en">DMG · pick your chip</span><span class="l-zh">DMG · 请按芯片选择</span></span>
+            <a class="btn btn-light" href={studioReleases} data-studio-asset="ReasonixStudio-darwin-arm64.dmg"><span class="l-en">Apple Silicon · <span data-release-version="studio">latest</span></span><span class="l-zh">Apple Silicon · <span data-release-version="studio">latest</span></span></a>
+            <a class="btn btn-light" href={studioReleases} data-studio-asset="ReasonixStudio-darwin-amd64.dmg"><span class="l-en">Intel · <span data-release-version="studio">latest</span></span><span class="l-zh">Intel · <span data-release-version="studio">latest</span></span></a>
+          </div>
+          <div class="os-card" data-os="win">
+            <h4>Windows</h4>
+            <span class="meta"><span class="l-en">Installer · Windows 10+ · x64</span><span class="l-zh">安装器 · Windows 10+ · x64</span></span>
+            <a class="btn btn-light" href={studioReleases} data-studio-asset="ReasonixStudio-windows-amd64-installer.exe"><span class="l-en">Download · <span data-release-version="studio">latest</span></span><span class="l-zh">下载 · <span data-release-version="studio">latest</span></span></a>
+          </div>
+          <div class="os-card" data-os="linux">
+            <h4>Linux</h4>
+            <span class="meta"><span class="l-en">Debian / Ubuntu package · amd64</span><span class="l-zh">Debian / Ubuntu 安装包 · amd64</span></span>
+            <a class="btn btn-light" href={studioReleases} data-studio-asset="ReasonixStudio-linux-amd64.deb"><span class="l-en">Download .deb · <span data-release-version="studio">latest</span></span><span class="l-zh">下载 .deb · <span data-release-version="studio">latest</span></span></a>
+          </div>
+        </div>
+        <div class="dl-note"><span class="l-en"><a href={studioReleases} data-release-notes="studio">Release notes →</a> · <a href={studioReleases}>all Studio releases →</a></span><span class="l-zh"><a href={studioReleases} data-release-notes="studio">更新说明 →</a> · <a href={studioReleases}>全部 Studio 版本 →</a></span></div>
+        <div class="dl-alt">
+          <strong><span class="l-en">Prefer the terminal? Command line (1.x)</span><span class="l-zh">更喜欢终端？命令行（1.x）</span></strong>
+          <span class="install"><span class="ps1">$</span>npm i -g reasonix<button data-copy="npm i -g reasonix">Copy</button></span>
+          <a href="#start" data-goto="cli"><span class="l-en">Binaries, Homebrew and more →</span><span class="l-zh">二进制包、Homebrew 等 →</span></a>
+        </div>
+      </div>
+
+      <div class="dl-pane" id="download-pane-desktop" data-pane="desktop" role="tabpanel" aria-labelledby="download-tab-desktop" hidden>
         <div class="release-channel-summary" data-release-summary="desktop" aria-live="polite">
-          <span><span class="l-en">Reasonix stable 1.x desktop · <span data-release-version="desktop">{desktopVersionLabel}</span></span><span class="l-zh">Reasonix 稳定版 1.x 桌面端 · <span data-release-version="desktop">{desktopVersionLabel}</span></span></span>
+          <span><span class="l-en">Reasonix desktop 1.x (previous line) · <span data-release-version="desktop">{desktopVersionLabel}</span></span><span class="l-zh">Reasonix 桌面端 1.x（上一代）· <span data-release-version="desktop">{desktopVersionLabel}</span></span></span>
         </div>
         <div class="os-grid">
           <div class="os-card" data-os="mac">
@@ -364,34 +396,9 @@ const ld = {
         </div>}
       </div>
 
-      <div class="dl-pane" id="download-pane-studio" data-pane="studio" role="tabpanel" aria-labelledby="download-tab-studio" hidden>
-        <div class="release-channel-summary" data-release-summary="studio" aria-live="polite">
-          <span><span class="l-en">Reasonix Studio 2.x preview · <span data-release-version="studio">latest</span></span><span class="l-zh">Reasonix Studio 2.x 预览版 · <span data-release-version="studio">latest</span></span></span>
-        </div>
-        <div class="os-grid">
-          <div class="os-card" data-os="mac">
-            <h4>macOS</h4>
-            <span class="meta">Apple Silicon / Intel · DMG</span>
-            <a class="btn btn-light" href={studioReleases} data-studio-asset="ReasonixStudio-darwin-arm64.dmg"><span class="l-en">Apple Silicon · <span data-release-version="studio">latest</span></span><span class="l-zh">Apple Silicon · <span data-release-version="studio">latest</span></span></a>
-            <div class="os-options"><a href={studioReleases} data-studio-asset="ReasonixStudio-darwin-amd64.dmg">Intel DMG</a></div>
-          </div>
-          <div class="os-card" data-os="win">
-            <h4>Windows</h4>
-            <span class="meta"><span class="l-en">Windows 10+ · x64 installer</span><span class="l-zh">Windows 10+ · x64 安装器</span></span>
-            <a class="btn btn-light" href={studioReleases} data-studio-asset="ReasonixStudio-windows-amd64-installer.exe"><span class="l-en">Download · <span data-release-version="studio">latest</span></span><span class="l-zh">下载 · <span data-release-version="studio">latest</span></span></a>
-          </div>
-          <div class="os-card" data-os="linux">
-            <h4>Linux</h4>
-            <span class="meta"><span class="l-en">Debian / Ubuntu · amd64</span><span class="l-zh">Debian / Ubuntu · amd64</span></span>
-            <a class="btn btn-light" href={studioReleases} data-studio-asset="ReasonixStudio-linux-amd64.deb"><span class="l-en">Download .deb · <span data-release-version="studio">latest</span></span><span class="l-zh">下载 .deb · <span data-release-version="studio">latest</span></span></a>
-          </div>
-        </div>
-        <div class="dl-note"><span class="l-en">Studio is the dedicated visual product and follows its own release line · <a href={studioReleases} data-release-notes="studio">release details →</a> · <a href={studioReleases}>all Studio releases →</a></span><span class="l-zh">Studio 是独立的可视化产品，使用自己的发布版本线 · <a href={studioReleases} data-release-notes="studio">版本详情 →</a> · <a href={studioReleases}>全部 Studio 版本 →</a></span></div>
-      </div>
-
       <div class="dl-pane" id="download-pane-cli" data-pane="cli" role="tabpanel" aria-labelledby="download-tab-cli" hidden>
         <div class="release-channel-summary" data-release-summary="cli" aria-live="polite">
-          <span><span class="l-en">Current official version <span data-release-version="cli">latest</span></span><span class="l-zh">当前正式版本 <span data-release-version="cli">latest</span></span></span>
+          <span><span class="l-en">Command line 1.x · current official version <span data-release-version="cli">latest</span></span><span class="l-zh">命令行 1.x · 当前正式版本 <span data-release-version="cli">latest</span></span></span>
         </div>
         <span class="install release-upgrade-command"><span class="ps1">$</span><span data-release-command="cli">reasonix upgrade</span><button data-copy="reasonix upgrade">Copy</button></span>
         <div class="os-grid cli-os-grid">

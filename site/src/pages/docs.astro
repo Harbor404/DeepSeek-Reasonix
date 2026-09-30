@@ -5,6 +5,7 @@ import SiteHeader from '../components/SiteHeader.astro';
 const base = import.meta.env.BASE_URL.replace(/\/$/, '');
 const repo = 'https://github.com/esengine/DeepSeek-Reasonix';
 const desktopStableFallback = `${repo}/releases/latest/download`;
+const studioReleases = `${repo}/releases?q=studio-v`;
 const goVer = 'latest';
 ---
 <Base
@@ -20,7 +21,7 @@ const goVer = 'latest';
       <nav class="side-nav" aria-label="Docs sections">
         <div class="side-group">
           <span class="gh"><span class="l-en">Start</span><span class="l-zh">开始使用</span></span>
-          <a href="#install"><strong><span class="l-en">Install</span><span class="l-zh">安装入口</span></strong><small><span class="l-en">CLI/TUI and desktop builds</span><span class="l-zh">CLI/TUI 与桌面端</span></small></a>
+          <a href="#studio"><strong><span class="l-en">Install</span><span class="l-zh">安装入口</span></strong><small><span class="l-en">Studio desktop app, CLI/TUI</span><span class="l-zh">Studio 桌面端、CLI/TUI</span></small></a>
           <a href="#config"><strong><span class="l-en">Model keys</span><span class="l-zh">模型密钥</span></strong><small><span class="l-en">Where API keys are saved</span><span class="l-zh">API Key 存在哪里</span></small></a>
           <a href="#quickstart"><strong><span class="l-en">First session</span><span class="l-zh">第一次会话</span></strong><small><span class="l-en">Open a repo and ask</span><span class="l-zh">打开仓库并提问</span></small></a>
           <a href="#serve"><strong><span class="l-en">Browser UI</span><span class="l-zh">浏览器界面</span></strong><small><span class="l-en">Run <code>reasonix serve</code></span><span class="l-zh">运行 <code>reasonix serve</code></span></small></a>
@@ -61,7 +62,7 @@ const goVer = 'latest';
         <h1><span class="l-en">Install, configure, and run coding work locally.</span><span class="l-zh">安装、配置，并在本地运行编码任务。</span></h1>
         <p class="lede"><span class="l-en">This page is the concise website guide. It covers the normal path first, then links out to the full repo docs when you need every field or internal contract.</span><span class="l-zh">这是官网上的精简使用说明：先讲最常用路径，再把完整字段和工程契约链接到仓库文档。</span></p>
         <div class="docs-path-grid" aria-label="Documentation overview">
-          <a href="#install">
+          <a href="#studio">
             <strong><span class="l-en">New user path</span><span class="l-zh">新手路径</span></strong>
             <span><span class="l-en">Install, add an API key, open a repo, and start chatting.</span><span class="l-zh">安装、配置密钥、打开仓库，然后开始对话。</span></span>
           </a>
@@ -80,8 +81,29 @@ const goVer = 'latest';
         </div>
       </section>
 
-      <h2 id="install"><span class="l-en">CLI / TUI</span><span class="l-zh">CLI / TUI</span></h2>
-      <p><span class="l-en">Install the terminal app with one command on macOS, Linux, Windows, or WSL. <code>reasonix</code> opens the interactive TUI; <code>reasonix run</code> is the headless automation entry.</span><span class="l-zh">一条命令安装终端应用,支持 macOS、Linux、Windows 或 WSL。<code>reasonix</code> 打开交互式 TUI；<code>reasonix run</code> 用于无界面自动执行。</span></p>
+      <h2 id="studio"><span class="l-en">Reasonix Studio (recommended)</span><span class="l-zh">Reasonix Studio（推荐）</span></h2>
+      <p><span class="l-en">Studio is the desktop app and the default way to use Reasonix: visual sessions, settings, approvals and automatic updates on the same local engine. Download the build for your system:</span><span class="l-zh">Studio 是桌面应用，也是使用 Reasonix 的默认方式：可视化会话、设置、审批与自动更新，运行在同一套本地引擎上。请下载对应系统的安装包：</span></p>
+      <div class="desktop-downloads desktop-downloads--two" aria-label="Studio downloads">
+        <a class="desktop-download" href={studioReleases} data-studio-asset="ReasonixStudio-darwin-arm64.dmg">
+          <strong>macOS · Apple Silicon</strong>
+          <span><span class="l-en">DMG</span><span class="l-zh">DMG</span> · <span data-release-version="studio">latest</span></span>
+        </a>
+        <a class="desktop-download" href={studioReleases} data-studio-asset="ReasonixStudio-darwin-amd64.dmg">
+          <strong>macOS · Intel</strong>
+          <span><span class="l-en">DMG</span><span class="l-zh">DMG</span> · <span data-release-version="studio">latest</span></span>
+        </a>
+        <a class="desktop-download" href={studioReleases} data-studio-asset="ReasonixStudio-windows-amd64-installer.exe">
+          <strong>Windows</strong>
+          <span><span class="l-en">x64 installer</span><span class="l-zh">x64 安装器</span> · <span data-release-version="studio">latest</span></span>
+        </a>
+        <a class="desktop-download" href={studioReleases} data-studio-asset="ReasonixStudio-linux-amd64.deb">
+          <strong>Linux</strong>
+          <span><span class="l-en">.deb · amd64</span><span class="l-zh">.deb · amd64</span> · <span data-release-version="studio">latest</span></span>
+        </a>
+      </div>
+
+      <h2 id="install"><span class="l-en">Command line (1.x)</span><span class="l-zh">命令行（1.x）</span></h2>
+      <p><span class="l-en">Prefer the terminal, or need scripting? Install the CLI / TUI app with one command on macOS, Linux, Windows, or WSL. <code>reasonix</code> opens the interactive TUI; <code>reasonix run</code> is the headless automation entry.</span><span class="l-zh">更喜欢终端，或需要脚本化？一条命令安装终端应用,支持 macOS、Linux、Windows 或 WSL。<code>reasonix</code> 打开交互式 TUI；<code>reasonix run</code> 用于无界面自动执行。</span></p>
       <div class="codeblock codeblock--copy"><button data-copy="npm i -g reasonix">Copy</button><span class="c"># npm (recommended · 推荐)</span>
 npm i -g reasonix
 
@@ -93,7 +115,7 @@ brew install esengine/reasonix/reasonix</div>
           <p><span class="l-en">You live in the terminal, want fast repo work, or need scriptable <code>reasonix run</code> automation.</span><span class="l-zh">你主要在终端工作、需要快速处理仓库任务，或要用 <code>reasonix run</code> 做自动化。</span></p>
         </div>
         <div>
-          <strong><span class="l-en">Use the desktop app when</span><span class="l-zh">适合用桌面端</span></strong>
+          <strong><span class="l-en">Use the 1.x desktop app when</span><span class="l-zh">适合用 1.x 桌面端</span></strong>
           <p><span class="l-en">You want visual sessions, settings, MCP status, checkpoints, approvals, and bot connections in one place.</span><span class="l-zh">你希望在一个界面里管理会话、设置、MCP 状态、checkpoint、审批和 Bot 连接。</span></p>
         </div>
       </div>
@@ -106,9 +128,9 @@ brew install esengine/reasonix/reasonix</div>
           <li><span class="l-en">Scriptable runs through <code>reasonix run</code>, including piped input and explicit model selection.</span><span class="l-zh">可脚本化的 <code>reasonix run</code>,支持管道输入和显式模型选择。</span></li>
         </ul>
       </div>
-      <div class="callout"><span class="ico">!</span><span><span class="l-en">To install the legacy <strong>0.x</strong> version, pin it explicitly with <code>npm i -g reasonix@0.53.2</code>. The commands above, Homebrew, and desktop/release downloads install Reasonix 1.x; the current desktop download build is <strong><span data-release-version="desktop">{goVer}</span></strong>.</span><span class="l-zh">如需安装 legacy <strong>0.x</strong> 版本,请显式 pin: <code>npm i -g reasonix@0.53.2</code>。上方命令、Homebrew 与桌面端/Release 下载对应 Reasonix 1.x；当前桌面端下载构建为 <strong><span data-release-version="desktop">{goVer}</span></strong>。</span></span></div>
+      <div class="callout"><span class="ico">!</span><span><span class="l-en">To install the legacy <strong>0.x</strong> version, pin it explicitly with <code>npm i -g reasonix@0.53.2</code>. The commands above and Homebrew install the Reasonix 1.x command line.</span><span class="l-zh">如需安装 legacy <strong>0.x</strong> 版本,请显式 pin: <code>npm i -g reasonix@0.53.2</code>。上方命令与 Homebrew 安装的是 Reasonix 1.x 命令行。</span></span></div>
 
-      <h2 id="desktop"><span class="l-en">Desktop app</span><span class="l-zh">桌面端</span></h2>
+      <h2 id="desktop"><span class="l-en">Desktop app (1.x)</span><span class="l-zh">桌面端（1.x）</span></h2>
       <div class="desktop-panel">
         <div class="desktop-panel-head">
           <span class="desktop-kicker"><span class="l-en">Native app · <span data-release-version="desktop">{goVer}</span></span><span class="l-zh">原生桌面端 · <span data-release-version="desktop">{goVer}</span></span></span>
