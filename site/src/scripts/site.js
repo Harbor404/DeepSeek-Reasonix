@@ -8,6 +8,7 @@ import {
   fetchFirstJSON,
   releaseVersionLabel,
 } from "./release-channels.js";
+import { detectPlatform } from "./os-detect.js";
 import { initTheme } from "./theme.js";
 import { initMobileNav } from "./mobile-nav.js";
 
@@ -109,20 +110,36 @@ import { initMobileNav } from "./mobile-nav.js";
   });
 
   /* OS detection — hero download button + card badge + highlight */
-  const ua = navigator.userAgent;
-  const os = /Windows/i.test(ua) ? "win" : /Mac|iPhone|iPad/i.test(ua) ? "mac" : /Linux|X11/i.test(ua) ? "linux" : "mac";
+  const platform = detectPlatform(navigator.userAgent, navigator.maxTouchPoints || 0);
+  const os = platform.os;
   const osNames = { mac: "macOS", win: "Windows", linux: "Linux" };
-  document.querySelectorAll("[data-os-dl] .os-name").forEach((s) => (s.textContent = osNames[os]));
-  const osCard = document.querySelector('.os-card[data-os="' + os + '"]');
-  if (osCard) {
-    osCard.classList.add("detected");
+  document.querySelectorAll("[data-os-dl]").forEach((button) => {
+    button.querySelectorAll(".os-for").forEach((label) => {
+      if (!os) { label.remove(); return; }
+      label.querySelectorAll(".os-name").forEach((s) => (s.textContent = osNames[os]));
+      label.hidden = false;
+    });
+  });
+  const platformNote = document.querySelector("[data-platform-note]");
+  if (platformNote && platform.reason && platform.reason !== "unknown") {
+    platformNote.querySelectorAll("[data-platform-reason]").forEach((r) => {
+      r.hidden = r.dataset.platformReason !== platform.reason;
+    });
+    platformNote.hidden = false;
+  }
+  const markDetected = (card) => {
+    card.classList.add("detected");
     const chip = document.createElement("span");
     chip.className = "os-chip";
     chip.innerHTML = '<span class="l-en">your OS</span><span class="l-zh">当前系统</span>';
-    osCard.appendChild(chip);
-  }
+    card.appendChild(chip);
+  };
+  if (os) document.querySelectorAll('.os-card[data-os="' + os + '"]').forEach((card) => {
+    if (!card.closest(".cli-os-grid")) markDetected(card);
+  });
 
   const flashOSCard = () => {
+    const osCard = os ? document.querySelector('.dl-pane.active .os-card[data-os="' + os + '"]') : null;
     if (!osCard) return;
     osCard.classList.remove("flash");
     void osCard.offsetWidth;
@@ -138,7 +155,7 @@ import { initMobileNav } from "./mobile-nav.js";
   }
   if (requestedPane) {
     activatePane(requestedPane);
-    if (requestedPane === "desktop") flashOSCard();
+    if (requestedPane === "desktop" || requestedPane === "studio") flashOSCard();
     requestAnimationFrame(() => {
       document.getElementById("start")?.scrollIntoView({ block: "start" });
       queueSweep();

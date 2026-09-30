@@ -330,9 +330,8 @@ test("site placeholders do not render the synthetic version vlatest", async () =
   assert.match(home, /id="download-pane-cli"[^>]+role="tabpanel"[^>]+hidden/);
   assert.match(home, /id="download-tab-studio"[^>]+aria-controls="download-pane-studio"/);
   assert.match(home, /data-studio-asset="ReasonixStudio-windows-amd64-installer\.exe"/);
-  assert.match(home, /Stable 1\.x/);
   assert.match(home, /Studio 2\.x/);
-  assert.match(home, /新架构与最新功能，正在快速迭代中/);
+  assert.match(home, /Command line/);
   assert.doesNotMatch(home, /releases\/latest\/download/);
   assert.doesNotMatch(siteScript, /releases\/latest\/download/);
   assert.doesNotMatch(siteScript, /desktopPreviewBase/);

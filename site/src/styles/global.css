@@ -291,6 +291,8 @@ body.mobile-nav-open { overflow: hidden; }
   z-index: 1;
 }
 
+.keep-case { text-transform: none; }
+.dl-platform-note { max-width: 640px; margin: 18px auto 24px; color: var(--ink-3); font-size: 12.5px; line-height: 1.6; text-align: center; }
 .install-kicker {
   display: inline-flex;
   align-items: center;
@@ -811,6 +813,19 @@ section { padding: 118px 0 0; }
   font-weight: 700; letter-spacing: 0.03em; text-transform: uppercase;
 }
 
+.os-card .btn + .btn { margin-top: 8px; }
+.dl-alt {
+  display: grid; gap: 10px; justify-items: center; max-width: 520px;
+  margin: 26px auto 0; padding: 16px 18px; text-align: center;
+  border: 1px dashed var(--line); border-radius: 9px;
+}
+.dl-alt strong { color: var(--ink); font-size: 13px; }
+.dl-alt .install { width: 100%; }
+.dl-alt a { color: var(--accent); font-size: 12.5px; font-weight: 500; text-decoration: none; }
+.dl-alt a:hover { text-decoration: underline; }
+.step-link { color: var(--accent); font-size: 13px; font-weight: 500; text-decoration: none; }
+.step-link:hover { text-decoration: underline; }
+
 .dl-pane { display: none; margin-top: 36px; }
 .dl-pane.active { display: block; animation: pane-in 0.45s var(--ease); }
 @keyframes pane-in { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
@@ -1143,6 +1158,7 @@ section { padding: 118px 0 0; }
   display: grid; grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 10px; margin-top: 20px;
 }
+.desktop-downloads--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 .desktop-downloads--secondary { margin-top: 10px; }
 .desktop-downloads--secondary .desktop-download {
   box-shadow: none; background: var(--bg-soft);
