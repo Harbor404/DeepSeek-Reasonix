@@ -22,6 +22,7 @@
 /docs/*_CONTRACT.md                       @esengine @SivanCola
 /docs/TOOL_APPROVAL_MODES.md              @esengine @SivanCola
 /docs/CAPABILITY_DIAGNOSTICS.md           @esengine @SivanCola
+/docs/CODE_SIGNING_POLICY.md            @esengine @SivanCola
 /docs/CHECKPOINTS.md                      @esengine @SivanCola
 /docs/EXTENSION_*.md                      @esengine @SivanCola
 /docs/SUBAGENT_*.md                       @esengine @SivanCola
