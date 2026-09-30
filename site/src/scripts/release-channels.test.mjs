@@ -29,8 +29,10 @@ function cliAssets(tag, missing = []) {
 
 const desktopSHA256 = "a".repeat(64);
 
-function studioManifest(version = "v2.20.0") {
-  const base = `https://github.com/esengine/DeepSeek-Reasonix/releases/download/studio-${version}/`;
+function studioManifest(version = "v2.20.0", host = "github") {
+  const base = host === "dl"
+    ? `https://dl.reasonix.io/studio-${version}/`
+    : `https://github.com/esengine/DeepSeek-Reasonix/releases/download/studio-${version}/`;
   const asset = (name) => ({ url: base + name, sig: `${base}${name}.minisig`, size: 42, sha256: desktopSHA256 });
   const releaseURL = `https://github.com/esengine/DeepSeek-Reasonix/releases/tag/studio-${version}`;
   return {
@@ -78,6 +80,47 @@ test("Studio uses the signed latest catalog entry and exact official assets", as
   assert.equal(model?.version, "v2.20.0");
   assert.equal(model?.assets["ReasonixStudio-linux-amd64.deb"], "https://github.com/esengine/DeepSeek-Reasonix/releases/download/studio-v2.20.0/ReasonixStudio-linux-amd64.deb");
   assert.deepEqual(calls, ["https://dl.reasonix.io/studio/versions.json", "https://dl.reasonix.io/studio-v2.20.0/latest.json"]);
+});
+
+test("Studio accepts a dl.reasonix.io manifest and returns the dl addresses", () => {
+  const model = studioReleaseModel(studioManifest("v2.23.0", "dl"));
+  assert.equal(model?.version, "v2.23.0");
+  assert.equal(model?.assets["ReasonixStudio-linux-amd64.deb"], "https://dl.reasonix.io/studio-v2.23.0/ReasonixStudio-linux-amd64.deb");
+  assert.equal(model?.assets["ReasonixStudio-darwin-arm64.dmg"], "https://dl.reasonix.io/studio-v2.23.0/ReasonixStudio-darwin-arm64.dmg");
+  assert.equal(model?.releaseURL, "https://github.com/esengine/DeepSeek-Reasonix/releases/tag/studio-v2.23.0");
+});
+
+test("Studio still accepts a legacy GitHub-shaped manifest", () => {
+  const model = studioReleaseModel(studioManifest("v2.20.0", "github"));
+  assert.match(model?.assets["ReasonixStudio-windows-amd64-installer.exe"], /^https:\/\/github\.com\/esengine\//);
+});
+
+test("Studio rejects foreign hosts, mismatched version directories, mixed bases, and missing integrity fields", () => {
+  const foreign = studioManifest("v2.23.0", "dl");
+  foreign.downloads["ReasonixStudio-darwin-arm64.dmg"].url = "https://dl.reasonix.io.evil.invalid/studio-v2.23.0/ReasonixStudio-darwin-arm64.dmg";
+  foreign.downloads["ReasonixStudio-darwin-arm64.dmg"].sig = foreign.downloads["ReasonixStudio-darwin-arm64.dmg"].url + ".minisig";
+  assert.equal(studioReleaseModel(foreign), null);
+
+  const wrongDir = studioManifest("v2.23.0", "dl");
+  const wrongURL = "https://dl.reasonix.io/studio-v2.22.0/ReasonixStudio-linux-amd64.deb";
+  wrongDir.native_packages["linux-amd64"].url = wrongURL;
+  wrongDir.native_packages["linux-amd64"].sig = wrongURL + ".minisig";
+  assert.equal(studioReleaseModel(wrongDir), null);
+
+  const mixed = studioManifest("v2.23.0", "dl");
+  const ghURL = "https://github.com/esengine/DeepSeek-Reasonix/releases/download/studio-v2.23.0/ReasonixStudio-linux-amd64.deb";
+  mixed.native_packages["linux-amd64"].url = ghURL;
+  mixed.native_packages["linux-amd64"].sig = ghURL + ".minisig";
+  assert.equal(studioReleaseModel(mixed), null);
+
+  for (const field of ["sha256", "sig", "size"]) {
+    const broken = studioManifest("v2.23.0", "dl");
+    delete broken.downloads["ReasonixStudio-darwin-amd64.dmg"][field];
+    assert.equal(studioReleaseModel(broken), null, field);
+  }
+  const badSig = studioManifest("v2.23.0", "dl");
+  badSig.downloads["ReasonixStudio-darwin-amd64.dmg"].sig = "https://dl.reasonix.io/studio-v2.23.0/other.minisig";
+  assert.equal(studioReleaseModel(badSig), null);
 });
 
 test("Studio rejects hostile catalogs and incomplete manifests", async () => {

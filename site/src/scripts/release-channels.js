@@ -257,19 +257,25 @@ export function studioReleaseModel(manifest) {
   const version = typeof manifest?.version === "string" ? manifest.version : "";
   if (!STUDIO_VERSION.test(version)) return null;
   const tag = `studio-${version}`;
-  const assetBase = `https://github.com/esengine/DeepSeek-Reasonix/releases/download/${tag}/`;
+  const assetBases = [
+    `https://dl.reasonix.io/${tag}/`,
+    `https://github.com/esengine/DeepSeek-Reasonix/releases/download/${tag}/`,
+  ];
   const releaseURL = `https://github.com/esengine/DeepSeek-Reasonix/releases/tag/${tag}`;
   if (manifest?.download_page !== releaseURL || manifest?.release_notes_url !== releaseURL) return null;
 
   const assets = {};
+  let selectedBase = "";
   for (const [group, key, name] of STUDIO_ASSETS) {
     const asset = manifest?.[group]?.[key];
     const rawURL = typeof asset?.url === "string" ? asset.url : "";
     const url = safeHTTPSURL(rawURL);
+    const base = assetBases.find((candidate) => rawURL === candidate + name);
     if (
       !url ||
+      !base ||
+      (selectedBase && selectedBase !== base) ||
       url.href !== rawURL ||
-      rawURL !== assetBase + name ||
       asset.sig !== `${rawURL}.minisig` ||
       !Number.isSafeInteger(asset.size) ||
       asset.size <= 0 ||
@@ -279,6 +285,7 @@ export function studioReleaseModel(manifest) {
     ) {
       return null;
     }
+    selectedBase = base;
     assets[name] = rawURL;
   }
   return {
