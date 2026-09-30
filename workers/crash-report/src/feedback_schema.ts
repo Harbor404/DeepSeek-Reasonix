@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { CATEGORIES } from "./feedback_types";
+import { CATEGORIES, MAX_CAP, MAX_REPLY_BYTES } from "./feedback_types";
 
 const short = (n: number) => z.string().max(n).optional();
 
@@ -22,6 +22,7 @@ export const FeedbackSubmit = z.object({
   body: z.string().refine((s) => s.trim().length > 0),
   displayName: z.string().trim().min(1).max(40),
   contact: z.string().max(120).optional(),
+  turnstileToken: z.string().max(2048).optional(),
   env: FeedbackEnv.default({}),
   attachments: z
     .array(z.object({ name: z.string().max(200), contentType: z.string().max(40), dataBase64: z.string() }))
@@ -37,3 +38,16 @@ export const StatusBody = z.object({
   resolvedVersion: z.string().max(40).optional(),
   duplicateOf: z.string().max(40).optional(),
 });
+
+const text = (maxBytes: number) =>
+  z
+    .string()
+    .refine((s) => s.trim().length > 0)
+    .refine((s) => new TextEncoder().encode(s).length <= maxBytes);
+
+export const ReplyBody = z.object({ body: text(MAX_REPLY_BYTES) });
+export const ReleaseBody = z.object({ publishImages: z.boolean().default(false) });
+export const RejectBody = z.object({ reason: z.string().trim().min(1).max(200) });
+export const BlockBody = z.object({ target: z.string().max(80), reason: z.string().trim().min(1).max(200), hours: z.number().int().min(1).max(8760).optional() });
+export const UnblockBody = z.object({ target: z.string().max(80) });
+export const CapBody = z.object({ dailyGlobal: z.number().int().min(0).max(MAX_CAP) });

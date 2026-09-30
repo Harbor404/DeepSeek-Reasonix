@@ -1,7 +1,7 @@
 export const CATEGORIES = ["bug", "idea", "question", "other"] as const;
 export type Category = (typeof CATEGORIES)[number];
 
-export const STATUSES = ["received", "held", "recorded", "in_progress", "fixed", "wontfix", "duplicate"] as const;
+export const STATUSES = ["held", "needs_info", "answered", "rejected", "received", "recorded", "in_progress", "fixed", "wontfix", "duplicate"] as const;
 export type Status = (typeof STATUSES)[number];
 
 export const MAX_BODY_BYTES = 8192;
@@ -14,6 +14,15 @@ export const GLOBAL_DAILY = 300;
 export const UNCONVERTED_RETENTION_DAYS = 30;
 export const MAX_IMAGE_PIXELS = 40_000_000;
 export const PER_INSTALL_DAILY = 10;
+export const MAX_REPLY_BYTES = 4096;
+export const MAX_REPLIES_PER_ITEM = 10;
+export const REPLIES_PER_INSTALL_HOURLY = 3;
+export const AUTO_BLOCK_REJECTIONS = 3;
+export const AUTO_BLOCK_WINDOW_DAYS = 7;
+export const AUTO_BLOCK_HOURS = 168;
+export const TRUST_DAYS = 30;
+export const RESERVED_SHARE = 0.1;
+export const MAX_CAP = 5000;
 
 export interface StoredAttachment {
   key: string;
@@ -40,11 +49,15 @@ export interface FeedbackRow {
   updated_at: string;
 }
 
-// Rank orders the forward-only lifecycle; the three outcomes share the top rank
-// so none of them can move to another.
+// Rank orders the forward-only lifecycle of converted reports; the three outcomes
+// share the top rank so none of them can move to another. Triage-only statuses
+// never reach the converter and rank below everything it owns.
 export function statusRank(s: Status): number {
   switch (s) {
     case "held":
+    case "needs_info":
+    case "answered":
+    case "rejected":
     case "received":
       return 0;
     case "recorded":

@@ -1,3 +1,4 @@
+import type { Env } from "./env";
 import { inspectImage, sniffImage, type ImageKind } from "./feedback_image";
 import { newAttachmentKey } from "./feedback_crypto";
 import { MAX_ATTACHMENT_BYTES, type StoredAttachment } from "./feedback_types";
@@ -50,8 +51,12 @@ export function attachmentUrl(origin: string, key: string): string {
   return `${origin}${ATTACHMENT_ROUTE}${key}`;
 }
 
-export async function serveAttachment(r2: R2Bucket | undefined, key: string): Promise<Response> {
+// An image stays private until a maintainer releases it with publishImages, so
+// an unreleased, removed or unknown key all answer the same 404.
+export async function serveAttachment(env: Env, key: string): Promise<Response> {
+  const r2 = env.TELEMETRY_RAW;
   if (!r2 || !/^[A-Za-z0-9_-]{16,64}$/.test(key)) return new Response("not found", { status: 404 });
+  if ((await env.DB.prepare("SELECT 1 AS x FROM feedback_public_images WHERE key = ?").bind(key).first()) === null) return new Response("not found", { status: 404 });
   const obj = await r2.get(ATTACHMENT_PREFIX + key);
   const type = obj?.httpMetadata?.contentType;
   if (!obj || (type !== "image/png" && type !== "image/jpeg")) return new Response("not found", { status: 404 });
@@ -61,7 +66,19 @@ export async function serveAttachment(r2: R2Bucket | undefined, key: string): Pr
       "x-content-type-options": "nosniff",
       "content-disposition": "inline",
       "content-security-policy": "default-src 'none'; sandbox",
-      "cache-control": "public, max-age=31536000, immutable",
+      "cache-control": "public, max-age=300",
     },
   });
+}
+
+export async function publishAttachments(env: Env, receipt: string, stored: StoredAttachment[]): Promise<void> {
+  const at = new Date().toISOString();
+  for (const a of stored) await env.DB.prepare("INSERT OR IGNORE INTO feedback_public_images (key, receipt, created_at) VALUES (?,?,?)").bind(a.key, receipt, at).run();
+}
+
+// Objects go first: a failed delete leaves the row and the public index untouched
+// so the operation can simply be repeated.
+export async function withdrawAttachments(env: Env, receipt: string, stored: StoredAttachment[]): Promise<void> {
+  if (env.TELEMETRY_RAW) await deleteAttachments(env.TELEMETRY_RAW, stored);
+  await env.DB.prepare("DELETE FROM feedback_public_images WHERE receipt = ?").bind(receipt).run();
 }

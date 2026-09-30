@@ -1,7 +1,8 @@
 import type { Env } from "./env";
+import { RESERVED_SHARE } from "./feedback_types";
 
 // Atomically takes one unit from a fixed-window counter; false once `limit` is reached.
-async function take(env: Env, bucket: string, day: string, limit: number): Promise<boolean> {
+export async function take(env: Env, bucket: string, day: string, limit: number): Promise<boolean> {
   const row = await env.DB.prepare(
     "INSERT INTO feedback_quota (bucket, n, day) VALUES (?, 1, ?) ON CONFLICT (bucket) DO UPDATE SET n = n + 1 WHERE n < ? RETURNING n",
   )
@@ -20,9 +21,16 @@ export interface QuotaLimits {
   ipHourly: number;
   installHourly: number;
   installDaily: number;
+  trusted: boolean;
 }
 
 export type Admission = "ok" | "limited" | "busy";
+
+// Untrusted installs stop short of the global cap so the last tenth stays
+// available to installs whose earlier reports were accepted.
+export function untrustedShare(globalDaily: number): number {
+  return Math.floor(globalDaily * (1 - RESERVED_SHARE));
+}
 
 // The caller's own limits are spent before the shared daily budget, and a refusal
 // hands back every unit already taken, so a rejected request costs nothing.
@@ -33,7 +41,7 @@ export async function admit(env: Env, keys: QuotaKeys, now: Date, limits: QuotaL
     [`ip:${keys.ipKey}:${hour}`, limits.ipHourly],
     [`ih:${keys.installHash}:${hour}`, limits.installHourly],
     [`id:${keys.installHash}:${day}`, limits.installDaily],
-    [`g:${day}`, limits.globalDaily],
+    [`g:${day}`, limits.trusted ? limits.globalDaily : untrustedShare(limits.globalDaily)],
   ];
   const taken: string[] = [];
   for (const [bucket, limit] of steps) {

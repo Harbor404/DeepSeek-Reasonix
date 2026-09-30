@@ -42,3 +42,18 @@ describe("Firebase crash data migration workflow", () => {
     expect(verify).toBeGreaterThan(apply);
   });
 });
+
+describe("feedback triage migration workflow", () => {
+  it("applies and verifies the triage schema before the Worker deploys", () => {
+    const step = workflow.indexOf("Apply and verify feedback triage D1 migration");
+    expect(step).toBeGreaterThan(workflow.indexOf("migrate-feedback.sql"));
+    expect(step).toBeLessThan(workflow.indexOf("npx wrangler deploy"));
+    const body = workflow.slice(step, workflow.indexOf("- name: Apply Studio telemetry schema"));
+    expect(body).toContain("--file=migrate-feedback-triage.sql");
+    for (const name of ["feedback_replies", "feedback_blocks", "feedback_trust", "feedback_public_images", "feedback_install_status_updated", "feedback_replies_unhandled"]) {
+      expect(body).toContain(name);
+    }
+    expect(body).toContain("missing $name after migration");
+    expect(body).toContain("substr(install_hash,1,8)");
+  });
+});

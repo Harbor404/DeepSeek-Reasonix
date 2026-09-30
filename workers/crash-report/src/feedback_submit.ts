@@ -5,7 +5,10 @@ import { feedbackEnabled, tokenMatches } from "./feedback_auth";
 import { readCappedText } from "./feedback_body";
 import { installHash, installToken, ipHash, ipPrefix, newReceipt } from "./feedback_crypto";
 import { jsonResponse, refuse } from "./feedback_http";
+import { publicStatus } from "./feedback_read";
 import { admit, firstBusyOfDay } from "./feedback_quota";
+import { blockKey, capOverride, isBlocked, isTrusted } from "./feedback_blocks";
+import { challengePassed } from "./feedback_turnstile";
 import { FeedbackSubmit, type FeedbackSubmitInput } from "./feedback_schema";
 import {
   GLOBAL_DAILY,
@@ -21,6 +24,7 @@ import { scrubSensitiveText } from "./scrub";
 
 const RECEIPT_ATTEMPTS = 5;
 const MAX_LINKS_BEFORE_HOLD = 3;
+const RATE_LIMITED_MESSAGE = "submission limit reached";
 
 function scrubEnv(env: FeedbackSubmitInput["env"]): Record<string, string> {
   const out: Record<string, string> = {};
@@ -28,8 +32,8 @@ function scrubEnv(env: FeedbackSubmitInput["env"]): Record<string, string> {
   return out;
 }
 
-// A body that is mostly links is the one structural spam signal; a person
-// describing a bug rarely pastes more than a few.
+// A trusted install still goes through triage when its body is mostly links; a
+// person describing a bug rarely pastes more than a few.
 function tripsSpamGate(body: string): boolean {
   return (body.match(/https?:\/\//gi)?.length ?? 0) > MAX_LINKS_BEFORE_HOLD;
 }
@@ -45,7 +49,7 @@ async function isKnownInstall(env: Env, hash: string): Promise<boolean> {
 function receiptBody(row: FeedbackRow, token: string) {
   return {
     receipt: row.receipt,
-    status: row.status === "held" ? "received" : row.status,
+    status: publicStatus(row),
     installToken: token,
     createdAt: row.created_at,
   };
@@ -100,6 +104,8 @@ export async function handleSubmit(request: Request, env: Env): Promise<Response
 
   const hash = await installHash(secret, input.installId);
   const token = await installToken(secret, input.installId);
+  const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
+  const ipKey = await ipHash(secret, ip);
   // Knowing the idempotency key proves the caller made the first attempt, so a
   // replay may recover the token even when the first response was lost.
   const replay = await findByKey(env, hash, input.idempotencyKey);
@@ -107,9 +113,12 @@ export async function handleSubmit(request: Request, env: Env): Promise<Response
   if ((await isKnownInstall(env, hash)) && !(await tokenMatches(secret, input.installId, request.headers.get("x-install-token") ?? ""))) {
     return refuse("feedback.bad_token", "install token missing or invalid");
   }
+  // Only a new submission meets the block, after the replay and token answers a
+  // blocked install gets exactly as an unblocked one would.
+  if (await isBlocked(env, [`install:${hash}`, `ip:${ipKey}`], new Date())) return refuse("feedback.rate_limited", RATE_LIMITED_MESSAGE);
+  if (!(await challengePassed(env, input.turnstileToken, ip))) return refuse("feedback.challenge_required", "verification required");
 
-  const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
-  if (env.FEEDBACK_LIMITER && !(await env.FEEDBACK_LIMITER.limit({ key: ipPrefix(ip) })).success) return refuse("feedback.rate_limited", "too many submissions");
+  if (env.FEEDBACK_LIMITER && !(await env.FEEDBACK_LIMITER.limit({ key: ipPrefix(ip) })).success) return refuse("feedback.rate_limited", RATE_LIMITED_MESSAGE);
   if (env.FEEDBACK_BUDGET_LIMITER && !(await env.FEEDBACK_BUDGET_LIMITER.limit({ key: "global" })).success) {
     return refuse("feedback.busy", "feedback is busy, try again later");
   }
@@ -122,16 +131,19 @@ export async function handleSubmit(request: Request, env: Env): Promise<Response
   }
   if (decoded.length > 0 && !env.TELEMETRY_RAW) return refuse("feedback.disabled", "attachments are unavailable");
 
-  const admission = await admit(env, { ipKey: await ipHash(secret, ip), installHash: hash }, new Date(), {
-    globalDaily: GLOBAL_DAILY,
+  const trusted = await isTrusted(env, hash);
+  const cap = (await capOverride(env)) ?? GLOBAL_DAILY;
+  const admission = await admit(env, { ipKey, installHash: hash }, new Date(), {
+    trusted,
+    globalDaily: cap,
     ipHourly: PER_IP_HOURLY,
     installHourly: PER_INSTALL_HOURLY,
     installDaily: PER_INSTALL_DAILY,
   });
-  if (admission === "limited") return refuse("feedback.rate_limited", "submission limit reached");
+  if (admission === "limited") return refuse("feedback.rate_limited", RATE_LIMITED_MESSAGE);
   if (admission === "busy") {
     console.error("feedback: global daily cap reached");
-    if (await firstBusyOfDay(env, new Date())) await sendAlert(env, `Feedback global daily cap (${GLOBAL_DAILY}) reached; submissions are refused until 00:00 UTC.`);
+    if (await firstBusyOfDay(env, new Date())) await sendAlert(env, `Feedback global daily cap (${cap}) reached or reserved for trusted installs; submissions are refused until 00:00 UTC.`);
     return refuse("feedback.busy", "feedback is busy, try again tomorrow");
   }
 
@@ -151,7 +163,7 @@ export async function handleSubmit(request: Request, env: Env): Promise<Response
         contact: input.contact ?? "",
         env_json: JSON.stringify(scrubEnv(input.env)),
         attachments_json: JSON.stringify(stored),
-        status: tripsSpamGate(body) ? "held" : "received",
+        status: trusted && stored.length === 0 && !tripsSpamGate(body) ? "received" : "held",
         issue_number: null,
         issue_url: null,
         resolved_version: null,
