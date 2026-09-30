@@ -8,6 +8,7 @@ import { statusRank, type FeedbackRow, type Status } from "./feedback_types";
 const PENDING_DEFAULT = 20;
 const PENDING_MAX = 50;
 const OPEN_LIMIT = 200;
+const CONCRETE_VERSION = /^v\d+\.\d+\.\d+$/;
 
 async function load(env: Env, receipt: string): Promise<FeedbackRow | null> {
   return env.DB.prepare("SELECT * FROM feedback WHERE receipt = ?").bind(receipt).first<FeedbackRow>();
@@ -38,11 +39,13 @@ async function pending(request: Request, env: Env, url: URL): Promise<Response> 
 }
 
 async function open(env: Env): Promise<Response> {
-  const { results } = await env.DB.prepare(
-    "SELECT receipt, status, issue_number, issue_url FROM feedback WHERE status IN ('recorded','in_progress') ORDER BY created_at ASC LIMIT ?",
-  )
+  type Open = Pick<FeedbackRow, "receipt" | "status" | "issue_number" | "issue_url">;
+  const cols = "SELECT receipt, status, issue_number, issue_url FROM feedback";
+  const active = await env.DB.prepare(`${cols} WHERE status IN ('recorded','in_progress') ORDER BY created_at ASC LIMIT ?`).bind(OPEN_LIMIT).all<Open>();
+  const awaitingTag = await env.DB.prepare(`${cols} WHERE status = 'fixed' AND resolved_version = 'next' ORDER BY created_at ASC LIMIT ?`)
     .bind(OPEN_LIMIT)
-    .all<Pick<FeedbackRow, "receipt" | "status" | "issue_number" | "issue_url">>();
+    .all<Open>();
+  const results = [...active.results, ...awaitingTag.results].slice(0, OPEN_LIMIT);
   return jsonResponse({
     items: results.map((r) => ({ receipt: r.receipt, status: r.status, issueNumber: r.issue_number, issueUrl: r.issue_url })),
   });
@@ -67,6 +70,14 @@ async function status(request: Request, env: Env, receipt: string): Promise<Resp
   if (next === "fixed" && !resolvedVersion) return refuse("feedback.invalid", "fixed requires resolvedVersion or \"next\"");
   const row = await load(env, receipt);
   if (!row) return refuse("feedback.not_found", "unknown receipt");
+  if (row.status === "fixed" && next === "fixed") {
+    if (row.resolved_version === resolvedVersion) return jsonResponse({ receipt, status: "fixed" });
+    if (row.resolved_version !== "next" || !resolvedVersion || !CONCRETE_VERSION.test(resolvedVersion)) {
+      return refuse("feedback.bad_transition", "a fixed report can only move from \"next\" to a concrete version");
+    }
+    if (!(await setState(env, receipt, "fixed", "resolved_version = ?", [resolvedVersion]))) return refuse("feedback.bad_transition", "status changed concurrently");
+    return jsonResponse({ receipt, status: "fixed" });
+  }
   if (row.status === next) return jsonResponse({ receipt, status: row.status });
   if (row.status === "received" || row.status === "held" || statusRank(next) <= statusRank(row.status)) {
     return refuse("feedback.bad_transition", "only forward transitions from a recorded report are allowed");

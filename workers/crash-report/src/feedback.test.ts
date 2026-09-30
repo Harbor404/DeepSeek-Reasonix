@@ -132,6 +132,14 @@ describe("POST /v1/feedback", () => {
     expect(list.items[0].body).not.toContain("sk-abcdefgh");
   });
 
+  it("stays disabled while either secret is absent", async () => {
+    env.FEEDBACK_ADMIN_TOKEN = undefined;
+    expect(await errCode(await post("/v1/feedback", submission()))).toBe("feedback.disabled");
+    env.FEEDBACK_ADMIN_TOKEN = ADMIN;
+    env.FEEDBACK_TOKEN_SECRET = undefined;
+    expect(await errCode(await call("/v1/feedback/mine"))).toBe("feedback.disabled");
+  });
+
   it("answers feedback.disabled when the kill switch is off", async () => {
     env.FEEDBACK_ENABLED = "false";
     const res = await post("/v1/feedback", submission());
@@ -180,6 +188,20 @@ describe("admin flow", () => {
     expect(open.items).toEqual([expect.objectContaining({ receipt: r, issueNumber: 7 })]);
     expect((await status(r, { status: "fixed" })).status).toBe(400);
     expect((await status(r, { status: "fixed", resolvedVersion: "next" })).status).toBe(200);
+  });
+
+  it("upgrades fixed(next) to a concrete version once and lists it while awaiting a tag", async () => {
+    const r = await receiptOf();
+    await post(`/v1/admin/feedback/${r}/recorded`, { issueNumber: 3, issueUrl: "https://github.com/o/r/issues/3" }, admin);
+    await status(r, { status: "fixed", resolvedVersion: "next" });
+    const open = async () => ((await (await call("/v1/admin/feedback/open", { headers: admin })).json()) as { items: { receipt: string }[] }).items;
+    expect(await open()).toEqual([expect.objectContaining({ receipt: r })]);
+    expect(await errCode(await status(r, { status: "fixed", resolvedVersion: "latest" }))).toBe("feedback.bad_transition");
+    expect((await status(r, { status: "fixed", resolvedVersion: "v2.25.0" })).status).toBe(200);
+    expect(await open()).toHaveLength(0);
+    expect((await status(r, { status: "fixed", resolvedVersion: "v2.25.0" })).status).toBe(200);
+    expect(await errCode(await status(r, { status: "fixed", resolvedVersion: "v2.26.0" }))).toBe("feedback.bad_transition");
+    expect(await errCode(await status(r, { status: "fixed", resolvedVersion: "next" }))).toBe("feedback.bad_transition");
   });
 
   it("refuses backward and terminal-to-terminal transitions", async () => {

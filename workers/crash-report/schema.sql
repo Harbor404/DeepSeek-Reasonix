@@ -279,3 +279,4 @@ CREATE TABLE IF NOT EXISTS feedback (
 
 CREATE INDEX IF NOT EXISTS feedback_status_created ON feedback (status, created_at);
 CREATE INDEX IF NOT EXISTS feedback_install_created ON feedback (install_hash, created_at);
+CREATE INDEX IF NOT EXISTS feedback_status_version ON feedback (status, resolved_version, created_at);

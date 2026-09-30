@@ -1,5 +1,6 @@
 import type { Env } from "./env";
 import { decodeAttachment, storeAttachment } from "./feedback_attachments";
+import { feedbackEnabled } from "./feedback_auth";
 import { installToken, newReceipt, sha256Hex } from "./feedback_crypto";
 import { jsonResponse, refuse } from "./feedback_http";
 import { FeedbackSubmit, type FeedbackSubmitInput } from "./feedback_schema";
@@ -76,7 +77,7 @@ async function insertWithReceipt(env: Env, row: Omit<FeedbackRow, "receipt">, ke
 }
 
 export async function handleSubmit(request: Request, env: Env): Promise<Response> {
-  if (env.FEEDBACK_ENABLED === "false" || !env.FEEDBACK_TOKEN_SECRET) return refuse("feedback.disabled", "feedback is unavailable");
+  if (!feedbackEnabled(env) || !env.FEEDBACK_TOKEN_SECRET) return refuse("feedback.disabled", "feedback is unavailable");
   const ip = request.headers.get("cf-connecting-ip") ?? "unknown";
   if (env.FEEDBACK_LIMITER && !(await env.FEEDBACK_LIMITER.limit({ key: ip })).success) return refuse("feedback.rate_limited", "too many submissions");
   if (env.FEEDBACK_BUDGET_LIMITER && !(await env.FEEDBACK_BUDGET_LIMITER.limit({ key: "global" })).success) {
