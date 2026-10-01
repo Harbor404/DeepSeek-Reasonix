@@ -321,6 +321,8 @@ func assemble(ctx context.Context, logs, handshakeTo io.Writer, shell shellIdent
 		Stderr:          logs,
 		StatsSource:     surface.Desktop,
 		FeedbackSurface: feedback.SurfaceStudio,
+
+		CleanupPendingReconciler: serve.BackgroundCleanupReconciler,
 	})
 	if err != nil {
 		return nil, err

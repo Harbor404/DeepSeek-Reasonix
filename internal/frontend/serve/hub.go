@@ -293,7 +293,8 @@ func (h *Hub) Open(ctx context.Context, req OpenRequest) (*Runtime, error) {
 		FeedbackSurface: feedbackSurface(h.surface()),
 		BalanceStore:    h.wallets,
 
-		ProviderResolver: h.opts.ProviderResolver,
+		ProviderResolver:         h.opts.ProviderResolver,
+		CleanupPendingReconciler: BackgroundCleanupReconciler,
 	})
 	if err != nil {
 		return nil, fmt.Errorf("open %s: %w", root, err)
