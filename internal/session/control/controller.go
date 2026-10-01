@@ -300,11 +300,11 @@ type Options struct {
 	// SubagentGate is the shared gate every headless-only sub-agent surface
 	// reads; nil disables gating there. The approval-mode setters Update it so
 	// a runtime switch reaches sub-agents, not only the executor's own gate.
-	SubagentGate *SharedHeadlessGate
-	Label        string
-	ModelRef     string
-	// ModelModes are the optional modes the session's model declares.
-	ModelModes    []config.ModelMode
+	SubagentGate  *SharedHeadlessGate
+	Label         string
+	ModelRef      string
+	Effort        string             // session-visible effort identity; not a request-scoped override
+	ModelModes    []config.ModelMode // optional modes the session's model declares
 	SystemPrompt  string
 	SessionDir    string
 	SessionPath   string

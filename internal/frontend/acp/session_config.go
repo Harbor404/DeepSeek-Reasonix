@@ -144,6 +144,37 @@ func (s *service) resolveSessionConfigDeltas(ctx context.Context, sess *acpSessi
 	return withToolApprovalConfig(cfgState, sess.currentToolApprovalMode()), nil
 }
 
+// sessionConfigMatchesRuntime reports whether the resolved config names the
+// controller generation already running. It is the ACP half of the shared
+// no-op fast path; a nil or deleted session deliberately falls through to the
+// normal rebuild path so its existing errors remain unchanged.
+func sessionConfigMatchesRuntime(sess *acpSession, cfgState SessionConfigState) bool {
+	if sess == nil {
+		return false
+	}
+	sess.mu.Lock()
+	if sess.deleted || sess.maintenanceDone != nil {
+		sess.mu.Unlock()
+		return false
+	}
+	ctrl := sess.ctrl
+	sess.mu.Unlock()
+	matcher, ok := ctrl.(control.RuntimeSelectionMatcher)
+	if !ok {
+		return false
+	}
+	return matcher.MatchesRuntimeSelection(cfgState.Model, sessionConfigCurrentValue(cfgState, "effort"))
+}
+
+func sessionConfigCurrentValue(cfgState SessionConfigState, id string) string {
+	for i := range cfgState.ConfigOptions {
+		if cfgState.ConfigOptions[i].ID == id {
+			return cfgState.ConfigOptions[i].CurrentValue
+		}
+	}
+	return ""
+}
+
 func (s *service) switchSessionModel(ctx context.Context, sess *acpSession, modelID string) (SessionConfigState, error) {
 	deltas := []sessionConfigDelta{{axis: "model", model: modelID}}
 	return s.switchSessionConfig(ctx, sess, deltas)
@@ -250,6 +281,9 @@ func (s *service) switchSessionConfig(ctx context.Context, sess *acpSession, del
 		if err != nil {
 			return SessionConfigState{}, err
 		}
+		if sessionConfigMatchesRuntime(sess, cfgState) {
+			return cfgState, nil
+		}
 		sess.mu.Lock()
 		if sess.maintenanceDone != nil && !sess.deleted {
 			for _, delta := range deltas {
@@ -269,6 +303,10 @@ func (s *service) switchSessionConfig(ctx context.Context, sess *acpSession, del
 	if err != nil {
 		sess.stateChangeMu.Unlock()
 		return SessionConfigState{}, err
+	}
+	if sessionConfigMatchesRuntime(sess, cfgState) {
+		sess.stateChangeMu.Unlock()
+		return cfgState, nil
 	}
 	didMaintenance := false
 	err = s.rebuildSessionLocked(ctx, sess, cfgState, deltas, &didMaintenance)

@@ -60,6 +60,7 @@ type controllerDeps struct {
 
 	label      string
 	modelRef   string
+	effort     string
 	modelModes []config.ModelMode // what SetModelMode accepts; see model_modes.go
 	sessionDir string
 	// skills owns the session's discovered skills (enabled subset, full set, and
@@ -143,6 +144,7 @@ func newControllerDeps(opts Options, sink event.Sink, usageTee *goalUsageTee, ru
 		subagentGate:           opts.SubagentGate,
 		label:                  opts.Label,
 		modelRef:               opts.ModelRef,
+		effort:                 opts.Effort,
 		modelModes:             opts.ModelModes,
 		sessionDir:             opts.SessionDir,
 		skills:                 newSkillSet(opts.Skills, opts.AllSkills, opts.SkillStore, opts.AllSkillStore, opts.DisableImplicitSkillInvocation),

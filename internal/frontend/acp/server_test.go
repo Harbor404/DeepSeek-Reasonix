@@ -150,7 +150,18 @@ func (f *configurableFactory) NewSession(_ context.Context, p SessionParams) (*c
 			return behavior(ctx, sink, input, p)
 		},
 	}
-	opts := control.Options{Runner: runner, Sink: p.Sink, SessionDir: f.dir, OnSessionRecovered: p.OnSessionRecovered}
+	model := strings.TrimSpace(p.Model)
+	if model == "" {
+		model = "fast"
+	}
+	effort := "auto"
+	if p.EffortOverride != nil && strings.TrimSpace(*p.EffortOverride) != "" {
+		effort = strings.TrimSpace(*p.EffortOverride)
+	}
+	opts := control.Options{
+		Runner: runner, Sink: p.Sink, SessionDir: f.dir, OnSessionRecovered: p.OnSessionRecovered,
+		ModelRef: model, Effort: effort,
+	}
 	if f.withHooks {
 		opts.Hooks = f.hookRunner()
 	}
@@ -214,7 +225,13 @@ func (f *configurableFactory) SessionConfigState(_ context.Context, p SessionCon
 	effort := "auto"
 	effortOverride := cloneStringPtr(p.EffortOverride)
 	if effortOverride != nil && *effortOverride != "" {
-		effort = *effortOverride
+		switch strings.ToLower(strings.TrimSpace(*effortOverride)) {
+		case "high":
+			effort = "high"
+		default:
+			cleared := ""
+			effortOverride = &cleared
+		}
 	}
 	modelOptions := []SessionConfigSelectOption{
 		{Value: "fast", Name: "Fast"},
@@ -943,6 +960,127 @@ func TestServeSessionConfigSwitchesModelAndEffort(t *testing.T) {
 	}
 	if got := factory.buildAt(t, 3).Model; got != "fast" {
 		t.Fatalf("legacy set_model build model = %q, want fast", got)
+	}
+}
+
+func TestServeSessionConfigNoopsSameSelection(t *testing.T) {
+	factory := &configurableFactory{}
+	client, stop := startServer(t, factory)
+	defer stop()
+
+	client.call(t, "initialize", InitializeParams{ProtocolVersion: 1})
+	newResp := client.call(t, "session/new", SessionNewParams{Cwd: testenv.TempDir(t)})
+	var nr SessionNewResult
+	if err := json.Unmarshal(newResp.Result, &nr); err != nil {
+		t.Fatalf("session/new result: %v", err)
+	}
+
+	sameModel := client.call(t, "session/set_config_option", SetSessionConfigOptionParams{
+		SessionID: nr.SessionID,
+		ConfigID:  "model",
+		Value:     "fast",
+	})
+	if sameModel.Error != nil {
+		t.Fatalf("same-model switch: %+v", sameModel.Error)
+	}
+	sameEffort := client.call(t, "session/set_config_option", SetSessionConfigOptionParams{
+		SessionID: nr.SessionID,
+		ConfigID:  "effort",
+		Value:     "auto",
+	})
+	if sameEffort.Error != nil {
+		t.Fatalf("same-effort switch: %+v", sameEffort.Error)
+	}
+	if got := factory.buildCount(); got != 1 {
+		t.Fatalf("build count after same-selection switches = %d, want initial build only", got)
+	}
+}
+
+func TestServeSessionConfigRejectsInvalidEffortBeforeRebuild(t *testing.T) {
+	factory := &configurableFactory{}
+	client, stop := startServer(t, factory)
+	defer stop()
+
+	client.call(t, "initialize", InitializeParams{ProtocolVersion: 1})
+	newResp := client.call(t, "session/new", SessionNewParams{Cwd: testenv.TempDir(t)})
+	var nr SessionNewResult
+	if err := json.Unmarshal(newResp.Result, &nr); err != nil {
+		t.Fatalf("session/new result: %v", err)
+	}
+
+	resp := client.call(t, "session/set_config_option", SetSessionConfigOptionParams{
+		SessionID: nr.SessionID,
+		ConfigID:  "effort",
+		Value:     "ultra",
+	})
+	if resp.Error == nil || !strings.Contains(resp.Error.Message, "effort") {
+		t.Fatalf("invalid effort response = %+v, want an effort validation error", resp.Error)
+	}
+	if got := factory.buildCount(); got != 1 {
+		t.Fatalf("build count after invalid effort = %d, want initial build only", got)
+	}
+}
+
+func TestServeSessionConfigNoopsSameSelectionDuringActivePrompt(t *testing.T) {
+	for _, tc := range []struct {
+		name  string
+		axis  string
+		value string
+	}{
+		{name: "model", axis: "model", value: "fast"},
+		{name: "effort", axis: "effort", value: "auto"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			started := make(chan struct{})
+			release := make(chan struct{})
+			var once sync.Once
+			factory := &configurableFactory{
+				behavior: func(ctx context.Context, sink event.Sink, input string, p SessionParams) error {
+					once.Do(func() { close(started) })
+					select {
+					case <-release:
+					case <-ctx.Done():
+						return ctx.Err()
+					}
+					sink.Emit(event.Event{Kind: event.Text, Text: p.Model + ":" + input})
+					return nil
+				},
+			}
+			client, stop := startServer(t, factory)
+			defer stop()
+
+			client.call(t, "initialize", InitializeParams{ProtocolVersion: 1})
+			newResp := client.call(t, "session/new", SessionNewParams{Cwd: testenv.TempDir(t)})
+			var nr SessionNewResult
+			if err := json.Unmarshal(newResp.Result, &nr); err != nil {
+				t.Fatalf("session/new result: %v", err)
+			}
+			prompt := client.callAsync("session/prompt", SessionPromptParams{
+				SessionID: nr.SessionID,
+				Prompt:    []ContentBlock{{Type: "text", Text: "keep running"}},
+			})
+			select {
+			case <-started:
+			case <-time.After(rpcCallBudget(t)):
+				t.Fatal("prompt never started")
+			}
+
+			resp := client.call(t, "session/set_config_option", SetSessionConfigOptionParams{
+				SessionID: nr.SessionID,
+				ConfigID:  tc.axis,
+				Value:     tc.value,
+			})
+			if resp.Error != nil {
+				t.Fatalf("same-selection switch while running: %+v", resp.Error)
+			}
+			close(release)
+			if _, promptResp := drainPrompt(t, client, prompt); promptResp.Error != nil {
+				t.Fatalf("prompt: %+v", promptResp.Error)
+			}
+			if got := factory.buildCount(); got != 1 {
+				t.Fatalf("build count after same-selection switch while running = %d, want initial build only", got)
+			}
+		})
 	}
 }
 

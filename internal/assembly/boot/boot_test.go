@@ -63,6 +63,34 @@ func TestAgentKeepPolicyFromConfig(t *testing.T) {
 	}
 }
 
+func TestBuildRecordsRuntimeSelectionEffort(t *testing.T) {
+	isolateConfigHome(t)
+	dir := robustTempDir(t)
+	t.Chdir(dir)
+	writeFile(t, dir, "reasonix.toml", `
+default_model = "test-model/test-model"
+
+[[providers]]
+name = "test-model"
+kind = "openai"
+base_url = "https://example.invalid/v1"
+model = "test-model"
+supported_efforts = ["low", "high"]
+effort = "high"
+`)
+	approveWorkspace(t, dir)
+
+	ctrl, err := Build(context.Background(), Options{})
+	if err != nil {
+		t.Fatalf("Build: %v", err)
+	}
+	defer ctrl.Close()
+
+	if got := ctrl.RuntimeSelection(); got.ModelRef != "test-model/test-model" || got.Effort != "high" {
+		t.Fatalf("runtime selection = %+v, want model test-model/test-model effort high", got)
+	}
+}
+
 // TestBuildFoldsProjectMemoryIntoSystemPrompt is the end-to-end proof of the
 // cache-first wiring: a project REASONIX.md is discovered at boot and folded
 // into the session's system message (the cached prefix), and the `remember`
