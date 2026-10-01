@@ -144,11 +144,10 @@ func (s *service) resolveSessionConfigDeltas(ctx context.Context, sess *acpSessi
 	return withToolApprovalConfig(cfgState, sess.currentToolApprovalMode()), nil
 }
 
-// sessionConfigMatchesRuntime reports whether the resolved config names the
-// controller generation already running. It is the ACP half of the shared
-// no-op fast path; a nil or deleted session deliberately falls through to the
-// normal rebuild path so its existing errors remain unchanged.
-func sessionConfigMatchesRuntime(sess *acpSession, cfgState SessionConfigState) bool {
+// sessionConfigMatchesRuntime reports whether cfgState names the running
+// controller generation, then drops older queued deltas for the same axes:
+// a later request that restores the running value is their last write.
+func sessionConfigMatchesRuntime(sess *acpSession, cfgState SessionConfigState, deltas []sessionConfigDelta) bool {
 	if sess == nil {
 		return false
 	}
@@ -163,7 +162,17 @@ func sessionConfigMatchesRuntime(sess *acpSession, cfgState SessionConfigState) 
 	if !ok {
 		return false
 	}
-	return matcher.MatchesRuntimeSelection(cfgState.Model, sessionConfigCurrentValue(cfgState, "effort"))
+	if !matcher.MatchesRuntimeSelection(cfgState.Model, sessionConfigCurrentValue(cfgState, "effort")) {
+		return false
+	}
+	sess.mu.Lock()
+	if sess.deleted || sess.maintenanceDone != nil {
+		sess.mu.Unlock()
+		return false
+	}
+	sess.pendingConfig = removePendingAxes(sess.pendingConfig, deltas)
+	sess.mu.Unlock()
+	return true
 }
 
 func sessionConfigCurrentValue(cfgState SessionConfigState, id string) string {
@@ -281,9 +290,6 @@ func (s *service) switchSessionConfig(ctx context.Context, sess *acpSession, del
 		if err != nil {
 			return SessionConfigState{}, err
 		}
-		if sessionConfigMatchesRuntime(sess, cfgState) {
-			return cfgState, nil
-		}
 		sess.mu.Lock()
 		if sess.maintenanceDone != nil && !sess.deleted {
 			for _, delta := range deltas {
@@ -304,7 +310,7 @@ func (s *service) switchSessionConfig(ctx context.Context, sess *acpSession, del
 		sess.stateChangeMu.Unlock()
 		return SessionConfigState{}, err
 	}
-	if sessionConfigMatchesRuntime(sess, cfgState) {
+	if sessionConfigMatchesRuntime(sess, cfgState, deltas) {
 		sess.stateChangeMu.Unlock()
 		return cfgState, nil
 	}
