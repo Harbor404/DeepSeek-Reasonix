@@ -179,15 +179,6 @@ func sessionConfigMatchesRuntime(sess *acpSession, cfgState SessionConfigState, 
 	return true
 }
 
-func sessionConfigCurrentValue(cfgState SessionConfigState, id string) string {
-	for i := range cfgState.ConfigOptions {
-		if cfgState.ConfigOptions[i].ID == id {
-			return cfgState.ConfigOptions[i].CurrentValue
-		}
-	}
-	return ""
-}
-
 func (s *service) switchSessionModel(ctx context.Context, sess *acpSession, modelID string) (SessionConfigState, error) {
 	deltas := []sessionConfigDelta{{axis: "model", model: modelID}}
 	return s.switchSessionConfig(ctx, sess, deltas)
