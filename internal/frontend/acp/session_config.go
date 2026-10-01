@@ -162,7 +162,11 @@ func sessionConfigMatchesRuntime(sess *acpSession, cfgState SessionConfigState, 
 	if !ok {
 		return false
 	}
-	if !matcher.MatchesRuntimeSelection(cfgState.Model, sessionConfigCurrentValue(cfgState, "effort")) {
+	if !matcher.MatchesRuntimeSelection(control.RuntimeSelection{
+		ModelRef:            cfgState.Model,
+		Effort:              cfgState.ResolvedEffort,
+		ProviderFingerprint: cfgState.ProviderFingerprint,
+	}) {
 		return false
 	}
 	sess.mu.Lock()

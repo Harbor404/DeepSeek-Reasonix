@@ -272,8 +272,7 @@ type externalFolderToolRefs interface {
 }
 
 // Options carries the already-built pieces setup assembles. Lifecycle metadata
-// lets the controller mint and rotate session files; Host/Commands are surfaced
-// to frontends that resolve MCP prompts and slash commands.
+// lets it mint/rotate session files; Host/Commands surface MCP prompts and slash commands.
 type Options struct {
 	Runner   agent.Runner
 	Executor *agent.Agent
@@ -300,20 +299,22 @@ type Options struct {
 	// SubagentGate is the shared gate every headless-only sub-agent surface
 	// reads; nil disables gating there. The approval-mode setters Update it so
 	// a runtime switch reaches sub-agents, not only the executor's own gate.
-	SubagentGate  *SharedHeadlessGate
-	Label         string
-	ModelRef      string
-	Effort        string             // session-visible effort identity; not a request-scoped override
-	ModelModes    []config.ModelMode // optional modes the session's model declares
-	SystemPrompt  string
-	SessionDir    string
-	SessionPath   string
-	Host          *plugin.Host
-	Commands      []command.Command
-	Skills        []skill.Skill
-	AllSkills     []skill.Skill
-	SkillStore    *skill.Store
-	AllSkillStore *skill.Store
+	SubagentGate *SharedHeadlessGate
+	Label        string
+	ModelRef     string
+	Effort       string             // resolved effective provider effort; not a request-scoped override
+	ModelModes   []config.ModelMode // optional modes the session's model declares
+	// ProviderFingerprint identifies resolved provider build inputs; empty fails closed.
+	ProviderFingerprint string
+	SystemPrompt        string
+	SessionDir          string
+	SessionPath         string
+	Host                *plugin.Host
+	Commands            []command.Command
+	Skills              []skill.Skill
+	AllSkills           []skill.Skill
+	SkillStore          *skill.Store
+	AllSkillStore       *skill.Store
 	// DisableImplicitSkillInvocation controls model-facing discovery only;
 	// explicit /skill commands and management remain host-side capabilities.
 	DisableImplicitSkillInvocation bool

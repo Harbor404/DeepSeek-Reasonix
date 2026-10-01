@@ -2,43 +2,49 @@ package control
 
 import "strings"
 
-// RuntimeSelection is the model and session-visible effort selection a
-// controller was built with. Both values are immutable for a controller
-// generation; a different selection is what requires a rebuild today.
+// RuntimeSelection is the immutable provider identity a controller was built
+// with: canonical model ref, resolved effective effort, and the provider build
+// fingerprint. A different identity is what requires a rebuild.
 type RuntimeSelection struct {
-	ModelRef string
-	Effort   string
+	ModelRef            string
+	Effort              string
+	ProviderFingerprint string
 }
 
 // RuntimeSelectionMatcher is the controller capability frontends use to skip a
 // rebuild when a resolved target is already the running generation.
 type RuntimeSelectionMatcher interface {
-	MatchesRuntimeSelection(modelRef, effort string) bool
+	MatchesRuntimeSelection(RuntimeSelection) bool
 }
 
-// RuntimeSelection returns the immutable model/effort identity of this
+// RuntimeSelection returns the immutable provider identity of this
 // controller generation.
 func (c *Controller) RuntimeSelection() RuntimeSelection {
 	if c == nil {
 		return RuntimeSelection{}
 	}
 	return RuntimeSelection{
-		ModelRef: strings.TrimSpace(c.modelRef),
-		Effort:   normalizeRuntimeEffort(c.effort),
+		ModelRef:            strings.TrimSpace(c.modelRef),
+		Effort:              normalizeRuntimeEffort(c.effort),
+		ProviderFingerprint: strings.TrimSpace(c.providerFingerprint),
 	}
 }
 
-// MatchesRuntimeSelection reports whether modelRef and effort name the running
-// controller generation. The caller passes a canonical model ref and the value
-// the provider capability resolved for effort; this method owns the shared
-// no-op comparison used by ACP, serve, and the CLI path through serve.
-func (c *Controller) MatchesRuntimeSelection(modelRef, effort string) bool {
+// MatchesRuntimeSelection reports whether target names the running controller
+// generation. The caller passes a canonical model ref, the resolved effective
+// effort, and the provider build fingerprint; this method owns the shared no-op
+// comparison used by ACP, serve, and the CLI path through serve.
+func (c *Controller) MatchesRuntimeSelection(target RuntimeSelection) bool {
 	current := c.RuntimeSelection()
-	if current.ModelRef == "" || strings.TrimSpace(modelRef) == "" {
+	target.ModelRef = strings.TrimSpace(target.ModelRef)
+	target.Effort = normalizeRuntimeEffort(target.Effort)
+	target.ProviderFingerprint = strings.TrimSpace(target.ProviderFingerprint)
+	if current.ModelRef == "" || current.ProviderFingerprint == "" || target.ModelRef == "" || target.ProviderFingerprint == "" {
 		return false
 	}
-	return current.ModelRef == strings.TrimSpace(modelRef) &&
-		current.Effort == normalizeRuntimeEffort(effort)
+	return current.ModelRef == target.ModelRef &&
+		current.Effort == target.Effort &&
+		current.ProviderFingerprint == target.ProviderFingerprint
 }
 
 var _ RuntimeSelectionMatcher = (*Controller)(nil)

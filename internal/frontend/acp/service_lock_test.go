@@ -729,7 +729,7 @@ func TestACPApplyPendingClaimsStateBeforeResolving(t *testing.T) {
 	}
 	sess := &acpSession{
 		id:             "sess-pending-order",
-		ctrl:           control.New(control.Options{ModelRef: "fast", Effort: "auto"}),
+		ctrl:           control.New(control.Options{ModelRef: "fast", Effort: "auto", ProviderFingerprint: "test:fast:auto"}),
 		sink:           newUpdateSink(&fakeNotifier{}, "sess-pending-order"),
 		cwd:            testenv.TempDir(t),
 		model:          "fast",
@@ -799,7 +799,7 @@ func TestACPSameSelectionSwitchCancelsOlderPendingDelta(t *testing.T) {
 	sink := newUpdateSink(&fakeNotifier{}, "sess-same-selection-pending")
 	sess := &acpSession{
 		id:             "sess-same-selection-pending",
-		ctrl:           control.New(control.Options{ModelRef: "fast", Effort: "auto"}),
+		ctrl:           control.New(control.Options{ModelRef: "fast", Effort: "auto", ProviderFingerprint: "test:fast:auto"}),
 		sink:           sink,
 		cwd:            testenv.TempDir(t),
 		model:          "fast",

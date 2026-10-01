@@ -6,14 +6,16 @@ import (
 	"net/http"
 	"strings"
 
+	"reasonix/internal/assembly/boot"
 	"reasonix/internal/contract/config"
+	"reasonix/internal/session/control"
 )
 
 // switchEffort persists a new reasoning-effort level for the active provider and
 // rebuilds via switchModel (which serializes on bindMu).
 func (s *Server) switchEffort(ctx context.Context, level string) error {
 	cur := s.ctl()
-	cfg, err := config.Load()
+	cfg, err := runtimeConfig(cur)
 	if err != nil {
 		return fmt.Errorf("load config: %w", err)
 	}
@@ -38,10 +40,18 @@ func (s *Server) switchEffort(ctx context.Context, level string) error {
 			map[string]any{"provider": entry.Name, "level": level, "levels": strings.Join(capability.Levels, " | ")})
 	}
 	targetRef := entry.Name + "/" + entry.Model
-	if runtimeSelectionMatches(cur, targetRef, effort) {
-		return nil
+	// Compare the request-level effort, not the picker spelling. "auto" and an
+	// explicit level can resolve to the same provider request without rebuilding.
+	targetEntry := *entry
+	targetEntry.Effort = effort
+	identity := boot.ResolveProviderBuildIdentity(&targetEntry, cfg.NetworkProxySpec(), nil)
+	target := control.RuntimeSelection{
+		ModelRef:            targetRef,
+		Effort:              identity.Effort,
+		ProviderFingerprint: identity.Fingerprint,
 	}
-	if controllerHasActiveRuntimeWork(cur) {
+	alreadyRunning := runtimeSelectionMatches(cur, target)
+	if !alreadyRunning && controllerHasActiveRuntimeWork(cur) {
 		return busyErr("busy.change_effort", "cannot change effort while active work or background jobs are running")
 	}
 	editPath := config.UserConfigPath()
@@ -63,6 +73,9 @@ func (s *Server) switchEffort(ctx context.Context, level string) error {
 		return nil
 	}(); err != nil {
 		return err
+	}
+	if alreadyRunning {
+		return nil
 	}
 	return s.switchModel(ctx, targetRef)
 }

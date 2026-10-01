@@ -443,6 +443,7 @@ func perseverationRetries(cfg *config.Config, entry *config.ProviderEntry) *int 
 func (b *builder) controllerOptions(runner agent.Runner, executor *agent.Agent, label string) control.Options {
 	opts, cfg, root, entry, t := b.opts, b.cfg, b.root, b.model.entry, &b.tools
 	specOptions := t.specOptions
+	providerIdentity := ResolveProviderBuildIdentity(entry, b.proxy, nil)
 	return control.Options{
 		Observe:                        b.observeRun(),
 		TaskBudget:                     taskBudgetFromConfig(cfg),
@@ -454,7 +455,8 @@ func (b *builder) controllerOptions(runner agent.Runner, executor *agent.Agent, 
 		SubagentGate:                   t.gate,
 		Label:                          label,
 		ModelRef:                       b.model.ref,
-		Effort:                         config.EffortDisplay(entry),
+		Effort:                         providerIdentity.Effort,
+		ProviderFingerprint:            providerIdentity.Fingerprint,
 		ModelModes:                     config.RequestModes(entry),
 		SystemPrompt:                   b.prompt.prompt,
 		SessionDir:                     b.session.dir,

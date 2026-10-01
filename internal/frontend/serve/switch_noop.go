@@ -4,6 +4,7 @@ import (
 	"context"
 	"strings"
 
+	"reasonix/internal/assembly/boot"
 	"reasonix/internal/contract/config"
 	"reasonix/internal/session/control"
 )
@@ -14,35 +15,39 @@ import (
 func (s *Server) switchModelRequested(ctx context.Context, ref string) error {
 	s.bindMu.Lock()
 	defer s.bindMu.Unlock()
-	if runtimeModelMatches(s.ctl(), ref) {
+	cur := s.ctl()
+	if target, ok := runtimeTargetForModel(cur, ref); ok && runtimeSelectionMatches(cur, target) {
 		return nil
 	}
 	return s.switchModelLocked(ctx, ref)
 }
 
-func runtimeModelMatches(cur control.SessionAPI, ref string) bool {
-	if cur == nil {
-		return false
+func runtimeTargetForModel(cur control.SessionAPI, ref string) (control.RuntimeSelection, bool) {
+	cfg, err := runtimeConfig(cur)
+	if err != nil {
+		return control.RuntimeSelection{}, false
 	}
-	current := currentModelRef(cur)
-	ref = strings.TrimSpace(ref)
-	if current == "" || ref == "" {
-		return false
+	entry, ok := cfg.ResolveModel(strings.TrimSpace(ref))
+	if !ok {
+		return control.RuntimeSelection{}, false
 	}
-	if ref == current {
-		return true
-	}
-	if ctrl, ok := cur.(*control.Controller); ok && ctrl != nil {
-		if cfg, err := config.LoadForRootReadOnly(ctrl.WorkspaceRoot()); err == nil {
-			if entry, ok := cfg.ResolveModel(ref); ok {
-				ref = entry.Name + "/" + entry.Model
-			}
-		}
-	}
-	return ref == current
+	identity := boot.ResolveProviderBuildIdentity(entry, cfg.NetworkProxySpec(), nil)
+	return control.RuntimeSelection{
+		ModelRef:            entry.Name + "/" + entry.Model,
+		Effort:              identity.Effort,
+		ProviderFingerprint: identity.Fingerprint,
+	}, identity.Fingerprint != ""
 }
 
-func runtimeSelectionMatches(cur control.SessionAPI, modelRef, effort string) bool {
+func runtimeConfig(cur control.SessionAPI) (*config.Config, error) {
+	root := ""
+	if cur != nil {
+		root = strings.TrimSpace(cur.WorkspaceRoot())
+	}
+	return config.LoadForRootReadOnly(root)
+}
+
+func runtimeSelectionMatches(cur control.SessionAPI, target control.RuntimeSelection) bool {
 	matcher, ok := cur.(control.RuntimeSelectionMatcher)
-	return ok && matcher.MatchesRuntimeSelection(modelRef, effort)
+	return ok && matcher.MatchesRuntimeSelection(target)
 }

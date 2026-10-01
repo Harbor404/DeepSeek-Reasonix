@@ -106,15 +106,16 @@ func (f *commandFactory) NewSession(_ context.Context, p SessionParams) (*contro
 }
 
 type configurableFactory struct {
-	mu         sync.Mutex
-	builds     []SessionParams
-	dir        string
-	withHooks  bool
-	hookEvents []hook.Event
-	behavior   func(ctx context.Context, sink event.Sink, input string, p SessionParams) error
-	managers   []*jobs.Manager
-	withCtrl   func(ctx context.Context, sink event.Sink, input string, p SessionParams, ctrl *control.Controller) error
-	onBuild    func(index int, p SessionParams)
+	mu          sync.Mutex
+	builds      []SessionParams
+	dir         string
+	withHooks   bool
+	hookEvents  []hook.Event
+	behavior    func(ctx context.Context, sink event.Sink, input string, p SessionParams) error
+	managers    []*jobs.Manager
+	withCtrl    func(ctx context.Context, sink event.Sink, input string, p SessionParams, ctrl *control.Controller) error
+	onBuild     func(index int, p SessionParams)
+	fingerprint string
 }
 
 func (f *configurableFactory) NewSession(_ context.Context, p SessionParams) (*control.Controller, error) {
@@ -160,7 +161,7 @@ func (f *configurableFactory) NewSession(_ context.Context, p SessionParams) (*c
 	}
 	opts := control.Options{
 		Runner: runner, Sink: p.Sink, SessionDir: f.dir, OnSessionRecovered: p.OnSessionRecovered,
-		ModelRef: model, Effort: effort,
+		ModelRef: model, Effort: effort, ProviderFingerprint: f.providerFingerprint(model, effort),
 	}
 	if f.withHooks {
 		opts.Hooks = f.hookRunner()
@@ -259,9 +260,11 @@ func (f *configurableFactory) SessionConfigState(_ context.Context, p SessionCon
 		agentPreset = "delivery"
 	}
 	return SessionConfigState{
-		Model:          model,
-		EffortOverride: effortOverride,
-		RuntimeProfile: runtimeProfile,
+		Model:               model,
+		EffortOverride:      effortOverride,
+		RuntimeProfile:      runtimeProfile,
+		ResolvedEffort:      effort,
+		ProviderFingerprint: f.providerFingerprint(model, effort),
 		Models: &SessionModelState{
 			AvailableModels: []ModelInfo{{ModelID: "fast", Name: "Fast"}, {ModelID: "pro", Name: "Pro"}},
 			CurrentModelID:  model,
@@ -277,6 +280,21 @@ func (f *configurableFactory) SessionConfigState(_ context.Context, p SessionCon
 			}},
 		},
 	}, nil
+}
+
+func (f *configurableFactory) providerFingerprint(model, effort string) string {
+	f.mu.Lock()
+	defer f.mu.Unlock()
+	if f.fingerprint != "" {
+		return f.fingerprint
+	}
+	return "test:" + model + ":" + effort
+}
+
+func (f *configurableFactory) setProviderFingerprint(fingerprint string) {
+	f.mu.Lock()
+	f.fingerprint = fingerprint
+	f.mu.Unlock()
 }
 
 func (f *configurableFactory) buildAt(t *testing.T, idx int) SessionParams {
@@ -993,6 +1011,32 @@ func TestServeSessionConfigNoopsSameSelection(t *testing.T) {
 	}
 	if got := factory.buildCount(); got != 1 {
 		t.Fatalf("build count after same-selection switches = %d, want initial build only", got)
+	}
+}
+
+func TestServeSessionConfigRebuildsWhenProviderFingerprintChanges(t *testing.T) {
+	factory := &configurableFactory{}
+	client, stop := startServer(t, factory)
+	defer stop()
+
+	client.call(t, "initialize", InitializeParams{ProtocolVersion: 1})
+	newResp := client.call(t, "session/new", SessionNewParams{Cwd: testenv.TempDir(t)})
+	var nr SessionNewResult
+	if err := json.Unmarshal(newResp.Result, &nr); err != nil {
+		t.Fatalf("session/new result: %v", err)
+	}
+
+	factory.setProviderFingerprint("rotated-provider")
+	resp := client.call(t, "session/set_config_option", SetSessionConfigOptionParams{
+		SessionID: nr.SessionID,
+		ConfigID:  "model",
+		Value:     "fast",
+	})
+	if resp.Error != nil {
+		t.Fatalf("same-model switch after provider change: %+v", resp.Error)
+	}
+	if got := factory.buildCount(); got != 2 {
+		t.Fatalf("build count after provider fingerprint change = %d, want initial build plus refresh", got)
 	}
 }
 
