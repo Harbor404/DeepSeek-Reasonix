@@ -30,10 +30,9 @@ func (c *Controller) RuntimeSelection() RuntimeSelection {
 	}
 }
 
-// MatchesRuntimeSelection reports whether target names the running controller
-// generation. The caller passes a canonical model ref, the resolved effective
-// effort, and the provider build fingerprint; this method owns the shared no-op
-// comparison used by ACP, serve, and the CLI path through serve.
+// MatchesRuntimeSelection reports whether target names the running controller.
+// The caller passes a canonical model ref, resolved effort, and provider
+// fingerprint; this is the shared no-op comparison for ACP, serve, and CLI.
 func (c *Controller) MatchesRuntimeSelection(target RuntimeSelection) bool {
 	current := c.RuntimeSelection()
 	target.ModelRef = strings.TrimSpace(target.ModelRef)

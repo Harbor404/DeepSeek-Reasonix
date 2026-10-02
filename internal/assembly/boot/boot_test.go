@@ -64,9 +64,10 @@ func TestAgentKeepPolicyFromConfig(t *testing.T) {
 }
 
 func TestBuildRecordsRuntimeSelectionEffort(t *testing.T) {
-	isolateConfigHome(t)
+	home := isolateConfigHome(t)
+	reasonixHome := filepath.Join(home, ".reasonix")
+	t.Setenv("REASONIX_HOME", reasonixHome)
 	dir := robustTempDir(t)
-	t.Chdir(dir)
 	writeFile(t, dir, "reasonix.toml", `
 default_model = "test-model/test-model"
 
@@ -80,7 +81,7 @@ effort = "high"
 `)
 	approveWorkspace(t, dir)
 
-	ctrl, err := Build(context.Background(), Options{})
+	ctrl, err := Build(context.Background(), Options{Model: "test-model/test-model", Home: reasonixHome, WorkspaceRoot: dir})
 	if err != nil {
 		t.Fatalf("Build: %v", err)
 	}

@@ -106,16 +106,17 @@ func (f *commandFactory) NewSession(_ context.Context, p SessionParams) (*contro
 }
 
 type configurableFactory struct {
-	mu          sync.Mutex
-	builds      []SessionParams
-	dir         string
-	withHooks   bool
-	hookEvents  []hook.Event
-	behavior    func(ctx context.Context, sink event.Sink, input string, p SessionParams) error
-	managers    []*jobs.Manager
-	withCtrl    func(ctx context.Context, sink event.Sink, input string, p SessionParams, ctrl *control.Controller) error
-	onBuild     func(index int, p SessionParams)
-	fingerprint string
+	mu            sync.Mutex
+	builds        []SessionParams
+	dir           string
+	defaultEffort string
+	withHooks     bool
+	hookEvents    []hook.Event
+	behavior      func(ctx context.Context, sink event.Sink, input string, p SessionParams) error
+	managers      []*jobs.Manager
+	withCtrl      func(ctx context.Context, sink event.Sink, input string, p SessionParams, ctrl *control.Controller) error
+	onBuild       func(index int, p SessionParams)
+	fingerprint   string
 }
 
 func (f *configurableFactory) NewSession(_ context.Context, p SessionParams) (*control.Controller, error) {
@@ -155,10 +156,7 @@ func (f *configurableFactory) NewSession(_ context.Context, p SessionParams) (*c
 	if model == "" {
 		model = "fast"
 	}
-	effort := "auto"
-	if p.EffortOverride != nil && strings.TrimSpace(*p.EffortOverride) != "" {
-		effort = strings.TrimSpace(*p.EffortOverride)
-	}
+	effort, _ := f.resolveEffort(p.EffortOverride)
 	opts := control.Options{
 		Runner: runner, Sink: p.Sink, SessionDir: f.dir, OnSessionRecovered: p.OnSessionRecovered,
 		ModelRef: model, Effort: effort, ProviderFingerprint: f.providerFingerprint(model, effort),
@@ -223,17 +221,7 @@ func (f *configurableFactory) SessionConfigState(_ context.Context, p SessionCon
 	if model != "fast" && model != "pro" {
 		return SessionConfigState{}, os.ErrInvalid
 	}
-	effort := "auto"
-	effortOverride := cloneStringPtr(p.EffortOverride)
-	if effortOverride != nil && *effortOverride != "" {
-		switch strings.ToLower(strings.TrimSpace(*effortOverride)) {
-		case "high":
-			effort = "high"
-		default:
-			cleared := ""
-			effortOverride = &cleared
-		}
-	}
+	effort, effortOverride := f.resolveEffort(p.EffortOverride)
 	modelOptions := []SessionConfigSelectOption{
 		{Value: "fast", Name: "Fast"},
 		{Value: "pro", Name: "Pro"},
@@ -280,6 +268,25 @@ func (f *configurableFactory) SessionConfigState(_ context.Context, p SessionCon
 			}},
 		},
 	}, nil
+}
+
+func (f *configurableFactory) resolveEffort(override *string) (string, *string) {
+	effort := strings.TrimSpace(f.defaultEffort)
+	if effort == "" {
+		effort = "auto"
+	}
+	normalized := cloneStringPtr(override)
+	if normalized != nil && strings.TrimSpace(*normalized) != "" {
+		switch strings.ToLower(strings.TrimSpace(*normalized)) {
+		case "high":
+			effort = "high"
+		default:
+			effort = "auto"
+			cleared := ""
+			normalized = &cleared
+		}
+	}
+	return effort, normalized
 }
 
 func (f *configurableFactory) providerFingerprint(model, effort string) string {
@@ -1011,6 +1018,43 @@ func TestServeSessionConfigNoopsSameSelection(t *testing.T) {
 	}
 	if got := factory.buildCount(); got != 1 {
 		t.Fatalf("build count after same-selection switches = %d, want initial build only", got)
+	}
+}
+
+func TestServeSessionConfigNoopPersistsExplicitEffort(t *testing.T) {
+	dir := testenv.TempDir(t)
+	factory := &configurableFactory{dir: dir, defaultEffort: "high"}
+	client, stop := startServer(t, factory)
+	defer stop()
+
+	client.call(t, "initialize", InitializeParams{ProtocolVersion: 1})
+	newResp := client.call(t, "session/new", SessionNewParams{Cwd: testenv.TempDir(t)})
+	var nr SessionNewResult
+	if err := json.Unmarshal(newResp.Result, &nr); err != nil {
+		t.Fatalf("session/new result: %v", err)
+	}
+	path := transcriptPath(dir, nr.SessionID)
+	if err := os.WriteFile(path, nil, 0o600); err != nil {
+		t.Fatal(err)
+	}
+
+	resp := client.call(t, "session/set_config_option", SetSessionConfigOptionParams{
+		SessionID: nr.SessionID,
+		ConfigID:  "effort",
+		Value:     "high",
+	})
+	if resp.Error != nil {
+		t.Fatalf("same-effective-effort switch: %+v", resp.Error)
+	}
+	if got := factory.buildCount(); got != 1 {
+		t.Fatalf("build count after same-effective-effort switch = %d, want initial build only", got)
+	}
+	meta, ok, err := loadACPMeta(path)
+	if err != nil {
+		t.Fatal(err)
+	}
+	if !ok || meta.EffortOverride == nil || *meta.EffortOverride != "high" {
+		t.Fatalf("persisted effort override = %#v, want explicit high", meta.EffortOverride)
 	}
 }
 

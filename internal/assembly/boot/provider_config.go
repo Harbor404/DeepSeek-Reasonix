@@ -12,19 +12,17 @@ import (
 	"reasonix/internal/contract/provider"
 )
 
-// ProviderBuildIdentity is the resolved provider identity a controller
-// generation was built with. Fingerprint changes mean the provider instance
-// must be rebuilt; Effort is compared separately because persistence may
-// change the stored level without changing the request-level level.
+// ProviderBuildIdentity is the resolved identity a controller was built with.
+// A changed fingerprint requires a rebuild; Effort is compared separately so
+// persistence can change without changing the request-level level.
 type ProviderBuildIdentity struct {
 	Fingerprint string
 	Effort      string
 }
 
-// ResolveProviderBuildIdentity resolves the same effective provider inputs selectModel
-// gives boot, then fingerprints everything except the separately compared
-// effort. A non-nil override follows the ACP session-override path, including
-// Anthropic's implicit adaptive thinking; nil leaves the resolved entry as-is.
+// ResolveProviderBuildIdentity fingerprints the resolved provider inputs
+// selectModel gives boot, excluding effort, which is compared separately.
+// A non-nil override follows the ACP path, including adaptive thinking.
 func ResolveProviderBuildIdentity(e *config.ProviderEntry, proxy netclient.ProxySpec, effortOverride *string) ProviderBuildIdentity {
 	if e == nil {
 		return ProviderBuildIdentity{}

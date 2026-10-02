@@ -306,6 +306,7 @@ func (s *service) switchSessionConfig(ctx context.Context, sess *acpSession, del
 		return SessionConfigState{}, err
 	}
 	if sessionConfigMatchesRuntime(sess, cfgState, deltas) {
+		sess.storeConfigState(cfgState)
 		sess.stateChangeMu.Unlock()
 		return cfgState, nil
 	}
@@ -458,6 +459,15 @@ func (s *acpSession) configStateParams() SessionConfigStateParams {
 		EffortOverride: cloneStringPtr(s.effortOverride),
 		RuntimeProfile: s.runtimeProfile,
 	}
+}
+
+func (s *acpSession) storeConfigState(cfgState SessionConfigState) {
+	s.mu.Lock()
+	s.model = cfgState.Model
+	s.effortOverride = cloneStringPtr(cfgState.EffortOverride)
+	s.runtimeProfile = cfgState.RuntimeProfile
+	s.mu.Unlock()
+	s.saveMetaIfPresent()
 }
 
 func (s *acpSession) currentToolApprovalMode() string {
