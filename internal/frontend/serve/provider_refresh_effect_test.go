@@ -48,10 +48,9 @@ func (e *refreshEndpoint) snapshot() (auth []string, bodies []map[string]any) {
 	return auth, bodies
 }
 
-// TestEffectProviderRefreshThroughBootBuild pins behavior at the
-// provider request: a same-selection switch reuses the live controller and its
-// warm prefix, while a changed key/base_url rebuilds and the next request uses
-// the refreshed endpoint and credential.
+// TestEffectProviderRefreshThroughBootBuild pins provider request behavior:
+// a same-selection switch reuses the live controller and warm prefix, while a
+// changed key/base_url rebuilds and the next request uses the new endpoint.
 func TestEffectProviderRefreshThroughBootBuild(t *testing.T) {
 	home := testenv.TempDir(t)
 	t.Setenv("REASONIX_HOME", home)

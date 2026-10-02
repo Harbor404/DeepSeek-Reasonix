@@ -25,9 +25,6 @@ func (s *Server) switchEffort(ctx context.Context, level string) error {
 		return refusal(http.StatusConflict, "effort.no_provider",
 			fmt.Errorf("cannot resolve current provider %q", ref), nil)
 	}
-	// Refusals, not failures: an endpoint with no effort vocabulary and a level
-	// outside the one it has are both answers about this request. Reporting
-	// them as 500 told a user their machine had broken instead of what to do.
 	capability := config.EffortCapabilityForEntry(entry)
 	if !capability.Supported {
 		return refusal(http.StatusBadRequest, "effort.not_configurable",
@@ -82,8 +79,7 @@ func (s *Server) switchEffort(ctx context.Context, level string) error {
 
 // applyEffortEdit writes effort onto entry within edit, mirroring CLI/desktop
 // SetEffort: upsert the provider when the user config has no block for it yet.
-// It writes nothing else — which request fields an endpoint accepts is the
-// provider contract's call, not a side effect of selecting a level.
+// It changes nothing else; endpoint field support is the provider contract's call.
 func applyEffortEdit(edit *config.Config, entry *config.ProviderEntry, effort string) error {
 	if _, ok := edit.Provider(entry.Name); !ok {
 		if err := edit.UpsertProvider(*entry); err != nil {

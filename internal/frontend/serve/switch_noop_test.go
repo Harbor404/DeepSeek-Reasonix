@@ -54,10 +54,9 @@ func TestServeSwitchEffortNoopsSameLevelBeforeBuild(t *testing.T) {
 	}
 }
 
-// A same effective effort still has to be persisted. The running controller may
-// have started from a different config.toml value (or from an implicit default),
-// so returning before the write makes the picker report success while the next
-// start disagrees with it.
+// A same effective effort still has to be persisted: the running controller may
+// have started from a different config.toml value (or an implicit default), so
+// returning before the write would make the picker and the next start disagree.
 func TestServeSwitchEffortPersistsSameLevelWithoutRebuild(t *testing.T) {
 	writeServeEffortSelectionConfig(t, "low")
 	bc := NewBroadcaster()
