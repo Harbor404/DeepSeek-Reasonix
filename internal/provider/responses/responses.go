@@ -15,6 +15,7 @@ import (
 	"io"
 	"maps"
 	"net/http"
+	"net/url"
 	"strings"
 	"sync"
 	"sync/atomic"
@@ -260,6 +261,13 @@ func (c *client) Stream(ctx context.Context, req provider.Request) (<-chan provi
 		body, _, wireMessages = c.buildRequestBody(req)
 		resp, err = c.send(requestCtx, body)
 	}
+	if err != nil && isCommandCodeTransientResponsesError(c.requestURL, err) {
+		// Command Code's Responses route intermittently returns an anonymous 400
+		// that succeeds when the byte-identical body is sent again. The upstream
+		// report measured the same bytes returning 200 and then 400, so one
+		// transparent resend recovers without hiding named schema failures.
+		resp, err = c.send(requestCtx, body)
+	}
 	if err != nil {
 		return nil, err
 	}
@@ -288,6 +296,24 @@ func (c *client) send(ctx context.Context, body map[string]any) (*http.Response,
 		return req, nil
 	}
 	return provider.SendWithRetry(ctx, c.http, c.sendOpts(), newRequest)
+}
+
+// isCommandCodeTransientResponsesError recognizes the one anonymous 400 that
+// Command Code's Responses route returns intermittently for an unchanged body.
+// Named schema failures carry a useful field/code and must remain terminal.
+func isCommandCodeTransientResponsesError(requestURL string, err error) bool {
+	u, parseErr := url.Parse(strings.TrimSpace(requestURL))
+	if parseErr != nil || strings.ToLower(u.Hostname()) != "api.commandcode.ai" || strings.TrimRight(u.Path, "/") != "/provider/v1/responses" {
+		return false
+	}
+	var apiErr *provider.APIError
+	if !errors.As(err, &apiErr) || apiErr.Status != http.StatusBadRequest {
+		return false
+	}
+	body := strings.ToLower(apiErr.Body)
+	return strings.Contains(body, "invalid_request_error") &&
+		strings.Contains(body, "invalid request error") &&
+		strings.Contains(body, "trace_id")
 }
 
 func isStalePreviousResponseError(err error) bool {
